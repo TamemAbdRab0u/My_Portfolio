@@ -1,0 +1,434 @@
+// main.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    initStars();
+    initEntrance();
+    initScrollAnimations();
+    initSkillTags();
+    initShootingStars();
+    initPlasmaLighter();
+});
+
+// --- Star Animation ---
+function initStars() {
+    const canvas = document.getElementById('stars-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    let numStars = 800;
+    let width, height;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 1.5,
+                opacity: Math.random(),
+                speed: Math.random() * 0.05 + 0.01,
+                depth: Math.random() * 0.2 + 0.1, // Parallax depth
+            });
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#ffffff';
+
+        stars.forEach(star => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.globalAlpha = star.opacity;
+            ctx.fill();
+
+            // Movement
+            star.y -= star.speed;
+            if (star.y < 0) {
+                star.y = height;
+                star.x = Math.random() * width;
+            }
+
+            // Twinkle
+            star.opacity += (Math.random() - 0.5) * 0.05;
+            if (star.opacity < 0.1) star.opacity = 0.1;
+            if (star.opacity > 1) star.opacity = 1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+}
+
+// --- Entrance Animation ---
+function initEntrance() {
+    const splash = document.getElementById('splash');
+    const enterBtn = document.getElementById('enter-btn');
+    const mainContent = document.getElementById('main-content');
+    const earth = document.getElementById('earth');
+    const mouseGlow = document.getElementById('mouse-glow');
+
+    if (!splash || !enterBtn || !mainContent || !earth) return;
+
+    let isZooming = false;
+    let isDragging = false;
+
+    // Physics targets for spring animation
+    let currentX = 0, currentY = 0;
+    let targetX = 0, targetY = 0;
+    let velX = 0, velY = 0;
+
+    let currentStretch = 1;
+    let targetStretch = 1;
+    let velStretch = 0;
+
+    const stiffness = 0.15;
+    const damping = 0.8;
+
+    function updatePhysics() {
+        const fx = (targetX - currentX) * stiffness;
+        velX = (velX + fx) * damping;
+        currentX += velX;
+
+        const fy = (targetY - currentY) * stiffness;
+        velY = (velY + fy) * damping;
+        currentY += velY;
+
+        const fs = (targetStretch - currentStretch) * stiffness;
+        velStretch = (velStretch + fs) * damping;
+        currentStretch += velStretch;
+
+        if (!isZooming) {
+            const angle = Math.atan2(currentY, currentX) * (180 / Math.PI);
+            earth.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${angle}deg) scale(${currentStretch}, ${1 / currentStretch}) rotate(${-angle}deg)`;
+        }
+
+        requestAnimationFrame(updatePhysics);
+    }
+
+    updatePhysics();
+
+    earth.addEventListener('mousedown', (e) => {
+        if (isZooming) return;
+        isDragging = true;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (isZooming) return;
+        const x = e.clientX;
+        const y = e.clientY;
+
+        splash.style.setProperty('--mouse-x', `${x}px`);
+        splash.style.setProperty('--mouse-y', `${y}px`);
+        if (mouseGlow) {
+            mouseGlow.style.left = `${x}px`;
+            mouseGlow.style.top = `${y}px`;
+        }
+
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const dx = x - centerX;
+        const dy = y - centerY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (isDragging) {
+            const maxDrag = 250;
+            const resistanceFactor = 0.55;
+
+            let tx = dx * resistanceFactor;
+            let ty = dy * resistanceFactor;
+
+            const d = Math.sqrt(tx * tx + ty * ty);
+            if (d > maxDrag) {
+                tx *= maxDrag / d;
+                ty *= maxDrag / d;
+            }
+
+            targetX = tx;
+            targetY = ty;
+            targetStretch = 1 + (dist / 800);
+        } else {
+            targetX = (dx / window.innerWidth) * 50;
+            targetY = (dy / window.innerHeight) * 50;
+            targetStretch = 1;
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        targetX = 0;
+        targetY = 0;
+        targetStretch = 1;
+    });
+
+    enterBtn.addEventListener('click', () => {
+        isZooming = true;
+        earth.classList.add('zooming');
+        splash.classList.add('fading');
+
+        setTimeout(() => {
+            splash.style.display = 'none';
+            mainContent.classList.add('visible');
+            document.body.style.overflow = 'auto';
+        }, 800);
+    });
+
+    document.body.style.overflow = 'hidden';
+}
+
+// --- Shooting Stars ---
+function initShootingStars() {
+    const container = document.querySelector('.shooting-stars');
+    if (!container) return;
+
+    function createShootingStar() {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+
+        // Randomly spawn from top or left edge (outside viewport)
+        const isTop = Math.random() > 0.5;
+        if (isTop) {
+            star.style.top = '-100px';
+            star.style.left = (Math.random() * 120 - 20) + '%';
+        } else {
+            star.style.left = '-100px';
+            star.style.top = (Math.random() * 120 - 20) + '%';
+        }
+
+        // Randomize speed/duration (Slower range: 8s to 15s)
+        const duration = 8 + Math.random() * 7;
+        star.style.animationDuration = duration + 's';
+
+        container.appendChild(star);
+
+        setTimeout(() => {
+            star.remove();
+        }, duration * 1000 + 100);
+    }
+
+    // Continuous Persistent Trigger (More subtle: one every 5 to 10s)
+    function autoTrigger() {
+        createShootingStar();
+        setTimeout(autoTrigger, 5000 + Math.random() * 5000);
+    }
+    autoTrigger();
+
+    window.triggerShootingStar = createShootingStar;
+}
+
+// --- Scroll Animations ---
+function initScrollAnimations() {
+    const panels = document.querySelectorAll('.panel');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+
+                const id = entry.target.getAttribute('id');
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+            }
+        });
+    }, {
+        threshold: 0.3
+    });
+
+    panels.forEach(panel => observer.observe(panel));
+}
+
+// --- Cyber Torch Reveal Logic ---
+function initPlasmaLighter() {
+    const torch = document.querySelector('.cyber-torch');
+    const pedestal = document.querySelector('.torch-pedestal');
+    const moduleClip = document.querySelector('.module-clip');
+    const revealText = document.querySelector('.torch-reveal-text');
+    const statusText = document.getElementById('decryption-status');
+
+    if (!torch || !moduleClip) return;
+
+    let isGrabbed = false;
+    let decryptPercent = 0;
+    let clickOffsetX = 0;
+    let clickOffsetY = 0;
+
+    function updateLightPosition(e) {
+        if (!isGrabbed) return;
+
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Calculate movement based on initial click offset
+        const tx = clientX - clickOffsetX;
+        const ty = clientY - clickOffsetY;
+
+        torch.style.transform = `translate(${tx}px, ${ty}px) rotate(${tx * 0.05}deg)`;
+        torch.style.transition = 'none';
+
+        // Update the flashlight beam (emanating from the torch flame tip, not the cursor)
+        const torchRect = torch.getBoundingClientRect();
+        const textRect = revealText.getBoundingClientRect();
+        
+        // lx/ly should be the flame position relative to the text box
+        const lx = (torchRect.left + torchRect.width / 2) - textRect.left;
+        const ly = torchRect.top - textRect.top; 
+
+        revealText.style.setProperty('--light-x', `${lx}px`);
+        revealText.style.setProperty('--light-y', `${ly}px`);
+
+        // Check if we are over the text area (based on flame position)
+        const clipRect = moduleClip.getBoundingClientRect();
+        const cx = (torchRect.left + torchRect.width / 2) - clipRect.left;
+        const cy = torchRect.top - clipRect.top;
+        if (cx > 0 && cx < clipRect.width && cy > 0 && cy < clipRect.height) {
+            if (decryptPercent < 100) {
+              decryptPercent = Math.min(100, decryptPercent + 0.3); // Faster on active move
+              statusText.innerText = `DECRYPTING... ${Math.floor(decryptPercent)}%`;
+              statusText.style.color = "var(--accent-cyan)";
+              statusText.style.textShadow = "0 0 15px var(--accent-cyan)";
+              statusText.classList.add('decryption-active');
+            } else {
+              completeDecryption();
+            }
+        } else {
+            if (decryptPercent >= 100) {
+                completeDecryption();
+            } else {
+                statusText.innerText = "WAITING...";
+                statusText.style.color = "rgba(255,255,255,0.3)";
+                statusText.style.textShadow = "none";
+                statusText.classList.remove('decryption-active');
+            }
+        }
+    }
+
+    const completeDecryption = () => {
+        const container = document.querySelector('.module-clip');
+        const glassModule = document.querySelector('.about-glass-module');
+        if (container) container.classList.add('decrypted');
+        if (glassModule) glassModule.classList.add('decrypted');
+        
+        revealText.classList.add('decrypted');
+        statusText.innerText = "ACCESS_GRANTED";
+        statusText.style.color = "#4ade80";
+        statusText.style.textShadow = "0 0 10px rgba(74, 222, 128, 0.5)";
+        
+        // Sync the switch if it's not already on
+        if (overrideSwitch && !overrideSwitch.checked) {
+            overrideSwitch.checked = true;
+        }
+        
+        // Removed: Hide the torch hint logic to keep it visible
+        // const torchHint = document.querySelector('.torch-hint');
+        // if (torchHint) torchHint.style.opacity = '0';
+    }
+
+    const overrideSwitch = document.getElementById('torch-override');
+    if (overrideSwitch) {
+      overrideSwitch.addEventListener('change', (e) => {
+          const container = document.querySelector('.module-clip');
+          if (e.target.checked) {
+              decryptPercent = 100; // Instantly complete
+              completeDecryption();
+          } else {
+              // Manual Lockdown: Restore the "barely visible" dark state
+              if (container) container.classList.remove('decrypted');
+              const glassModule = document.querySelector('.about-glass-module');
+              if (glassModule) glassModule.classList.remove('decrypted');
+
+              
+              revealText.classList.remove('decrypted');
+              decryptPercent = 0; // Reset progress so it can be re-decrypted
+              
+              // Restore WAITING status
+              statusText.innerText = "WAITING...";
+              statusText.style.color = "rgba(255,255,255,0.3)";
+              statusText.style.textShadow = "none";
+              
+              // Move the light beam far away
+              revealText.style.setProperty('--light-x', '-1000px');
+              revealText.style.setProperty('--light-y', '-1000px');
+          }
+      });
+    }
+
+    const startDrag = (e) => {
+        isGrabbed = true;
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        // Capture pedestal center to calculate relative transform
+        const pedRect = pedestal.getBoundingClientRect();
+        const pedCenterX = pedRect.left + (pedRect.width / 2);
+        const pedCenterY = pedRect.top + (pedRect.height / 2);
+
+        // Store the offset between where we clicked and where tx/ty=0 (the center)
+        clickOffsetX = clientX;
+        clickOffsetY = clientY;
+
+        torch.classList.add('is-grabbed');
+        torch.style.cursor = 'grabbing';
+        document.body.style.cursor = 'grabbing';
+    };
+
+    const stopDrag = () => {
+        if (!isGrabbed) return;
+        isGrabbed = false;
+        torch.style.cursor = 'grab';
+        document.body.style.cursor = 'default';
+
+        // Keep is-grabbed ON so float animation stays paused during the return journey
+        // Use a smooth spring transition back to origin
+        torch.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        torch.style.transform = 'translate(0, 0) rotate(0deg)';
+
+        // Once the return transition ends, hand control back to the float animation
+        const onReturnEnd = () => {
+            torch.removeEventListener('transitionend', onReturnEnd);
+            torch.style.transition = '';
+            torch.style.transform = '';
+            torch.classList.remove('is-grabbed'); // Resume zero-gravity float
+        };
+        torch.addEventListener('transitionend', onReturnEnd);
+
+        // Reset Light variables if not yet fully decrypted
+        if (decryptPercent < 100) {
+            revealText.style.setProperty('--light-x', '-500px');
+            revealText.style.setProperty('--light-y', '-500px');
+            statusText.innerText = "WAITING...";
+            statusText.style.color = "rgba(255,255,255,0.3)";
+        } else {
+            completeDecryption();
+        }
+    };
+
+    torch.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', updateLightPosition);
+    window.addEventListener('mouseup', stopDrag);
+
+    torch.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startDrag(e);
+    }, { passive: false });
+    window.addEventListener('touchmove', (e) => {
+        updateLightPosition(e);
+    }, { passive: false });
+    window.addEventListener('touchend', stopDrag);
+}
+
+// --- Skill Tags Motion ---
+function initSkillTags() {
+    const tags = document.querySelectorAll('.skill-tag');
+    tags.forEach(tag => {
+        let ox = (Math.random() - 0.5) * 40;
+        let oy = (Math.random() - 0.5) * 40;
+        tag.style.setProperty('--ox', `${ox}px`);
+        tag.style.setProperty('--oy', `${oy}px`);
+    });
+}
