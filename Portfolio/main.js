@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initStars();
     initEntrance();
     initScrollAnimations();
-    initSkillTags();
     initShootingStars();
     initPlasmaLighter();
 });
@@ -264,6 +263,8 @@ function initPlasmaLighter() {
         const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
         const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
 
+        // Pure CSS Solar System implemented. No complex JS dependencies required for 3D orbits.
+
         // Calculate movement based on initial click offset
         const tx = clientX - clickOffsetX;
         const ty = clientY - clickOffsetY;
@@ -274,10 +275,10 @@ function initPlasmaLighter() {
         // Update the flashlight beam (emanating from the torch flame tip, not the cursor)
         const torchRect = torch.getBoundingClientRect();
         const textRect = revealText.getBoundingClientRect();
-        
+
         // lx/ly should be the flame position relative to the text box
         const lx = (torchRect.left + torchRect.width / 2) - textRect.left;
-        const ly = torchRect.top - textRect.top; 
+        const ly = torchRect.top - textRect.top;
 
         revealText.style.setProperty('--light-x', `${lx}px`);
         revealText.style.setProperty('--light-y', `${ly}px`);
@@ -288,13 +289,13 @@ function initPlasmaLighter() {
         const cy = torchRect.top - clipRect.top;
         if (cx > 0 && cx < clipRect.width && cy > 0 && cy < clipRect.height) {
             if (decryptPercent < 100) {
-              decryptPercent = Math.min(100, decryptPercent + 0.3); // Faster on active move
-              statusText.innerText = `DECRYPTING... ${Math.floor(decryptPercent)}%`;
-              statusText.style.color = "var(--accent-cyan)";
-              statusText.style.textShadow = "0 0 15px var(--accent-cyan)";
-              statusText.classList.add('decryption-active');
+                decryptPercent = Math.min(100, decryptPercent + 0.3); // Faster on active move
+                statusText.innerText = `DECRYPTING... ${Math.floor(decryptPercent)}%`;
+                statusText.style.color = "var(--accent-cyan)";
+                statusText.style.textShadow = "0 0 15px var(--accent-cyan)";
+                statusText.classList.add('decryption-active');
             } else {
-              completeDecryption();
+                completeDecryption();
             }
         } else {
             if (decryptPercent >= 100) {
@@ -313,17 +314,17 @@ function initPlasmaLighter() {
         const glassModule = document.querySelector('.about-glass-module');
         if (container) container.classList.add('decrypted');
         if (glassModule) glassModule.classList.add('decrypted');
-        
+
         revealText.classList.add('decrypted');
         statusText.innerText = "ACCESS_GRANTED";
         statusText.style.color = "#4ade80";
         statusText.style.textShadow = "0 0 10px rgba(74, 222, 128, 0.5)";
-        
+
         // Sync the switch if it's not already on
         if (overrideSwitch && !overrideSwitch.checked) {
             overrideSwitch.checked = true;
         }
-        
+
         // Removed: Hide the torch hint logic to keep it visible
         // const torchHint = document.querySelector('.torch-hint');
         // if (torchHint) torchHint.style.opacity = '0';
@@ -331,31 +332,31 @@ function initPlasmaLighter() {
 
     const overrideSwitch = document.getElementById('torch-override');
     if (overrideSwitch) {
-      overrideSwitch.addEventListener('change', (e) => {
-          const container = document.querySelector('.module-clip');
-          if (e.target.checked) {
-              decryptPercent = 100; // Instantly complete
-              completeDecryption();
-          } else {
-              // Manual Lockdown: Restore the "barely visible" dark state
-              if (container) container.classList.remove('decrypted');
-              const glassModule = document.querySelector('.about-glass-module');
-              if (glassModule) glassModule.classList.remove('decrypted');
+        overrideSwitch.addEventListener('change', (e) => {
+            const container = document.querySelector('.module-clip');
+            if (e.target.checked) {
+                decryptPercent = 100; // Instantly complete
+                completeDecryption();
+            } else {
+                // Manual Lockdown: Restore the "barely visible" dark state
+                if (container) container.classList.remove('decrypted');
+                const glassModule = document.querySelector('.about-glass-module');
+                if (glassModule) glassModule.classList.remove('decrypted');
 
-              
-              revealText.classList.remove('decrypted');
-              decryptPercent = 0; // Reset progress so it can be re-decrypted
-              
-              // Restore WAITING status
-              statusText.innerText = "WAITING...";
-              statusText.style.color = "rgba(255,255,255,0.3)";
-              statusText.style.textShadow = "none";
-              
-              // Move the light beam far away
-              revealText.style.setProperty('--light-x', '-1000px');
-              revealText.style.setProperty('--light-y', '-1000px');
-          }
-      });
+
+                revealText.classList.remove('decrypted');
+                decryptPercent = 0; // Reset progress so it can be re-decrypted
+
+                // Restore WAITING status
+                statusText.innerText = "WAITING...";
+                statusText.style.color = "rgba(255,255,255,0.3)";
+                statusText.style.textShadow = "none";
+
+                // Move the light beam far away
+                revealText.style.setProperty('--light-x', '-1000px');
+                revealText.style.setProperty('--light-y', '-1000px');
+            }
+        });
     }
 
     const startDrag = (e) => {
@@ -422,13 +423,3 @@ function initPlasmaLighter() {
     window.addEventListener('touchend', stopDrag);
 }
 
-// --- Skill Tags Motion ---
-function initSkillTags() {
-    const tags = document.querySelectorAll('.skill-tag');
-    tags.forEach(tag => {
-        let ox = (Math.random() - 0.5) * 40;
-        let oy = (Math.random() - 0.5) * 40;
-        tag.style.setProperty('--ox', `${ox}px`);
-        tag.style.setProperty('--oy', `${oy}px`);
-    });
-}
