@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initShootingStars();
     initPlasmaLighter();
+    initSkillConnector();
 });
 
 // --- Star Animation ---
@@ -421,5 +422,100 @@ function initPlasmaLighter() {
         updateLightPosition(e);
     }, { passive: false });
     window.addEventListener('touchend', stopDrag);
+}
+
+// --- Skill Hover Connector ---
+function initSkillConnector() {
+    const svg = document.getElementById('skill-connector-svg');
+    const panel = document.getElementById('skill-detail-panel');
+    if (!svg || !panel) return;
+
+    const cards = document.querySelectorAll('.planet-card[data-name]');
+
+    // Cache panel sub-elements
+    const sdpTag  = panel.querySelector('.sdp-tag');
+    const sdpIcon = panel.querySelector('.sdp-icon-wrap');
+    const sdpName = panel.querySelector('.sdp-name');
+    const sdpDesc = panel.querySelector('.sdp-desc');
+
+    // SVG line + endpoint dot
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.classList.add('skill-connector-line');
+    line.style.display = 'none';
+
+    const dotStart = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dotStart.setAttribute('r', '4');
+    dotStart.classList.add('skill-connector-dot');
+    dotStart.style.display = 'none';
+
+    const dotEnd = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dotEnd.setAttribute('r', '4');
+    dotEnd.classList.add('skill-connector-dot');
+    dotEnd.style.display = 'none';
+
+    svg.appendChild(line);
+    svg.appendChild(dotStart);
+    svg.appendChild(dotEnd);
+
+    function showConnector(card) {
+        const data = card.dataset;
+        const svgRect = svg.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+
+        // Card center in SVG-local coords
+        const cx = cardRect.left + cardRect.width / 2 - svgRect.left;
+        const cy = cardRect.top  + cardRect.height / 2 - svgRect.top;
+
+        // Panel entry point (left-center of the panel)
+        const px = panelRect.left - svgRect.left;
+        const py = panelRect.top + panelRect.height / 2 - svgRect.top;
+
+        // Set connector line
+        line.setAttribute('x1', cx);
+        line.setAttribute('y1', cy);
+        line.setAttribute('x2', px);
+        line.setAttribute('y2', py);
+        line.style.display = '';
+
+        dotStart.setAttribute('cx', cx);
+        dotStart.setAttribute('cy', cy);
+        dotStart.style.display = '';
+
+        dotEnd.setAttribute('cx', px);
+        dotEnd.setAttribute('cy', py);
+        dotEnd.style.display = '';
+
+        // Populate panel
+        sdpTag.textContent  = data.tag || 'Skill';
+        sdpName.textContent = data.name || '';
+        sdpDesc.textContent = data.desc || '';
+
+        // Clone icon from card
+        sdpIcon.innerHTML = '';
+        const img = card.querySelector('img');
+        const svgEl = card.querySelector('svg');
+        if (img) {
+            const clone = img.cloneNode(true);
+            sdpIcon.appendChild(clone);
+        } else if (svgEl) {
+            const clone = svgEl.cloneNode(true);
+            sdpIcon.appendChild(clone);
+        }
+
+        panel.classList.add('visible');
+    }
+
+    function hideConnector() {
+        line.style.display = 'none';
+        dotStart.style.display = 'none';
+        dotEnd.style.display = 'none';
+        panel.classList.remove('visible');
+    }
+
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => showConnector(card));
+        card.addEventListener('mouseleave', hideConnector);
+    });
 }
 

@@ -1344,12 +1344,14 @@ body {
   opacity: 0.7;
 }
 
-/* Hover States */
-.orbit-ring:hover {
+/* Hover States - Only pause when SPECIFICALLY hovering a card */
+.orbit-ring:focus-within,
+.orbit-ring:has(.planet-card:hover) {
   animation-play-state: paused;
 }
 
 .planet-card:hover {
+  animation-play-state: paused;
   background: rgba(0, 209, 255, 0.15);
   border-color: var(--accent-cyan);
   box-shadow: 0 0 30px rgba(0, 209, 255, 0.3);
@@ -1376,6 +1378,147 @@ body {
 
 [data-skill="assembly"] svg {
   color: var(--accent-cyan);
+}
+
+/* ================================
+   Skill Detail Panel & Connector
+   ================================ */
+.solar-system-viewport {
+  position: relative; /* anchor for the SVG + panel */
+}
+
+/* The floating detail card */
+.skill-detail-panel {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  width: 220px;
+  background: rgba(5, 15, 30, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 209, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.4rem 1.2rem;
+  box-shadow:
+    0 0 30px rgba(0, 209, 255, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 200;
+}
+
+.skill-detail-panel.visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.sdp-tag {
+  font-family: var(--font-hero);
+  font-size: 0.55rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(0, 209, 255, 0.08);
+  border: 1px solid rgba(0, 209, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.sdp-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+}
+
+.sdp-icon-wrap img,
+.sdp-icon-wrap svg {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(0, 209, 255, 0.6));
+}
+
+.sdp-name {
+  font-family: var(--font-hero);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05rem;
+}
+
+.sdp-desc {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.sdp-level-wrap {
+  margin-top: 0.8rem;
+}
+
+.sdp-level-label {
+  font-family: var(--font-hero);
+  font-size: 0.55rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sdp-level-pct {
+  font-family: var(--font-hero);
+  font-size: 0.7rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1rem;
+  text-align: right;
+  margin-top: 0.3rem;
+}
+
+.sdp-level-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sdp-level-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-cyan), #7c3aed);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-cyan);
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* SVG connector line styling (applied via JS on the <line> element) */
+.skill-connector-line {
+  stroke: rgba(0, 209, 255, 0.7);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(0, 209, 255, 0.5));
+  animation: dashMove 0.8s linear infinite;
+}
+
+.skill-connector-dot {
+  fill: var(--accent-cyan);
+  filter: drop-shadow(0 0 6px var(--accent-cyan));
+}
+
+@keyframes dashMove {
+  to { stroke-dashoffset: -20; }
 }
 
 /* --- Projects --- */
