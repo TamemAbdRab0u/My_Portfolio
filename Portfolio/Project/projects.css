@@ -17,6 +17,17 @@
     --hologram-cyan: rgba(0, 209, 255, 0.15);
 }
 
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     background-color: var(--bg-dark);
     color: #fff;
@@ -32,6 +43,10 @@ body {
     /* IE/Edge */
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 /* Hide scrollbars globally */
 *::-webkit-scrollbar {
     display: none !important;
@@ -41,6 +56,7 @@ body {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
 }
+
 
 /* Landing & Particle Effects */
 #particle-field {

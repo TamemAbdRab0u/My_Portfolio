@@ -51,7 +51,7 @@ const id = parseInt(params.get('id')) || 0;
 const THEMES = [
     { color: '#00d1ff', accent: 'rgba(0, 209, 255, 0.2)', name: 'NEBULA_BLUE' },
     { color: '#a100a4', accent: 'rgba(161, 0, 164, 0.2)', name: 'VOID_PURPLE' },
-    { color: '#ff8e00', accent: 'rgba(255, 142, 0, 0.2)', name: 'SOLAR_ORANGE' }
+    { color: '#8e4a01', accent: 'rgba(255, 142, 0, 0.2)', name: 'SOLAR_ORANGE' }
 ];
 
 const project = DATA[id];

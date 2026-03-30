@@ -179,18 +179,21 @@ function initEntrance() {
     setTimeout(() => {
       splash.style.display = "none";
       mainContent.classList.add("visible");
-      document.body.style.overflow = "auto";
+      document.body.style.overflowX = "hidden";
+      document.body.style.overflowY = "auto";
     }, 800);
   });
 
-  document.body.style.overflow = "hidden";
+  document.body.style.overflowX = "hidden";
+  document.body.style.overflowY = "hidden";
 
   // Persistent Return Logic
-  const returnScroll = localStorage.getItem('portfolio_return_scroll');
+  const returnScroll = localStorage.getItem("portfolio_return_scroll");
   if (returnScroll) {
     splash.style.display = "none";
     mainContent.style.display = "block"; // Force display first so layout height is correct
-    document.body.style.overflow = "auto";
+    document.body.style.overflowX = "hidden";
+    document.body.style.overflowY = "auto";
 
     // Jump to spot before showing content
     window.scrollTo(0, parseInt(returnScroll));
@@ -198,7 +201,7 @@ function initEntrance() {
     // Now trigger the fade-in
     requestAnimationFrame(() => {
       mainContent.classList.add("visible");
-      localStorage.removeItem('portfolio_return_scroll');
+      localStorage.removeItem("portfolio_return_scroll");
     });
   }
 }
@@ -593,21 +596,21 @@ function initPlanetSystem() {
 
   function updateCenter() {
     // Top-level system anchor
-    const globalCX = system.offsetWidth * 0.50;
+    const globalCX = system.offsetWidth * 0.5;
     const globalCY = system.offsetHeight * 0.62;
 
-    if (typeof PLANETS !== 'undefined' && PLANETS.length > 0) {
+    if (typeof PLANETS !== "undefined" && PLANETS.length > 0) {
       PLANETS.forEach((data, i) => {
         // Individual anchor override? If not, use global.
-        const cx = system.offsetWidth * (data.centerX || 0.50);
+        const cx = system.offsetWidth * (data.centerX || 0.5);
         const cy = system.offsetHeight * (data.centerY || 0.62);
 
         const angle = data.startAngle || 0;
         const distance = data.orbitRadius || 0;
 
         // Base Position = Anchor + Circular Position + Manual Nudge
-        data.baseX = cx + (distance * Math.cos(angle)) + (data.offsetX || 0);
-        data.baseY = cy + (distance * Math.sin(angle)) + (data.offsetY || 0);
+        data.baseX = cx + distance * Math.cos(angle) + (data.offsetX || 0);
+        data.baseY = cy + distance * Math.sin(angle) + (data.offsetY || 0);
       });
     }
   }
@@ -623,9 +626,9 @@ function initPlanetSystem() {
       tech: ["HTML", "TailwindCSS", "JS", "ASP.NET API", "SQL Server"],
       link: "#",
       orbitRadius: 70,
-      speed: 0.00010,
+      speed: 0.0001,
       startAngle: 1.2,
-      size: 80,
+      size: 100,
       floatSpeed: 0.004,
       floatRange: 22,
       floatAngle: 0,
@@ -643,7 +646,7 @@ function initPlanetSystem() {
       orbitRadius: 180,
       speed: 0.00032,
       startAngle: 4.8,
-      size: 70,
+      size: 100,
       floatSpeed: 0.004,
       floatRange: 18,
       floatAngle: 2,
@@ -661,7 +664,7 @@ function initPlanetSystem() {
       orbitRadius: 240,
       speed: 0.00022,
       startAngle: 2.9,
-      size: 80,
+      size: 100,
       floatSpeed: 0.004,
       floatRange: 20,
       floatAngle: 4,
@@ -672,7 +675,6 @@ function initPlanetSystem() {
     },
   ];
 
-
   // ── Helpers ─────────────────────────────────────────────────────────────────
   function hexToRgba(hex, alpha) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -681,7 +683,7 @@ function initPlanetSystem() {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  /* 
+  /*
   // ── Orbit rings (removed for free-floating design) ─────────────────────────
   const orbitRadii = [...new Set(PLANETS.map((p) => p.orbitRadius))].sort(
     (a, b) => a - b,
@@ -705,8 +707,8 @@ function initPlanetSystem() {
 
   PLANETS.forEach((data, i) => {
     // Specific base positions relative to system center (static but distributed)
-    const angle = data.startAngle || (i * (Math.PI * 2 / PLANETS.length));
-    const distance = data.orbitRadius || (150 + i * 80);
+    const angle = data.startAngle || i * ((Math.PI * 2) / PLANETS.length);
+    const distance = data.orbitRadius || 150 + i * 80;
 
     data.baseX = cx + distance * Math.cos(angle);
     data.baseY = cy + distance * Math.sin(angle);
@@ -798,7 +800,7 @@ function initPlanetSystem() {
   let animPaused = false;
   let rafId = null;
   let hoveredIdx = -1; // index of hovered planet, -1 = none
-  /* 
+  /*
   updateCenter();
   window.addEventListener("resize", updateCenter);
   */
@@ -812,11 +814,12 @@ function initPlanetSystem() {
 
         // Gentle "hover" oscillation
         const driftX = Math.sin(data.floatAngle) * data.floatRange;
-        const driftY = Math.cos(data.floatAngle * 0.8) * (data.floatRange * 0.7);
+        const driftY =
+          Math.cos(data.floatAngle * 0.8) * (data.floatRange * 0.7);
 
         // Apply position
-        orbitNodes[i].style.left = (data.baseX + driftX) + "px";
-        orbitNodes[i].style.top = (data.baseY + driftY) + "px";
+        orbitNodes[i].style.left = data.baseX + driftX + "px";
+        orbitNodes[i].style.top = data.baseY + driftY + "px";
       });
 
       // Keep SVG connector locked onto the moving planet
@@ -867,7 +870,7 @@ function initPlanetSystem() {
   // ── Scroll zoom ───────────────────────────────────────────────────────────────
   // When zoom is already at its min/max the event is NOT prevented,
   // so the page can scroll naturally to the next section.
-  /* 
+  /*
   // Scroll zoom disabled per user request
   wrap.addEventListener(
     "wheel",
@@ -901,16 +904,22 @@ function initPlanetSystem() {
         const targetUrl = psdpLink.href;
 
         // Save current spot
-        localStorage.setItem('portfolio_return_scroll', window.scrollY);
+        localStorage.setItem("portfolio_return_scroll", window.scrollY);
 
-        const transition = document.getElementById('entry-transition');
-        const transitionText = document.getElementById('transition-planet');
+        const transition = document.getElementById("entry-transition");
+        const transitionText = document.getElementById("transition-planet");
 
         if (transition) {
-          if (transitionText) transitionText.textContent = `PLANET: ${data.name}`;
-          document.documentElement.style.setProperty('--accent-cyan', data.colorA);
-          transition.classList.add('active');
-          setTimeout(() => { window.location.href = targetUrl; }, 1800);
+          if (transitionText)
+            transitionText.textContent = `PLANET: ${data.name}`;
+          document.documentElement.style.setProperty(
+            "--accent-cyan",
+            data.colorA,
+          );
+          transition.classList.add("active");
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 1800);
         } else {
           window.location.href = targetUrl;
         }
@@ -1021,18 +1030,23 @@ function initPlanetSystem() {
           const targetUrl = modalLink.href;
 
           // Save current spot
-          localStorage.setItem('portfolio_return_scroll', window.scrollY);
+          localStorage.setItem("portfolio_return_scroll", window.scrollY);
 
-          const transition = document.getElementById('entry-transition');
-          const transitionText = document.getElementById('transition-planet');
+          const transition = document.getElementById("entry-transition");
+          const transitionText = document.getElementById("transition-planet");
 
           if (transition) {
-            if (transitionText) transitionText.textContent = `PLANET: ${data.name}`;
+            if (transitionText)
+              transitionText.textContent = `PLANET: ${data.name}`;
             // Match portal color to project color
-            document.documentElement.style.setProperty('--accent-cyan', data.colorA);
+            document.documentElement.style.setProperty(
+              "--accent-cyan",
+              data.colorA,
+            );
 
-            transition.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            transition.classList.add("active");
+            document.body.style.overflowX = "hidden";
+            document.body.style.overflowY = "hidden";
             setTimeout(() => {
               window.location.href = targetUrl;
             }, 1800);
