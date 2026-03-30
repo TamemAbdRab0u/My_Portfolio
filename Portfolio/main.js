@@ -574,20 +574,23 @@ function initPlanetSystem() {
   let cx = 0;
   let cy = 0;
 
-  // ── Compute system centre ────────────────────────────────────────────────────
   function updateCenter() {
-    // Shift system center down and right to clear the top-left title area
-    // Lower the system to a more centered position relative to the available void
-    cx = system.offsetWidth * 0.5; 
-    cy = system.offsetHeight * 0.62; 
+    // Top-level system anchor
+    const globalCX = system.offsetWidth * 0.50;
+    const globalCY = system.offsetHeight * 0.62;
 
-    // Re-anchor base positions
     if (typeof PLANETS !== 'undefined' && PLANETS.length > 0) {
       PLANETS.forEach((data, i) => {
-        const angle = data.startAngle || (i * (Math.PI * 2 / PLANETS.length));
-        const distance = data.orbitRadius || (150 + i * 80);
-        data.baseX = cx + distance * Math.cos(angle);
-        data.baseY = cy + distance * Math.sin(angle);
+        // Individual anchor override? If not, use global.
+        const cx = system.offsetWidth * (data.centerX || 0.50);
+        const cy = system.offsetHeight * (data.centerY || 0.62);
+
+        const angle = data.startAngle || 0;
+        const distance = data.orbitRadius || 0;
+
+        // Base Position = Anchor + Circular Position + Manual Nudge
+        data.baseX = cx + (distance * Math.cos(angle)) + (data.offsetX || 0);
+        data.baseY = cy + (distance * Math.sin(angle)) + (data.offsetY || 0);
       });
     }
   }
@@ -597,69 +600,58 @@ function initPlanetSystem() {
   // ── Planet data ─────────────────────────────────────────────────────────────
   const PLANETS = [
     {
-      name: "DECO-DUI",
+      name: "N3M|Nest",
       description:
-        "Decentralized interface for cosmic governance systems using React & Three.js with real-time planetary data sync.",
-      tech: ["React", "Three.js", "Node.js"],
+        "Complete full-stack game tracking platform where users can discover games, build a personal library, review titles, and interact with other players in real time.",
+      tech: ["HTML", "TailwindCSS", "JS", "ASP.NET API", "SQL Server"],
+      link: "#",
+      orbitRadius: 70,
+      speed: 0.00010,
+      startAngle: 1.2,
+      size: 80,
+      floatSpeed: 0.004,
+      floatRange: 22,
+      floatAngle: 0,
+      offsetX: 300,
+      offsetY: 0,
+      colorA: "#00d1ff", 
+      colorB: "#2b2200",
+    },
+    {
+      name: "SummonerBase",
+      description:
+        "A full-stack League of Legends web application designed to deliver a seamless and interactive user experience for players and summoners.",
+      tech: ["Node.js", "HTML", "JS", "CSS"],
       link: "#",
       orbitRadius: 180,
-      speed: 0.00042,
-      startAngle: 0.5,
-      size: 56,
-      colorA: "#00d1ff",
-      colorB: "#003366",
+      speed: 0.00032,
+      startAngle: 4.8,
+      size: 70,
+      floatSpeed: 0.004,
+      floatRange: 18,
+      floatAngle: 2,
+      offsetX: 0,
+      offsetY: 0,
+      colorA: "#a100a4", 
+      colorB: "#002033",
     },
     {
-      name: "NEBULA OS",
+      name: "MindShelf",
       description:
-        "Cloud-native OS for long-distance interstellar communication with advanced encryption and latency-free streaming.",
-      tech: ["Rust", "WebAssembly", "Docker"],
+        "An Online Bookstore Platform that is more than just a bookstore. It’s a community for book lovers packed with powerful discovery features.",
+      tech: ["HTML", "CSS", "JS", "ASP.NET MVC", "SQL Server"],
       link: "#",
       orbitRadius: 240,
-      speed: 0.00026,
-      startAngle: 2.5,
-      size: 52,
-      colorA: "#9d00ff",
+      speed: 0.00022,
+      startAngle: 2.9,
+      size: 80,
+      floatSpeed: 0.004,
+      floatRange: 20,
+      floatAngle: 4,
+      offsetX: -100,
+      offsetY: 0,
+      colorA: "#8e4a01", 
       colorB: "#1a0033",
-    },
-    {
-      name: "STARMAP",
-      description:
-        "Interactive 3D star catalog with procedural generation and real-time celestial navigation algorithms.",
-      tech: ["Three.js", "WebGL", "Python"],
-      link: "#",
-      orbitRadius: 240,
-      speed: 0.0002,
-      startAngle: 5.2,
-      size: 48,
-      colorA: "#ff8800",
-      colorB: "#330800",
-    },
-    {
-      name: "QUANTEX",
-      description:
-        "Quantum-resistant encryption API with real-time performance monitoring built on ASP.NET Core.",
-      tech: ["C#", "ASP.NET Core", "SQL Server"],
-      link: "#",
-      orbitRadius: 320,
-      speed: 0.00014,
-      startAngle: 1.2,
-      size: 62,
-      colorA: "#ff00d1",
-      colorB: "#330030",
-    },
-    {
-      name: "VOIDLINK",
-      description:
-        "Real-time multiplayer hub using SignalR and WebSockets for seamless live collaboration across star systems.",
-      tech: ["SignalR", "Node.js", "MongoDB"],
-      link: "#",
-      orbitRadius: 320,
-      speed: 0.0001,
-      startAngle: 4.1,
-      size: 50,
-      colorA: "#00ff99",
-      colorB: "#003320",
     },
   ];
 

@@ -2153,8 +2153,7 @@ textarea:focus {
 }
 
 .project-planet:hover .ps-planet-label {
-  color: var(--planet-color-a);
-  opacity: 1;
+  opacity: 0;
 }
 
 /* ---- Landing (click) animation ---- */
