@@ -292,41 +292,67 @@
 
       <!-- Projects Section -->
       <section id="projects" class="panel">
-        <div class="title-container float-text">
-          <div class="title-subline" style="justify-content: flex-start;">
+
+        <!-- Cinematic white-flash overlay (fires on section entry) -->
+        <div class="ps-flash-overlay" id="ps-flash"></div>
+
+        <!-- Floating title — sits above the system -->
+        <div class="title-container float-text ps-title-overlay">
+          <div class="title-subline">
             <div class="title-bar"></div>
             <span class="title-tag">FEATURED WORK</span>
           </div>
           <h2 class="section-title">MY PROJECTS</h2>
-          <div class="title-subline" style="justify-content: flex-end;">
+          <div class="title-subline">
             <span class="title-tag">RECENT PRODUCTIONS</span>
-            <div class="title-bar"></div>
+            <div class="title-bar" style="border-color: var(--accent-cyan);"></div>
           </div>
         </div>
-        <div class="project-grid">
-          <div class="project-card">
-            <div class="project-img-placeholder"
-              style="background-image: url('./project1.png'); background-size: cover; background-position: center;">
-            </div>
-            <div class="project-info">
-              <h3>DECO-DUI</h3>
-              <p>Designed a decentralized interface for cosmic governance systems using React and Three.js. Includes
-                real-time data sync with planetary fleets.</p>
-              <a href="#" class="project-link">VIEW PROJECT</a>
-            </div>
+
+        <div class="planet-system-wrap" id="planet-system-wrap">
+
+          <div class="ps-system" id="ps-system">
           </div>
-          <div class="project-card">
-            <div class="project-img-placeholder"
-              style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=800'); background-size: cover;">
-            </div>
-            <div class="project-info">
-              <h3>NEBULA OS</h3>
-              <p>A cloud-native operating system developed for long-distance interstellar communication. Implements
-                advanced encryption and latency-free streaming.</p>
-              <a href="#" class="project-link">VIEW PROJECT</a>
-            </div>
+
+          <svg id="ps-connector-svg" class="ps-connector-svg"
+            style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:15;">
+          </svg>
+
+          <!-- Hover detail panel -->
+          <div id="ps-detail-panel" class="ps-detail-panel">
+            <div class="psdp-tag">PROJECT</div>
+            <h3 class="psdp-name"></h3>
+            <p class="psdp-desc"></p>
+            <div class="psdp-tech"></div>
+            <a class="psdp-link" href="#">VIEW PROJECT &#8594;</a>
           </div>
+
         </div>
+
+        <!-- ═══════════════════════════
+             LANDING MODAL
+             Shown on planet click
+             ═══════════════════════════ -->
+        <div id="ps-modal" class="ps-modal">
+          <div class="ps-modal-content">
+
+            <button class="ps-modal-close" id="ps-modal-close" aria-label="Close">&#10005;</button>
+
+            <div class="ps-modal-header">
+              <div class="ps-modal-planet-preview" id="ps-modal-preview"></div>
+              <div class="ps-modal-meta">
+                <span class="ps-modal-tag">PROJECT</span>
+                <h2 class="ps-modal-name" id="ps-modal-name"></h2>
+              </div>
+            </div>
+
+            <p class="ps-modal-desc" id="ps-modal-desc"></p>
+            <div class="ps-modal-tech" id="ps-modal-tech"></div>
+            <a class="ps-modal-link" id="ps-modal-link" href="#">VIEW PROJECT &#8594;</a>
+
+          </div>
+        </div><!-- /#ps-modal -->
+
       </section>
 
       <!-- Experience Section -->
