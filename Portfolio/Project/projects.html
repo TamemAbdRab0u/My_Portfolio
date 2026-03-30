@@ -1,15 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Details | Portfolio</title>
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;700&family=Outfit:wght@300;600;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="./projects.css">
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./projects.css" />
 </head>
 
 <body>
@@ -18,6 +18,21 @@
         <div class="stars"></div>
     </div>
     <div id="particle-field"></div>
+    <div class="atmosphere-layer"></div>
+    <div class="planet-ground"></div>
+
+    <div class="hud-frame">
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+        <div class="scanning-line"></div>
+        <div class="data-readout" id="hud-stats">
+            ALT: 12.4km<br />
+            O2: 18.2%<br />
+            TEMP: -142°C
+        </div>
+    </div>
 
     <div class="landing-overlay" id="landing-sequence">
         <div class="entry-portal-ring"></div>
@@ -29,16 +44,11 @@
 
     <main class="immersive-discovery">
         <div class="header-nav">
-            <a href="../index.html" class="back-btn">
-                <span class="portal-ring"></span>
-                <span class="btn-text">← ABORT MISSION</span>
-            </a>
-            <div class="system-time" id="clock">SYNCING TIME...</div>
+            <a href="../index.html" class="back-btn"> ← ABORT MISSION </a>
         </div>
 
         <section class="planet-hero">
             <div class="hero-content">
-                <span class="info-label" id="proj-index">ARCHIVE // UNIT-00</span>
                 <h1 id="proj-title" class="glitch-text">SYNCING...</h1>
                 <p class="project-desc" id="proj-desc">
                     Initializing secure connection to project subspace...
@@ -50,22 +60,47 @@
                         <div class="tech-list" id="proj-tech"></div>
                     </div>
                 </div>
-
-                <a href="#" id="proj-link" class="explore-btn">INITIATE EXPLORATION</a>
             </div>
         </section>
 
-        <section class="orbital-gallery-section">
-            <div class="gallery-track-container" id="proj-gallery">
-                <!-- Media Items injected here -->
-            </div>
-            <div class="gallery-controls">
-                <div class="scroll-hint">SCROLL TO ORBIT</div>
-                <div class="progress-indicator">
-                    <div class="progress-fill" id="gallery-progress"></div>
+        <!-- ═══════════════════════════════════════════════════════
+             SCROLL-BASED 3D DEPTH SHOWCASE
+             Tall trigger wrapper → sticky 3D viewport inside
+             Cards + progress injected by initDepthShowcase()
+             ═══════════════════════════════════════════════════════ -->
+        <section class="depth-showcase-trigger" id="depth-showcase">
+            <div class="depth-showcase-sticky">
+                <!-- 3D perspective stage (children positioned by JS) -->
+                <div class="depth-scene" id="depth-stage"></div>
+
+                <!-- ── UI Overlays ── -->
+
+                <!-- Image counter  top-right -->
+                <div class="depth-counter">
+                    <span class="depth-counter-current" id="depth-current">01</span>
+                    <span class="depth-sep">/</span>
+                    <span class="depth-counter-total" id="depth-total">01</span>
+                </div>
+
+                <!-- Section label  top-left -->
+                <div class="depth-section-label">
+                    <span class="depth-label-tag">SPECIMEN ARCHIVE</span>
+                    <span class="depth-label-name" id="depth-proj-name"></span>
+                </div>
+
+                <!-- Scroll hint (fades once user scrolls) -->
+                <div class="depth-hint" id="depth-hint">
+                    ↓ &nbsp; SCROLL TO TRAVEL THROUGH SPACE
+                </div>
+
+                <!-- Progress bar  bottom-center -->
+                <div class="depth-progress-track">
+                    <div class="depth-progress-fill" id="gallery-progress"></div>
                 </div>
             </div>
+            <!-- /.depth-showcase-sticky -->
         </section>
+        <!-- /#depth-showcase -->
     </main>
 
     <script src="./projects.js"></script>

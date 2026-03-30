@@ -10,11 +10,12 @@
     --accent-purple: #9d00ff;
     --accent-blue: #0047ff;
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --neon-glow: 0 0 20px rgba(0, 209, 255, 0.3);
-    --hologram-cyan: rgba(0, 209, 255, 0.15);
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --neon-glow: 0 0 30px rgba(0, 209, 255, 0.4);
+    --hologram-cyan: rgba(0, 209, 255, 0.1);
+    --planet-surface: rgba(0, 0, 0, 0.8);
 }
 
 html {
@@ -31,16 +32,16 @@ html::-webkit-scrollbar {
 body {
     background-color: var(--bg-dark);
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     overflow-x: hidden;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     line-height: 1.6;
     scroll-behavior: smooth;
+    overflow-y: auto;
     /* Hide scrollbar for immersive feel */
     scrollbar-width: none;
-    /* Firefox */
     -ms-overflow-style: none;
-    /* IE/Edge */
 }
 
 body::-webkit-scrollbar {
@@ -56,7 +57,6 @@ body::-webkit-scrollbar {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
 }
-
 
 /* Landing & Particle Effects */
 #particle-field {
@@ -93,7 +93,9 @@ body::-webkit-scrollbar {
     height: 350px;
     border: 1px solid var(--accent-cyan);
     border-radius: 50%;
-    box-shadow: 0 0 50px var(--accent-cyan), inset 0 0 25px var(--accent-cyan);
+    box-shadow:
+        0 0 50px var(--accent-cyan),
+        inset 0 0 25px var(--accent-cyan);
     transform: translate(-50%, -50%) scale(1);
     animation: portalRotate 10s linear infinite;
 }
@@ -112,7 +114,7 @@ body::-webkit-scrollbar {
     text-align: center;
     color: var(--accent-cyan);
     z-index: 10;
-    font-family: 'Orbitron', sans-serif;
+    font-family: "Orbitron", sans-serif;
     transform: translateY(0);
     opacity: 1;
     transition: opacity 0.8s ease;
@@ -159,42 +161,93 @@ body::-webkit-scrollbar {
     text-transform: uppercase;
 }
 
-
-
-
-
 /* Ambient Cosmic Background */
 .cosmic-canvas {
     position: fixed;
     inset: 0;
-    z-index: -1;
+    z-index: -2;
     background-color: var(--bg-dark);
     overflow: hidden;
 }
 
 .cosmic-canvas::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 20% 30%, rgba(0, 209, 255, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
-    opacity: 0.4;
-    filter: blur(80px);
-    transition: background 2s ease;
+        radial-gradient(circle at 50% -20%,
+            var(--accent-cyan) 0%,
+            transparent 50%),
+        radial-gradient(circle at 0% 100%,
+            var(--accent-purple) 0%,
+            transparent 40%),
+        radial-gradient(circle at 100% 100%,
+            var(--accent-cyan) 0%,
+            transparent 40%);
+    opacity: 0.15;
+    filter: blur(100px);
 }
 
+.atmosphere-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to bottom,
+            transparent 60%,
+            rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
+}
+
+.planet-surface-mesh {
+    position: fixed;
+    bottom: -10vh;
+    left: -10vw;
+    width: 120vw;
+    height: 40vh;
+    background: radial-gradient(ellipse at 50% 100%,
+            var(--accent-cyan) 0%,
+            transparent 70%);
+    opacity: 0.1;
+    filter: blur(50px);
+    z-index: -1;
+    transform: perspective(1000px) rotateX(60deg);
+}
+
+/* Immersive Environment */
 .immersive-discovery {
-    max-width: 100vw;
-    margin: 0;
-    padding: 0;
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+    transform-style: preserve-3d;
+}
+
+.planet-ground {
+    position: fixed;
+    bottom: -20vh;
+    left: -50vw;
+    width: 200vw;
+    height: 60vh;
+    background:
+        radial-gradient(ellipse at 50% 0%,
+            var(--planet-surface-color, var(--accent-cyan)) 0%,
+            transparent 70%),
+        linear-gradient(to bottom, transparent, #000 80%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3C%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-blend-mode: overlay, normal, soft-light;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    opacity: 0.3;
+    z-index: -1;
+    transform: rotateX(45deg);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .header-nav {
     position: fixed;
-    top: 2rem;
-    left: 2rem;
-    right: 2rem;
+    top: 3rem;
+    left: 4rem;
+    right: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -207,17 +260,32 @@ body::-webkit-scrollbar {
     align-items: center;
     padding: 0 10%;
     position: relative;
-    background: radial-gradient(circle at 50% 120%, rgba(0, 209, 255, 0.1) 0%, transparent 60%);
+    transform-style: preserve-3d;
+    perspective: 2000px;
 }
 
 .hero-content {
     max-width: 800px;
     position: relative;
     z-index: 10;
+    transform: translateZ(100px);
+    animation: floatHero 6s ease-in-out infinite;
+}
+
+@keyframes floatHero {
+
+    0%,
+    100% {
+        transform: translateZ(100px) translateY(0);
+    }
+
+    50% {
+        transform: translateZ(100px) translateY(-20px);
+    }
 }
 
 .hero-content h1 {
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
     font-size: clamp(3rem, 12vw, 7rem);
     font-weight: 800;
     line-height: 0.9;
@@ -259,13 +327,16 @@ body::-webkit-scrollbar {
 }
 
 .tech-pill {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    font-family: "Orbitron", sans-serif;
+    color: var(--accent-cyan);
+    backdrop-filter: blur(5px);
 }
 
 .explore-btn {
@@ -275,7 +346,7 @@ body::-webkit-scrollbar {
     color: #000;
     text-decoration: none;
     font-weight: 800;
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
     border-radius: 50px;
     font-size: 0.9rem;
     letter-spacing: 2px;
@@ -291,36 +362,75 @@ body::-webkit-scrollbar {
 
 /* Orbital Gallery Section - Horizontal Displacement */
 .orbital-gallery-section {
-    position: relative;
-    padding: 10vh 0;
-    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 5;
 }
 
 .gallery-track-container {
-    display: flex;
-    gap: 4rem;
-    padding: 0 10vw;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.gallery-track-container::-webkit-scrollbar {
-    display: none;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    perspective: 2000px;
+    transform-style: preserve-3d;
+    pointer-events: auto;
 }
 
 .media-wrapper {
-    flex: 0 0 80vw;
-    height: 70vh;
-    background: rgba(255, 255, 255, 0.03);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60vw;
+    height: 45vh;
+    margin-top: -22.5vh;
+    margin-left: -30vw;
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 40px;
+    border-radius: 4px;
     overflow: hidden;
-    scroll-snap-align: center;
-    position: relative;
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-style: preserve-3d;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.media-wrapper.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateZ(0);
+}
+
+.media-wrapper::before {
+    content: "SPECIMEN_ANALYSIS";
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.6rem;
+    color: var(--accent-cyan);
+    letter-spacing: 2px;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+.media-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--accent-cyan);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 3;
+    clip-path: polygon(0 0, 20px 0, 20px 1px, 1px 1px, 1px 20px, 0 20px);
+}
+
+.media-wrapper:hover::after {
+    opacity: 1;
 }
 
 .media-item {
@@ -344,8 +454,32 @@ body::-webkit-scrollbar {
     align-items: center;
 }
 
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+    color: var(--accent-cyan);
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 5px;
+    padding: 1rem 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 2px;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+}
+
+.back-btn:hover {
+    background: var(--accent-cyan);
+    color: #000;
+    box-shadow: 0 0 30px var(--accent-cyan);
+    transform: scale(0.95);
+}
+
 .scroll-hint {
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
     font-size: 0.7rem;
     letter-spacing: 4px;
     opacity: 0.4;
@@ -364,8 +498,88 @@ body::-webkit-scrollbar {
     width: 0%;
     height: 100%;
     background: var(--accent-cyan);
-    box-shadow: 0 0 10px var(--accent-cyan);
-    transition: width 0.3s ease;
+    box-shadow: 0 0 20px var(--accent-cyan);
+    transition: width 0.1s linear;
+}
+
+/* New HUD elements */
+.hud-frame {
+    position: fixed;
+    inset: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+    z-index: 100;
+}
+
+.hud-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-cyan);
+}
+
+.hud-corner.tl {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.hud-corner.tr {
+    top: -1px;
+    right: -1px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.hud-corner.bl {
+    bottom: -1px;
+    left: -1px;
+    border-right: none;
+    border-top: none;
+}
+
+.hud-corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+}
+
+.scanning-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right,
+            transparent,
+            var(--accent-cyan),
+            transparent);
+    opacity: 0.2;
+    animation: scan 4s linear infinite;
+}
+
+@keyframes scan {
+    from {
+        top: 0;
+    }
+
+    to {
+        top: 100%;
+    }
+}
+
+.data-readout {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.6rem;
+    color: var(--accent-cyan);
+    text-align: right;
+    letter-spacing: 1px;
+    opacity: 0.6;
 }
 
 @media (max-width: 1000px) {
@@ -381,5 +595,447 @@ body::-webkit-scrollbar {
     .media-wrapper {
         flex: 0 0 90vw;
         height: 50vh;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL-BASED 3D DEPTH SHOWCASE
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Utility: missing label styles ── */
+.info-label {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    opacity: 0.75;
+    display: block;
+    margin-bottom: 0.6rem;
+}
+
+.system-time {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+}
+
+/* ── Tall trigger wrapper ─────────────────────────────────────────
+   Height is set by JS: (N-1) * SCROLL_PER_CARD + 100vh
+   This is the element that "stores" the scroll budget.            */
+.depth-showcase-trigger {
+    position: relative;
+    /* Height is exactly one viewport — JS wheel-lock drives the animation,
+       no extra scroll budget needed in the DOM.                             */
+    height: 100vh;
+    background: var(--bg-dark);
+}
+
+/* ── Showcase viewport — fills the trigger exactly, NOT sticky ──────────
+   Scroll is hijacked by JS (IntersectionObserver + wheel lock), so this
+   element does not need position:sticky.  It simply fills the 100vh
+   trigger and acts as the 3D stage container.                            */
+.depth-showcase-sticky {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    /* All 3D children share this perspective context */
+    perspective: 2200px;
+    perspective-origin: 50% 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ambient glow that shifts with each project's accent colour */
+.depth-showcase-sticky::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 55% 55% at 50% 50%,
+            var(--accent-cyan),
+            transparent);
+    opacity: 0.055;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.4s ease;
+}
+
+/* Very faint vignette to frame the depth stage */
+.depth-showcase-sticky::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 90% 90% at 50% 50%,
+            transparent 50%,
+            rgba(0, 0, 0, 0.7) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ── 3D stage: full-size, preserve-3d so translateZ works ── */
+.depth-scene {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    z-index: 2;
+}
+
+/* ── Individual screenshot card ───────────────────────────────────
+   Base position: centred on screen.
+   transform is overridden by JS every rAF frame.                  */
+.depth-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    /* Responsive width: 58vw on desktop, capped at 920px */
+    width: 58vw;
+    max-width: 920px;
+    aspect-ratio: 16 / 9;
+
+    /* Centre the card on its anchor point */
+    transform: translate(-50%, -50%) translateZ(0px);
+
+    border-radius: 14px;
+    overflow: hidden;
+
+    /* GPU acceleration & smooth compositing */
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+
+    /* Layered shadow for depth/float */
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.09),
+        0 0 80px rgba(0, 0, 0, 0.95),
+        0 40px 120px rgba(0, 0, 0, 0.7),
+        0 0 60px rgba(0, 0, 0, 0.5);
+
+    /* ── Cinematic motion easing ──────────────────────────────
+       Short enough to stay responsive, long enough to feel smooth.
+       transform/opacity are driven per-frame by JS but this easing
+       softens any discrete jumps (e.g. on first render).           */
+    transition:
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 120ms linear,
+        filter 120ms linear,
+        box-shadow 0.4s ease;
+}
+
+/* Lens-like glass sheen on top */
+.depth-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(170deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 38%);
+    pointer-events: none;
+    z-index: 4;
+}
+
+/* Subtle cyan border glow */
+.depth-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: 5;
+    transition: border-color 0.4s ease;
+}
+
+/* Front card gets a coloured border */
+.depth-card.is-front::after {
+    border-color: rgba(var(--accent-rgb, 0, 209, 255), 0.35);
+    box-shadow: inset 0 0 30px rgba(var(--accent-rgb, 0, 209, 255), 0.05);
+}
+
+/* ── Warp speed-streak overlay (on the whole stage) ─────────
+   Fires via JS class toggle: .depth-scene.warping                 */
+.depth-scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    background: repeating-linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.018) 0.5%,
+            transparent 1%),
+        radial-gradient(ellipse 80% 30% at 50% 50%,
+            rgba(var(--accent-rgb, 0, 209, 255), 0.08) 0%,
+            transparent 70%);
+    transition: opacity 0.15s ease;
+}
+
+.depth-scene.warping::before {
+    opacity: 1;
+    transition: opacity 0.05s ease;
+}
+
+.depth-card img,
+.depth-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px;
+    /* Slight contrast boost for space aesthetic */
+    filter: brightness(0.88) contrast(1.05) saturate(1.1);
+    transition: filter 0.5s ease;
+}
+
+.depth-card.is-front img,
+.depth-card.is-front video {
+    filter: brightness(1) contrast(1.05) saturate(1.15);
+}
+
+/* HUD tag on each card */
+.depth-card-label {
+    position: absolute;
+    bottom: 1.1rem;
+    left: 1.3rem;
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 3px;
+    color: var(--accent-cyan);
+    opacity: 0.6;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 10;
+    /* subtle scanline tag style */
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    backdrop-filter: blur(4px);
+}
+
+/* Scanline overlay on each card (very subtle) */
+.depth-card-scanline {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.06) 3px,
+            rgba(0, 0, 0, 0.06) 4px);
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0.5;
+}
+
+/* ══ UI OVERLAYS ═══════════════════════════════════════════════════ */
+
+/* Image counter — top-right */
+.depth-counter {
+    position: absolute;
+    top: 2.2rem;
+    right: 3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.depth-counter-current {
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    line-height: 1;
+    letter-spacing: -1px;
+    /* Smooth number transition */
+    transition:
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.2s ease;
+}
+
+.depth-counter-current.bump {
+    transform: translateY(-4px);
+    opacity: 0.6;
+}
+
+.depth-sep {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.25);
+    margin: 0 0.15rem;
+}
+
+.depth-counter-total {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 2px;
+}
+
+/* Section label — top-left */
+.depth-section-label {
+    position: absolute;
+    top: 2.2rem;
+    left: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.depth-label-tag {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 4px;
+    color: rgba(255, 255, 255, 0.28);
+    text-transform: uppercase;
+}
+
+.depth-label-name {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--accent-cyan);
+    opacity: 0.7;
+    text-transform: uppercase;
+}
+
+/* Scroll hint — bottom-centre, fades once scrolling begins */
+.depth-hint {
+    position: absolute;
+    bottom: 5.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.46rem;
+    letter-spacing: 5px;
+    color: rgba(255, 255, 255, 0.22);
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+    animation: depthHintPulse 3.5s ease-in-out infinite;
+    transition: opacity 0.7s ease;
+}
+
+.depth-hint.hidden {
+    opacity: 0 !important;
+    animation: none;
+}
+
+@keyframes depthHintPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Progress bar — bottom-centre */
+.depth-progress-track {
+    position: absolute;
+    bottom: 2.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(440px, 58vw);
+    height: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    z-index: 20;
+}
+
+.depth-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 14px var(--accent-cyan);
+    transition: width 0.05s linear;
+    border-radius: 2px;
+}
+
+/* Depth dots — right side (optional nav indicators) */
+.depth-dots {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    z-index: 20;
+}
+
+.depth-dot {
+    cursor: pointer;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease;
+}
+
+.depth-dot.active {
+    background: var(--accent-cyan);
+    transform: scale(1.5);
+    box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+/* ══ RESPONSIVE ════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+    .depth-card {
+        width: 88vw;
+        max-width: 600px;
+    }
+
+    .depth-counter {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .depth-counter-current {
+        font-size: 1.8rem;
+    }
+
+    .depth-section-label {
+        top: 1.5rem;
+        left: 1.5rem;
+    }
+
+    .depth-progress-track {
+        width: 80vw;
+    }
+
+    .depth-hint {
+        font-size: 0.4rem;
+        letter-spacing: 3px;
+    }
+
+    .depth-dots {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .depth-card {
+        width: 95vw;
+        border-radius: 10px;
+    }
+
+    .depth-counter-current {
+        font-size: 1.4rem;
     }
 }
