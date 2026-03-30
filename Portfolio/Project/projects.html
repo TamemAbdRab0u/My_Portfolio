@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Portfolio</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;700&family=Outfit:wght@300;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./projects.css">
+</head>
+
+<body>
+    <div class="loading-data-stream" id="data-stream"></div>
+    <div class="cosmic-canvas">
+        <div class="stars"></div>
+    </div>
+    <div id="particle-field"></div>
+
+    <div class="landing-overlay" id="landing-sequence">
+        <div class="entry-portal-ring"></div>
+        <div class="entry-portal-content">
+            <span class="status-badge pulse">ATMOSPHERIC JUMP</span>
+            <h2 id="transition-planet">INITIATING...</h2>
+            <p>SYNCING ORBITAL COORDINATES</p>
+        </div>
+    </div>
+
+    <main class="immersive-discovery">
+        <div class="header-nav">
+            <a href="../index.html" class="back-btn">
+                <span class="portal-ring"></span>
+                <span class="btn-text">← ABORT MISSION</span>
+            </a>
+            <div class="system-time" id="clock">SYNCING TIME...</div>
+        </div>
+
+        <section class="planet-hero">
+            <div class="hero-content">
+                <span class="info-label" id="proj-index">ARCHIVE // UNIT-00</span>
+                <h1 id="proj-title" class="glitch-text">SYNCING...</h1>
+                <p class="project-desc" id="proj-desc">
+                    Initializing secure connection to project subspace...
+                </p>
+
+                <div class="mission-stats">
+                    <div class="stat-box">
+                        <span class="info-label">Tech Composition</span>
+                        <div class="tech-list" id="proj-tech"></div>
+                    </div>
+                </div>
+
+                <a href="#" id="proj-link" class="explore-btn">INITIATE EXPLORATION</a>
+            </div>
+        </section>
+
+        <section class="orbital-gallery-section">
+            <div class="gallery-track-container" id="proj-gallery">
+                <!-- Media Items injected here -->
+            </div>
+            <div class="gallery-controls">
+                <div class="scroll-hint">SCROLL TO ORBIT</div>
+                <div class="progress-indicator">
+                    <div class="progress-fill" id="gallery-progress"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="./projects.js"></script>
+</body>
+
+</html>

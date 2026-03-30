@@ -236,6 +236,104 @@ body {
   mix-blend-mode: screen;
 }
 
+/* --- Atmospheric Entry Transition --- */
+.entry-transition {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.entry-transition.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.entry-portal-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 350px;
+  height: 350px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 50px var(--accent-cyan), inset 0 0 25px var(--accent-cyan);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.entry-transition.active .entry-portal-ring {
+  transform: translate(-50%, -50%) scale(1);
+  animation: portalRotate 10s linear infinite;
+}
+
+@keyframes portalRotate {
+  from {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  }
+}
+
+.entry-portal-content {
+  text-align: center;
+  color: var(--accent-cyan);
+  z-index: 10;
+  font-family: 'Orbitron', sans-serif;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.8s ease 0.4s;
+}
+
+.entry-transition.active .entry-portal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.entry-portal-content .status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: rgba(0, 209, 255, 0.1);
+  border: 1px solid var(--accent-cyan);
+  border-radius: 20px;
+  font-size: 0.7rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+
+#transition-planet {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.pulse {
+  animation: portalPulse 2s infinite ease-in-out;
+}
+
+@keyframes portalPulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* --- Main Content --- */
 #main-content {
   display: none;
@@ -1987,8 +2085,13 @@ textarea:focus {
 
 #projects {
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
+  /* Allow planet landing effect to flow across sections */
   position: relative;
+}
+
+#projects.ps--active-landing {
+  z-index: 1000;
 }
 
 /* ---- Cinematic flash overlay ---- */
@@ -2022,8 +2125,10 @@ textarea:focus {
 /* ---- Floating title ---- */
 .ps-title-overlay {
   position: absolute;
-  top: 3.5rem;   /* Raised slightly to create even more vertical space below */
-  left: 4.5rem;  /* Clean left positioning as requested */
+  top: 3.5rem;
+  /* Raised slightly to create even more vertical space below */
+  left: 4.5rem;
+  /* Clean left positioning as requested */
   z-index: 10;
   pointer-events: none;
   white-space: nowrap;
@@ -2040,7 +2145,8 @@ textarea:focus {
 .planet-system-wrap {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: visible;
+  /* Extended to allow planets to bleed across sections */
 }
 
 /* ---- ps-system: zoom target, contains everything that scales ---- */
@@ -2159,11 +2265,16 @@ textarea:focus {
 /* ---- Landing (click) animation ---- */
 .project-planet.ps-planet--landing {
   transform: translate(-50%, -50%) scale(9) !important;
+  /* Always move to center during landing to avoid clipping at edges */
+  left: 50% !important;
+  top: 50% !important;
   opacity: 0 !important;
   transition:
     transform 0.68s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.68s cubic-bezier(0.4, 0, 0.2, 1),
+    top 0.68s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.68s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  z-index: 30;
+  z-index: 1000;
 }
 
 /* ====== SVG CONNECTOR OVERLAY ====== */
@@ -2306,9 +2417,9 @@ textarea:focus {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.42s ease;
-  background: rgba(2, 2, 14, 0.84);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .ps-modal.visible {
@@ -2319,7 +2430,9 @@ textarea:focus {
 .ps-modal-content {
   position: relative;
   width: min(520px, 90vw);
-  background: rgba(7, 7, 24, 0.96);
+  background: rgba(10, 10, 25, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   padding: 2.5rem 2rem;

@@ -184,6 +184,23 @@ function initEntrance() {
   });
 
   document.body.style.overflow = "hidden";
+
+  // Persistent Return Logic
+  const returnScroll = localStorage.getItem('portfolio_return_scroll');
+  if (returnScroll) {
+    splash.style.display = "none";
+    mainContent.style.display = "block"; // Force display first so layout height is correct
+    document.body.style.overflow = "auto";
+
+    // Jump to spot before showing content
+    window.scrollTo(0, parseInt(returnScroll));
+
+    // Now trigger the fade-in
+    requestAnimationFrame(() => {
+      mainContent.classList.add("visible");
+      localStorage.removeItem('portfolio_return_scroll');
+    });
+  }
 }
 
 // --- Shooting Stars ---
@@ -614,7 +631,7 @@ function initPlanetSystem() {
       floatAngle: 0,
       offsetX: 300,
       offsetY: 0,
-      colorA: "#00d1ff", 
+      colorA: "#00d1ff",
       colorB: "#2b2200",
     },
     {
@@ -632,7 +649,7 @@ function initPlanetSystem() {
       floatAngle: 2,
       offsetX: 0,
       offsetY: 0,
-      colorA: "#a100a4", 
+      colorA: "#a100a4",
       colorB: "#002033",
     },
     {
@@ -650,7 +667,7 @@ function initPlanetSystem() {
       floatAngle: 4,
       offsetX: -100,
       offsetY: 0,
-      colorA: "#8e4a01", 
+      colorA: "#8e4a01",
       colorB: "#1a0033",
     },
   ];
@@ -690,10 +707,10 @@ function initPlanetSystem() {
     // Specific base positions relative to system center (static but distributed)
     const angle = data.startAngle || (i * (Math.PI * 2 / PLANETS.length));
     const distance = data.orbitRadius || (150 + i * 80);
-    
+
     data.baseX = cx + distance * Math.cos(angle);
     data.baseY = cy + distance * Math.sin(angle);
-    
+
     // Floating state
     data.floatAngle = Math.random() * Math.PI * 2;
     data.floatSpeed = 0.008 + Math.random() * 0.007;
@@ -792,7 +809,7 @@ function initPlanetSystem() {
       PLANETS.forEach((data, i) => {
         // Increment float angle
         data.floatAngle += data.floatSpeed;
-        
+
         // Gentle "hover" oscillation
         const driftX = Math.sin(data.floatAngle) * data.floatRange;
         const driftY = Math.cos(data.floatAngle * 0.8) * (data.floatRange * 0.7);
@@ -877,7 +894,28 @@ function initPlanetSystem() {
     if (psdpTag) psdpTag.textContent = "PROJECT";
     if (psdpName) psdpName.textContent = data.name;
     if (psdpDesc) psdpDesc.textContent = data.description;
-    if (psdpLink) psdpLink.href = data.link;
+    if (psdpLink) {
+      psdpLink.href = "Project/projects.html?id=" + i;
+      psdpLink.onclick = (e) => {
+        e.preventDefault();
+        const targetUrl = psdpLink.href;
+
+        // Save current spot
+        localStorage.setItem('portfolio_return_scroll', window.scrollY);
+
+        const transition = document.getElementById('entry-transition');
+        const transitionText = document.getElementById('transition-planet');
+
+        if (transition) {
+          if (transitionText) transitionText.textContent = `PLANET: ${data.name}`;
+          document.documentElement.style.setProperty('--accent-cyan', data.colorA);
+          transition.classList.add('active');
+          setTimeout(() => { window.location.href = targetUrl; }, 1800);
+        } else {
+          window.location.href = targetUrl;
+        }
+      };
+    }
 
     if (psdpTech) {
       psdpTech.innerHTML = "";
@@ -950,6 +988,9 @@ function initPlanetSystem() {
 
     // CSS transition: planet scales to 9× and fades out (camera rush effect)
     el.classList.add("ps-planet--landing");
+    // Ensure the section itself sits above all others to allow spilling over
+    const projectsSec = document.getElementById("projects");
+    if (projectsSec) projectsSec.classList.add("ps--active-landing");
 
     setTimeout(() => {
       if (!modalPreview || !modalName || !modalDesc || !modalTech) return;
@@ -970,9 +1011,35 @@ function initPlanetSystem() {
       });
 
       if (modalLink) {
-        modalLink.href = data.link;
+        modalLink.href = "Project/projects.html?id=" + i;
         modalLink.style.borderColor = hexToRgba(data.colorA, 0.5);
         modalLink.style.color = data.colorA;
+
+        // Thematic Entry Transition
+        modalLink.onclick = (e) => {
+          e.preventDefault();
+          const targetUrl = modalLink.href;
+
+          // Save current spot
+          localStorage.setItem('portfolio_return_scroll', window.scrollY);
+
+          const transition = document.getElementById('entry-transition');
+          const transitionText = document.getElementById('transition-planet');
+
+          if (transition) {
+            if (transitionText) transitionText.textContent = `PLANET: ${data.name}`;
+            // Match portal color to project color
+            document.documentElement.style.setProperty('--accent-cyan', data.colorA);
+
+            transition.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+              window.location.href = targetUrl;
+            }, 1800);
+          } else {
+            window.location.href = targetUrl;
+          }
+        };
       }
 
       modalEl.classList.add("visible");
@@ -983,6 +1050,8 @@ function initPlanetSystem() {
   function closeModal() {
     modalEl.classList.remove("visible");
     planetEls.forEach((el) => el.classList.remove("ps-planet--landing"));
+    const projectsSec = document.getElementById("projects");
+    if (projectsSec) projectsSec.classList.remove("ps--active-landing");
     setTimeout(() => {
       animPaused = false;
     }, 420);
