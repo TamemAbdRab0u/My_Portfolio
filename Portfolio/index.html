@@ -10,7 +10,7 @@
   <!-- Preload fonts from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Share+Tech+Mono&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -365,22 +365,62 @@
         </div>
       </section>
 
-      <!-- Contact Section -->
-      <section id="contact" class="panel">
-        <div class="glass-card contact-card">
-          <h2 class="section-title">CONTACT ME</h2>
-          <form id="contact-form">
-            <div class="form-group">
-              <input type="text" placeholder="Your Name" required />
-            </div>
-            <div class="form-group">
-              <input type="email" placeholder="Email Address" required />
-            </div>
-            <div class="form-group">
-              <textarea placeholder="Message" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="submit-btn">SEND SIGNAL</button>
-          </form>
+      <!-- Contact Section — Constellation Theme -->
+      <section id="contact" class="panel constel-panel">
+        <!-- Canvas for starfield background -->
+        <canvas id="constel-bg" class="constel-canvas"></canvas>
+        <!-- Canvas for constellation lines overlay -->
+        <canvas id="constel-overlay" class="constel-canvas-overlay"></canvas>
+
+        <div class="title-container float-text contact-title-overlay">
+          <h2 class="section-title">INITIATE CONTACT</h2>
+        </div>
+
+        <div class="constel-inner">
+          <div class="constel-form-wrap">
+            <form id="constel-form" class="constel-form" novalidate>
+
+              <div class="cf-group" data-index="0">
+                <div class="cf-field-header">
+                  <div class="cf-node" id="node-0"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+                  <span class="cf-index">01</span>
+                </div>
+                <div class="cf-input-wrapper">
+                  <input id="cf-name" class="cf-input" type="text" name="name" autocomplete="off" placeholder="Name" required/>
+                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+                </div>
+              </div>
+
+              <div class="cf-group" data-index="1">
+                <div class="cf-field-header">
+                  <div class="cf-node" id="node-1-left"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+                  <div class="cf-node" id="node-1-right"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+                </div>
+                <div class="cf-input-wrapper">
+                  <input id="cf-email" class="cf-input" type="email" name="email" autocomplete="off" placeholder="Email" required/>
+                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+                </div>
+              </div>
+
+              <div class="cf-group" data-index="2">
+                <div class="cf-field-header">
+                  <span class="cf-index">03</span>
+                  <div class="cf-node" id="node-2"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+                </div>
+                <div class="cf-input-wrapper">
+                  <textarea id="cf-msg" class="cf-input cf-textarea" name="message" rows="4" placeholder="Message" required></textarea>
+                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+                </div>
+              </div>
+
+              <button class="cf-submit" id="cf-submit" type="submit" disabled>
+                ★ LOCK IN CONSTELLATION
+              </button>
+
+              <p class="cf-status" id="cf-status" aria-live="polite"></p>
+
+            </form>
+          </div>
         </div>
       </section>
     </div>

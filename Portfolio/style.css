@@ -3,12 +3,15 @@
 html {
     overflow-x: hidden;
     max-width: 100%;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
 }
 
 html::-webkit-scrollbar {
-    display: none; /* WebKit */
+    display: none;
+    /* WebKit */
 }
 
 body {
@@ -93,11 +96,9 @@ body {
     justify-content: center;
     text-align: center;
     /* Reveal effect via radial-gradient using CSS variables */
-    background: radial-gradient(
-        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        transparent 50px,
-        #050505 350px
-    );
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            transparent 50px,
+            #050505 350px);
     transition:
         opacity 1.2s ease,
         transform 1.2s ease;
@@ -158,11 +159,9 @@ body {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: radial-gradient(
-        circle at 30% 30%,
-        rgba(255, 255, 255, 0.1),
-        transparent 60%
-    );
+    background: radial-gradient(circle at 30% 30%,
+            rgba(255, 255, 255, 0.1),
+            transparent 60%);
     pointer-events: none;
 }
 
@@ -184,16 +183,15 @@ body {
     position: absolute;
     width: 350px;
     height: 350px;
-    background: radial-gradient(
-        circle,
-        rgba(0, 209, 255, 0.1) 0%,
-        transparent 70%
-    );
+    background: radial-gradient(circle,
+            rgba(0, 209, 255, 0.1) 0%,
+            transparent 70%);
     border-radius: 50%;
     animation: pulseGlow 4s ease-in-out infinite;
 }
 
 @keyframes pulseGlow {
+
     0%,
     100% {
         transform: scale(1);
@@ -242,11 +240,9 @@ body {
     left: 50%;
     width: 150%;
     height: 150%;
-    background: radial-gradient(
-        circle,
-        rgba(0, 209, 255, 0.4) 0%,
-        transparent 70%
-    );
+    background: radial-gradient(circle,
+            rgba(0, 209, 255, 0.4) 0%,
+            transparent 70%);
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.6s ease;
     pointer-events: none;
@@ -262,11 +258,9 @@ body {
     left: 0;
     width: 600px;
     height: 600px;
-    background: radial-gradient(
-        circle,
-        rgba(0, 209, 255, 0.1) 0%,
-        transparent 70%
-    );
+    background: radial-gradient(circle,
+            rgba(0, 209, 255, 0.1) 0%,
+            transparent 70%);
     border-radius: 50%;
     pointer-events: none;
     z-index: 10;
@@ -362,6 +356,7 @@ body {
 }
 
 @keyframes portalPulse {
+
     0%,
     100% {
         opacity: 0.6;
@@ -564,6 +559,7 @@ body {
 }
 
 @keyframes zero-gravity {
+
     0%,
     100% {
         transform: translateY(0) rotate(0deg);
@@ -583,6 +579,7 @@ body {
 }
 
 @keyframes cosmic-float-glitch {
+
     0%,
     15%,
     21%,
@@ -684,14 +681,12 @@ body {
     width: 16px;
     height: 90px;
     /* Cylindrical lighting: Dark -> Light -> Dark */
-    background: linear-gradient(
-        90deg,
-        #111 0%,
-        #444 35%,
-        #555 50%,
-        #444 65%,
-        #111 100%
-    );
+    background: linear-gradient(90deg,
+            #111 0%,
+            #444 35%,
+            #555 50%,
+            #444 65%,
+            #111 100%);
     margin: 0 auto;
     border-left: 1px solid rgba(255, 255, 255, 0.2);
     border-right: 1px solid rgba(0, 0, 0, 0.5);
@@ -784,6 +779,7 @@ body {
 }
 
 @keyframes flameWave {
+
     0%,
     100% {
         transform: scale(1);
@@ -875,12 +871,10 @@ body {
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background: radial-gradient(
-        ellipse 55% 40% at var(--glow-x, 50%) var(--glow-y, 30%),
-        rgba(200, 230, 255, 0.14) 0%,
-        rgba(100, 180, 255, 0.06) 50%,
-        transparent 100%
-    );
+    background: radial-gradient(ellipse 55% 40% at var(--glow-x, 50%) var(--glow-y, 30%),
+            rgba(200, 230, 255, 0.14) 0%,
+            rgba(100, 180, 255, 0.06) 50%,
+            transparent 100%);
     opacity: 0;
     transition: opacity 2s cubic-bezier(0.165, 0.84, 0.44, 1);
     animation: none;
@@ -948,12 +942,10 @@ body {
     position: relative;
     z-index: 2;
 
-    background: radial-gradient(
-        circle 180px at var(--light-x, -500px) var(--light-y, -500px),
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 0.15) 75%,
-        rgba(255, 255, 255, 0.18) 100%
-    );
+    background: radial-gradient(circle 180px at var(--light-x, -500px) var(--light-y, -500px),
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.15) 75%,
+            rgba(255, 255, 255, 0.18) 100%);
     -webkit-background-clip: text;
     background-clip: text;
 
@@ -1155,13 +1147,13 @@ body {
     border-radius: 50%;
 }
 
-.cyber-switch input:checked + .switch-slider {
+.cyber-switch input:checked+.switch-slider {
     background: rgba(0, 209, 255, 0.1);
     border-color: var(--accent-cyan);
     box-shadow: 0 0 10px rgba(0, 209, 255, 0.2);
 }
 
-.cyber-switch input:checked + .switch-slider:before {
+.cyber-switch input:checked+.switch-slider:before {
     transform: translateX(22px);
     background: var(--accent-cyan);
     box-shadow: 0 0 10px var(--accent-cyan);
@@ -1179,12 +1171,10 @@ body {
     left: 0;
     width: 100%;
     height: 100px;
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(0, 209, 255, 0.05),
-        transparent
-    );
+    background: linear-gradient(to bottom,
+            transparent,
+            rgba(0, 209, 255, 0.05),
+            transparent);
     animation: scanMove 8s linear infinite;
     pointer-events: none;
     z-index: 1;
@@ -1193,12 +1183,10 @@ body {
 
 .about-glass-module.decrypted .scanline {
     animation-duration: 4s;
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(0, 209, 255, 0.1),
-        transparent
-    );
+    background: linear-gradient(to bottom,
+            transparent,
+            rgba(0, 209, 255, 0.1),
+            transparent);
 }
 
 @keyframes scanMove {
@@ -1754,13 +1742,11 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        135deg,
-        var(--accent-cyan),
-        transparent 40%,
-        transparent 60%,
-        var(--accent-purple)
-    );
+    background: linear-gradient(135deg,
+            var(--accent-cyan),
+            transparent 40%,
+            transparent 60%,
+            var(--accent-purple));
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: 0;
@@ -1794,12 +1780,10 @@ body {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
     transform: skewX(-25deg);
     transition: 0.75s;
 }
@@ -1965,11 +1949,9 @@ textarea:focus {
 .submit-btn {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(
-        to right,
-        var(--accent-cyan),
-        var(--accent-purple)
-    );
+    background: linear-gradient(to right,
+            var(--accent-cyan),
+            var(--accent-purple));
     border: none;
     border-radius: 10px;
     color: white;
@@ -2050,13 +2032,11 @@ textarea:focus {
     width: 180px;
     height: 1px;
     /* Reversed gradient: flows from transparent into the bright star head */
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(157, 0, 255, 0.3),
-        rgba(0, 209, 255, 0.6),
-        #fff
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(157, 0, 255, 0.3),
+            rgba(0, 209, 255, 0.6),
+            #fff);
     filter: blur(1px);
     opacity: 0.8;
     box-shadow: 0 0 5px rgba(0, 209, 255, 0.2);
@@ -2088,6 +2068,779 @@ textarea:focus {
     animation: shooting 2.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   CONSTELLATION FORM — Contact Section
+   ═══════════════════════════════════════════════════════════════════ */
+
+.constel-panel {
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    font-family: "Share Tech Mono", monospace;
+}
+
+.constel-canvas,
+.constel-canvas-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.constel-canvas {
+    z-index: 0;
+}
+
+.constel-canvas-overlay {
+    z-index: 2;
+}
+
+/* ── Signal Strength Meter ── */
+.signal-meter-wrap {
+    position: absolute;
+    top: 5rem;
+    right: 4.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.signal-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 24px;
+}
+
+.signal-bar {
+    width: 4px;
+    background: rgba(253, 230, 138, 0.1);
+    border-radius: 2px;
+    transition: height 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signal-bar:nth-child(1) {
+    height: 6px;
+}
+
+.signal-bar:nth-child(2) {
+    height: 12px;
+}
+
+.signal-bar:nth-child(3) {
+    height: 18px;
+}
+
+.signal-bar:nth-child(4) {
+    height: 24px;
+}
+
+.signal-bar.active {
+    background: #fde68a;
+    box-shadow: 0 0 8px #fde68a;
+}
+
+.signal-label {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: rgba(253, 230, 138, 0.4);
+    text-transform: uppercase;
+}
+
+/* ── Content column ── */
+.constel-inner {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 12rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.constel-form-wrap {
+    width: 100%;
+    position: relative;
+}
+
+.constel-form {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 2rem 0;
+}
+
+/* ── Field Group (stacked) ── */
+.cf-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    position: relative;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: cfGroupIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cf-group:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.cf-group:nth-child(2) {
+    animation-delay: 0.22s;
+}
+
+.cf-group:nth-child(3) {
+    animation-delay: 0.34s;
+}
+
+@keyframes cfGroupIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── High-Tech Form Panel ── */
+.comms-form {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(10, 15, 25, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+    border-radius: 24px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.7),
+        inset 0 0 50px rgba(0, 229, 255, 0.05);
+    overflow: visible;
+    /* Changed to visible for 3D overflow */
+    perspective: 1000px;
+    animation: cfPanelIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.comms-form::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            transparent,
+            rgba(0, 229, 255, 0.03) 50%,
+            transparent);
+    pointer-events: none;
+    animation: scanline 4s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        top: -100%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+@keyframes cfPanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Field Groups (Stacked Modules) ── */
+.cf-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(253, 230, 138, 0.05);
+    border-radius: 16px;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center;
+    opacity: 0;
+    transform: translateY(40px) rotateX(20deg);
+    animation: cfGroupEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cf-group:nth-child(1) {
+    animation-delay: 0.4s;
+}
+
+.cf-group:nth-child(2) {
+    animation-delay: 0.55s;
+}
+
+.cf-group:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+@keyframes cfGroupEntry {
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+    }
+}
+
+.cf-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(253, 230, 138, 0.05), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.cf-group:hover {
+    background: rgba(253, 230, 138, 0.03);
+    border-color: rgba(253, 230, 138, 0.15);
+    transform: translateZ(20px) scale(1.02);
+}
+
+.cf-group.active {
+    background: rgba(10, 20, 40, 0.7);
+    border-color: rgba(253, 230, 138, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6),
+        inset 0 0 20px rgba(253, 230, 138, 0.05);
+    transform: translateZ(50px) scale(1.05);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.cf-group.active::after {
+    display: none;
+}
+
+/* Scan animation removed per user request */
+
+.cf-group.active::before {
+    opacity: 1;
+}
+
+.cf-group.locked {
+    border-color: rgba(0, 229, 255, 0.3);
+    background: rgba(0, 229, 255, 0.02);
+}
+
+/* ── Field Header row ── */
+.cf-field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cf-index {
+    /* margin-left: auto removed to support flexible header layout */
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: rgba(253, 230, 138, 0.4);
+    transition: all 0.4s ease;
+}
+
+.cf-group.active .cf-index,
+.cf-group.locked .cf-index {
+    color: #fde68a;
+    text-shadow: 0 0 10px rgba(253, 230, 138, 0.4);
+}
+
+/* ── Star Nodes ── */
+.cf-node {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cf-node::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed rgba(253, 230, 138, 0.2);
+    border-radius: 50%;
+    animation: nodeRotate 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.cf-group.active .cf-node::before {
+    opacity: 1;
+    border-color: rgba(253, 230, 138, 0.6);
+}
+
+@keyframes nodeRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.cf-node-core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(253, 230, 138, 0.3);
+    box-shadow: 0 0 10px rgba(253, 230, 138, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2;
+}
+
+.cf-group.active .cf-node-core {
+    background: #fde68a;
+    box-shadow: 0 0 10px 2px rgba(253, 230, 138, 0.6);
+    /* Tighter glow */
+    transform: scale(1.4);
+}
+
+.cf-group.locked .cf-node-core {
+    background: #fff;
+    box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.9);
+}
+
+/* ── Star Node Rays ── */
+.cf-node-rays {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(253, 230, 138, 0.4) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: screen;
+}
+
+.cf-group.active .cf-node-rays {
+    opacity: 1;
+    animation: nodeRaysPulse 3s ease-in-out infinite;
+}
+
+.cf-node-rays::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(253, 230, 138, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: radarSweep 2s linear infinite;
+}
+
+@keyframes radarSweep {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes nodeRaysPulse {
+
+    0%,
+    100% {
+        transform: scale(0.8) rotate(0deg);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 0.6;
+    }
+}
+
+/* Unused data bits removed */
+
+.cf-bit {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.5rem;
+    color: rgba(253, 230, 138, 0.4);
+    white-space: nowrap;
+    animation: bitFloat 2s ease-in-out infinite alternate;
+}
+
+.cf-bit:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.cf-bit:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes bitFloat {
+    from {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    to {
+        transform: translateX(5px);
+        opacity: 0.8;
+    }
+}
+
+/* ── Inputs ── */
+.cf-input-wrapper {
+    width: 100%;
+}
+
+.cf-label {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: rgba(253, 230, 138, 0.4);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.cf-group.active .cf-label {
+    color: #fde68a;
+    letter-spacing: 5px;
+    /* Removed text-shadow to clean up field appearance */
+}
+
+.cf-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0.6rem 0.5rem;
+    color: #fff;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    outline: none;
+    caret-color: #fde68a;
+}
+
+.cf-input::placeholder {
+    color: rgba(255, 255, 255, 0.1);
+}
+
+.cf-textarea {
+    min-height: 80px;
+    line-height: 1.6;
+}
+
+/* ── Underline ── */
+.cf-underline {
+    width: 100%;
+    height: 1px;
+    background: rgba(253, 230, 138, 0.1);
+    margin-top: 0.2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.cf-underline-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, transparent, #fde68a, transparent);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cf-group.active .cf-underline-fill,
+.cf-group.locked .cf-underline-fill {
+    width: 100%;
+}
+
+/* ── Submit button ── */
+.cf-submit {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(253, 230, 138, 0.02);
+    border: 1px solid rgba(253, 230, 138, 0.1);
+    border-radius: 12px;
+    color: rgba(253, 230, 138, 0.3);
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.cf-submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(253, 230, 138, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.cf-submit:not(:disabled):hover {
+    background: rgba(253, 230, 138, 0.08);
+    border-color: rgba(253, 230, 138, 0.6);
+    color: #fde68a;
+    box-shadow: 0 0 30px rgba(253, 230, 138, 0.2);
+    transform: translateY(-2px);
+}
+
+.cf-submit:not(:disabled):hover::before {
+    width: 300%;
+    height: 300%;
+}
+
+.cf-submit:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+.cf-submit:not(:disabled) {
+    border-color: rgba(253, 230, 138, 0.4);
+    color: rgba(253, 230, 138, 0.8);
+    animation: btnPulse 2s infinite;
+}
+
+@keyframes btnPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(253, 230, 138, 0);
+    }
+
+    50% {
+        box-shadow: 0 0 20px 2px rgba(253, 230, 138, 0.1);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(253, 230, 138, 0);
+    }
+}
+
+/* ── Contact Title Glitch ── */
+.contact-title-overlay h2 {
+    position: relative;
+    animation: contactGlitch 4s infinite;
+}
+
+@keyframes contactGlitch {
+
+    0%,
+    90%,
+    100% {
+        transform: none;
+        opacity: 1;
+    }
+
+    92% {
+        transform: skewX(10deg);
+        opacity: 0.8;
+        color: var(--accent-cyan);
+    }
+
+    94% {
+        transform: skewX(-10deg);
+        opacity: 0.8;
+        color: #fde68a;
+    }
+
+    96% {
+        transform: translateX(2px);
+    }
+
+    98% {
+        transform: translateX(-2px);
+    }
+}
+
+/* ── Status line ── */
+.cf-status {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--accent-cyan);
+    text-align: center;
+    min-height: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.4s;
+    text-transform: uppercase;
+}
+
+.cf-status.visible {
+    opacity: 1;
+}
+
+/* ── Sparkles ── */
+.sparkle {
+    position: absolute;
+    color: #fff;
+    font-size: 14px;
+    text-shadow: 0 0 8px #fde68a;
+    pointer-events: none;
+    opacity: 1;
+    animation: sparkleAnim 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes sparkleAnim {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-60px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ── Transmission Blast Effect ── */
+.transmission-blast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: 0 0 50px 20px #fff, 0 0 100px 40px #fde68a;
+    opacity: 0;
+}
+
+.transmission-blast.active {
+    animation: blastOut 1.2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes blastOut {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(500);
+        opacity: 0;
+    }
+}
+
+/* ────────────────────────────────────────
+   FOOTER META
+   ──────────────────────────────────────── */
+.comms-footer {
+    width: 100%;
+    padding-top: 0.5rem;
+}
+
+.cf-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right,
+            transparent 0%,
+            rgba(0, 229, 255, 0.25) 30%,
+            rgba(0, 229, 255, 0.25) 70%,
+            transparent 100%);
+    margin-bottom: 1.6rem;
+}
+
+.cf-meta {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.cf-meta li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.cf-meta-label {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.5rem;
+    letter-spacing: 4px;
+    color: rgba(0, 229, 255, 0.3);
+    text-transform: uppercase;
+}
+
+.cf-meta-val {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: rgba(0, 229, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a.cf-meta-val:hover {
+    color: #00e5ff;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .comms-inner {
+        padding: 8rem 1.2rem 3rem;
+        gap: 2rem;
+    }
+
+    .comms-form {
+        padding: 1.4rem 1.1rem;
+    }
+
+    .cf-meta {
+        gap: 1.8rem;
+    }
+
+    .comms-title {
+        letter-spacing: 2px;
+    }
+}
+
 /* ═══════════════════════════════════════════════════════════
    SPACESHIP CURSOR
    ═══════════════════════════════════════════════════════════ */
@@ -2102,8 +2855,9 @@ textarea:focus {
 /* The custom cursor div (injected by initSpaceshipCursor) */
 #cursor-ship {
     position: fixed;
-    top: -100px;
-    left: -100px;
+    /* Anchored at origin — all movement is via transform (no layout reflow) */
+    top: 0;
+    left: 0;
     width: 28px;
     height: 28px;
     pointer-events: none;
@@ -2111,14 +2865,15 @@ textarea:focus {
     opacity: 0;
     transition: opacity 0.25s ease;
     will-change: transform;
+    /* Isolate cursor compositing from the rest of the document */
+    contain: layout style;
 }
 
 #cursor-ship svg {
     width: 100%;
     height: 100%;
     overflow: visible;
-    filter: drop-shadow(0 0 3px rgba(0, 209, 255, 0.95))
-        drop-shadow(0 0 9px rgba(0, 209, 255, 0.5));
+    filter: drop-shadow(0 0 3px rgba(0, 209, 255, 0.95)) drop-shadow(0 0 9px rgba(0, 209, 255, 0.5));
 }
 
 /* Engine flame — pulses on its own transform-origin */
@@ -2132,6 +2887,7 @@ textarea:focus {
         transform: scaleY(0.7) scaleX(0.85);
         opacity: 0.65;
     }
+
     to {
         transform: scaleY(1.35) scaleX(1.15);
         opacity: 1;
@@ -2182,7 +2938,8 @@ textarea:focus {
 }
 
 /* ---- Floating title ---- */
-.ps-title-overlay {
+.ps-title-overlay,
+.contact-title-overlay {
     position: absolute;
     top: 3.5rem;
     /* Raised slightly to create even more vertical space below */
@@ -2245,12 +3002,10 @@ textarea:focus {
         transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.42s ease,
         filter 0.42s ease;
-    background: radial-gradient(
-        circle at 35% 30%,
-        #ffffff 0%,
-        var(--planet-color-a) 30%,
-        var(--planet-color-b) 100%
-    );
+    background: radial-gradient(circle at 35% 30%,
+            #ffffff 0%,
+            var(--planet-color-a) 30%,
+            var(--planet-color-b) 100%);
     box-shadow:
         0 0 12px var(--planet-glow-50),
         0 0 30px var(--planet-glow-25),
@@ -2456,6 +3211,7 @@ textarea:focus {
 }
 
 @keyframes psHintPulse {
+
     0%,
     100% {
         opacity: 0.45;
@@ -2507,11 +3263,9 @@ textarea:focus {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(0, 209, 255, 0.045) 0%,
-        transparent 55%
-    );
+    background: linear-gradient(135deg,
+            rgba(0, 209, 255, 0.045) 0%,
+            transparent 55%);
     pointer-events: none;
 }
 

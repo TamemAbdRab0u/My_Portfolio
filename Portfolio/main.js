@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSkillConnector();
   initPlanetSystem();
   initSpaceshipCursor();
+  initContactSection();
 });
 
 // --- Star Animation ---
@@ -568,6 +569,375 @@ function initSkillConnector() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+//  CONSTELLATION CONTACT SECTION
+//  initContactSection()
+// ─────────────────────────────────────────────────────────────────────────────
+function initContactSection() {
+  const contactForm = document.getElementById("constel-form");
+  if (!contactForm) return;
+
+  const cfBtn = document.getElementById("cf-submit");
+  const cfStatus = document.getElementById("cf-status");
+  const cfInputs = contactForm.querySelectorAll(".cf-input");
+  const cfGroups = contactForm.querySelectorAll(".cf-group");
+  
+  // Update button state based on validity
+  function checkValidity() {
+    let valid = true;
+    cfInputs.forEach(input => {
+      if (!input.value.trim()) valid = false;
+    });
+    if (cfBtn) cfBtn.disabled = !valid;
+  }
+
+  cfInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      checkValidity();
+      drawOverlay();
+    });
+    input.addEventListener("focus", () => {
+      const group = input.closest(".cf-group");
+      if (group) group.classList.add("active");
+      drawOverlay();
+    });
+    input.addEventListener("blur", () => {
+      const group = input.closest(".cf-group");
+      if (group && !input.value.trim()) {
+        group.classList.remove("active");
+      }
+      drawOverlay();
+    });
+  });
+
+  contactForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    contactForm.classList.add("connecting");
+    if (cfBtn) {
+      cfBtn.innerHTML = "★ TRANSMITTING...";
+      cfBtn.disabled = true;
+    }
+    if (cfStatus) {
+      cfStatus.innerText = "Establishing secure connection...";
+      cfStatus.style.color = "var(--accent-cyan)";
+    }
+
+    // Lock in the nodes
+    cfGroups.forEach(group => group.classList.add("locked"));
+
+    setTimeout(() => {
+      contactForm.classList.remove("connecting");
+      if (cfStatus) {
+        cfStatus.innerText = "✔ TRANSMISSION SUCCESSFUL";
+        cfStatus.style.color = "#fde68a"; // Gold/amber accent
+      }
+      if (cfBtn) cfBtn.innerHTML = "★ LOCK IN CONSTELLATION";
+      
+      setTimeout(() => {
+        if (cfStatus) cfStatus.innerText = "";
+        contactForm.reset();
+        checkValidity();
+        cfGroups.forEach(group => {
+          group.classList.remove("active");
+          group.classList.remove("locked");
+        });
+        drawOverlay();
+      }, 5000);
+    }, 2000);
+  });
+
+  // Canvas Background (Starfield)
+  const bgCanvas = document.getElementById("constel-bg");
+  const bgCtx = bgCanvas ? bgCanvas.getContext("2d") : null;
+  let stars = [];
+
+  function initBgCanvas() {
+    if (!bgCanvas) return;
+    bgCanvas.width = bgCanvas.offsetWidth;
+    bgCanvas.height = bgCanvas.offsetHeight;
+    stars = [];
+    // ~160 dots
+    for (let i = 0; i < 160; i++) {
+      stars.push({
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
+        r: Math.random() * 1.5,
+        alpha: Math.random() * 0.5 + 0.1
+      });
+    }
+  }
+
+  function drawBg() {
+    if (!bgCtx) return;
+    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    stars.forEach(star => {
+      bgCtx.beginPath();
+      bgCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      bgCtx.fillStyle = `rgba(253, 230, 138, ${star.alpha})`; // gold/amber
+      bgCtx.fill();
+    });
+  }
+
+  if (bgCanvas) {
+    initBgCanvas();
+    drawBg();
+    window.addEventListener("resize", () => {
+      initBgCanvas();
+      drawBg();
+      drawOverlay();
+    });
+  }
+
+  // Canvas Overlay (Constellation Lines)
+  const overlayCanvas = document.getElementById("constel-overlay");
+  const overlayCtx = overlayCanvas ? overlayCanvas.getContext("2d") : null;
+  let startTime = Date.now();
+  let animationFrameId = null;
+  let currentProgress = 0; // Tracks smooth animation progress
+
+  function drawOverlay() {
+    if (!overlayCanvas || !overlayCtx) return;
+    
+    // Resize if needed
+    if (overlayCanvas.width !== overlayCanvas.offsetWidth || overlayCanvas.height !== overlayCanvas.offsetHeight) {
+      overlayCanvas.width = overlayCanvas.offsetWidth;
+      overlayCanvas.height = overlayCanvas.offsetHeight;
+    }
+    
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    
+    const allNodes = [];
+    for (let index = 0; index < cfGroups.length; index++) {
+      const group = cfGroups[index];
+      const nodes = group.querySelectorAll(".cf-node");
+      nodes.forEach(node => {
+        const rect = node.getBoundingClientRect();
+        const parentRect = overlayCanvas.getBoundingClientRect();
+        allNodes.push({
+          x: rect.left - parentRect.left + rect.width / 2,
+          y: rect.top - parentRect.top + rect.height / 2
+        });
+      });
+    }
+
+    let targetProgress = 0;
+    
+    // Nodes:
+    // 0: Field 1
+    // 1: Field 2 Left
+    // 2: Field 2 Right
+    // 3: Field 3
+    
+    const input2 = cfGroups[1].querySelector(".cf-input");
+    const input3 = cfGroups[2].querySelector(".cf-input");
+    
+    if (input2 && input2.value.trim() !== "") {
+      targetProgress = 2; // Draws line from 0 to 1, and skip 1 to 2
+    }
+    if (input2 && input2.value.trim() !== "" && input3 && input3.value.trim() !== "") {
+      targetProgress = 3; // Draws line from 2 to 3
+    }
+    
+    // Update currentProgress with constant speed
+    const diff = targetProgress - currentProgress;
+    if (Math.abs(diff) > 0.01) {
+      const step = 0.025; // Constant speed
+      currentProgress += Math.sign(diff) * step;
+      
+      // Skip the invisible segment (from Node 1 to Node 2) instantly to avoid dead time
+      if (currentProgress > 1 && currentProgress < 2) {
+        if (diff > 0) {
+          currentProgress = 2;
+        } else {
+          currentProgress = 1;
+        }
+      }
+    } else {
+      currentProgress = targetProgress;
+    }
+
+    if (currentProgress > 0 && allNodes.length > 1) {
+      const time = (Date.now() - startTime) / 1000;
+      // Pulse subtlety using sin(time)
+      const alpha = 0.4 + 0.3 * Math.sin(time * 3);
+      
+      overlayCtx.beginPath();
+      overlayCtx.moveTo(allNodes[0].x, allNodes[0].y);
+      
+      let fullSegments = Math.floor(currentProgress);
+      let partialSegment = currentProgress % 1;
+      
+      // Guard against rounding errors exceeding array bounds
+      if (fullSegments >= allNodes.length - 1) {
+        fullSegments = allNodes.length - 1;
+        partialSegment = 0;
+      }
+      
+      let lastX = allNodes[0].x;
+      let lastY = allNodes[0].y;
+
+      const getOffset = (i) => {
+        const isMobile = window.innerWidth < 768;
+        if (i === 0) return isMobile ? 40 : 100;    // F1 -> F2L (Left side)
+        if (i === 1) return 0;                      // F2L -> F2R (Across field)
+        if (i === 2) return isMobile ? -60 : -150; // F2R -> F3R (Right side)
+        return 0;
+      };
+      const radius = 5;   
+
+      for (let i = 0; i < fullSegments; i++) {
+        const p0 = allNodes[i];
+        const p2 = allNodes[i+1];
+        const segOffset = getOffset(i);
+        
+        if (i === 1) {
+          // Skip drawing the line between the two nodes in Field 2
+          overlayCtx.moveTo(p2.x, p2.y);
+        } else if (segOffset === 0) {
+          overlayCtx.lineTo(p2.x, p2.y);
+        } else {
+          // Go out
+          overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
+          overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
+          
+          // Go down/up to next field level
+          overlayCtx.lineTo(p0.x - segOffset, p2.y - (p2.y > p0.y ? radius : -radius));
+          overlayCtx.arcTo(p0.x - segOffset, p2.y, p0.x - segOffset + (segOffset > 0 ? radius : -radius), p2.y, radius);
+          
+          // Go back in
+          overlayCtx.lineTo(p2.x, p2.y);
+        }
+        
+        lastX = p2.x;
+        lastY = p2.y;
+      }
+      
+      if (partialSegment > 0 && allNodes[fullSegments + 1]) {
+        const p0 = allNodes[fullSegments];
+        const p2 = allNodes[fullSegments + 1];
+        const segOffset = getOffset(fullSegments);
+        
+        if (fullSegments === 1) {
+          // Skip drawing the partial line for the internal segment in Field 2
+          lastX = p0.x + (p2.x - p0.x) * partialSegment;
+          lastY = p0.y + (p2.y - p0.y) * partialSegment;
+          overlayCtx.moveTo(lastX, lastY);
+        } else if (segOffset === 0) {
+          lastX = p0.x + (p2.x - p0.x) * partialSegment;
+          lastY = p0.y + (p2.y - p0.y) * partialSegment;
+          overlayCtx.lineTo(lastX, lastY);
+        } else {
+          const hLen = Math.abs(segOffset);
+          const vLen = Math.abs(p2.y - p0.y);
+          const totalLen = hLen * 2 + vLen;
+          const currentLen = totalLen * partialSegment;
+          
+          if (currentLen <= hLen) {
+            lastX = p0.x - (segOffset > 0 ? currentLen : -currentLen);
+            lastY = p0.y;
+            overlayCtx.lineTo(lastX, lastY);
+          } else if (currentLen <= hLen + vLen) {
+            overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
+            overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
+            
+            const progressV = currentLen - hLen;
+            lastX = p0.x - segOffset;
+            lastY = p0.y + (p2.y > p0.y ? progressV : -progressV);
+            overlayCtx.lineTo(lastX, lastY);
+          } else {
+            overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
+            overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
+            overlayCtx.lineTo(p0.x - segOffset, p2.y - (p2.y > p0.y ? radius : -radius));
+            overlayCtx.arcTo(p0.x - segOffset, p2.y, p0.x - segOffset + (segOffset > 0 ? radius : -radius), p2.y, radius);
+            
+            const progressH2 = currentLen - hLen - vLen;
+            lastX = p0.x - segOffset + (segOffset > 0 ? progressH2 : -progressH2);
+            lastY = p2.y;
+            overlayCtx.lineTo(lastX, lastY);
+          }
+        }
+      }
+      
+      // Create a gradient that follows the line's general direction
+      const grad = overlayCtx.createLinearGradient(allNodes[0].x, allNodes[0].y, lastX, lastY);
+      grad.addColorStop(0, `rgba(253, 230, 138, ${alpha})`); // amber
+      grad.addColorStop(0.5, `rgba(255, 255, 255, ${alpha + 0.2})`); // white
+      grad.addColorStop(1, `rgba(253, 230, 138, ${alpha})`); // amber
+      
+      overlayCtx.strokeStyle = grad;
+      overlayCtx.lineWidth = 2.5;
+      // Add a bit of glow
+      overlayCtx.shadowBlur = 15;
+      overlayCtx.shadowColor = "#fde68a";
+      overlayCtx.stroke();
+      
+      overlayCtx.shadowBlur = 0;
+
+      // ── Traveling Pulse Effect ──
+      const pulseTime = (Date.now() % 3000) / 3000; // 0 to 1 loop every 3s
+      const pulseSegment = Math.floor(pulseTime * (allNodes.length - 1));
+      const pulseSubProgress = (pulseTime * (allNodes.length - 1)) % 1;
+      
+      // Only show pulse if the line has reached this part
+      if (pulseTime * (allNodes.length - 1) <= currentProgress && allNodes[pulseSegment + 1]) {
+        if (pulseSegment === 1) {
+          // Hide pulse during the gap in Field 2
+        } else {
+          const p0 = allNodes[pulseSegment];
+          const p2 = allNodes[pulseSegment + 1];
+          const segOffset = getOffset(pulseSegment);
+          
+          let px, py;
+          if (segOffset === 0) {
+            px = p0.x + (p2.x - p0.x) * pulseSubProgress;
+            py = p0.y + (p2.y - p0.y) * pulseSubProgress;
+          } else {
+            const hLen = Math.abs(segOffset);
+            const vLen = Math.abs(p2.y - p0.y);
+            const totalLen = hLen * 2 + vLen;
+            const currentLen = totalLen * pulseSubProgress;
+            
+            if (currentLen <= hLen) {
+              px = p0.x - (segOffset > 0 ? currentLen : -currentLen);
+              py = p0.y;
+            } else if (currentLen <= hLen + vLen) {
+              const vProgress = currentLen - hLen;
+              px = p0.x - segOffset;
+              py = p0.y + (p2.y > p0.y ? vProgress : -vProgress);
+            } else {
+              const h2Progress = currentLen - hLen - vLen;
+              px = (p0.x - segOffset) + (segOffset > 0 ? h2Progress : -h2Progress);
+              py = p2.y;
+            }
+          }
+          
+          overlayCtx.beginPath();
+          overlayCtx.arc(px, py, 4, 0, Math.PI * 2);
+          overlayCtx.fillStyle = "#fff";
+          overlayCtx.shadowBlur = 15;
+          overlayCtx.shadowColor = "#fde68a";
+          overlayCtx.fill();
+          overlayCtx.shadowBlur = 0;
+        }
+      }
+    }
+    
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+    
+    // Animate constantly while transitioning or while drawing is visible (for pulse)
+    if (Math.abs(diff) > 0.01 || currentProgress > 0) {
+      animationFrameId = requestAnimationFrame(drawOverlay);
+    }
+  }
+  
+  // Initial draw
+  setTimeout(drawOverlay, 100);
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
 //  SPACESHIP CURSOR
 //  Creates a small SVG spaceship that replaces the OS pointer.
 //  It follows the mouse with slight lag and rotates smoothly to face
@@ -641,9 +1011,11 @@ function initSpaceshipCursor() {
     // Smooth heading rotation
     angle = lerpAngle(angle, tAngle, 0.1);
 
-    ship.style.left = sx + "px";
-    ship.style.top = sy + "px";
-    ship.style.transform = `translate(-50%,-50%) rotate(${angle.toFixed(2)}deg)`;
+    // One transform-only write — zero layout reflow, fully GPU-composited
+    ship.style.transform =
+      `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)` +
+      ` translate(-50%,-50%)` +
+      ` rotate(${angle.toFixed(2)}deg)`;
 
     requestAnimationFrame(loop);
   })();
@@ -883,6 +1255,7 @@ function initPlanetSystem() {
   let animPaused = false;
   let rafId = null;
   let hoveredIdx = -1; // index of hovered planet, -1 = none
+  let flashFired = false;
   /*
   updateCenter();
   window.addEventListener("resize", updateCenter);

@@ -648,9 +648,11 @@ function initSpaceshipCursor() {
     sx += (mx - sx) * 0.22;
     sy += (my - sy) * 0.22;
     angle = lerpAngle(angle, tAngle, 0.1);
-    ship.style.left = sx + "px";
-    ship.style.top = sy + "px";
-    ship.style.transform = `translate(-50%,-50%) rotate(${angle.toFixed(2)}deg)`;
+    // Single transform write — no left/top, no layout reflow
+    ship.style.transform =
+      `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)` +
+      ` translate(-50%,-50%)` +
+      ` rotate(${angle.toFixed(2)}deg)`;
     requestAnimationFrame(loop);
   })();
 }
