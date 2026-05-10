@@ -142,7 +142,6 @@ body::-webkit-scrollbar {
 }
 
 @keyframes portalPulse {
-
     0%,
     100% {
         opacity: 0.6;
@@ -175,15 +174,21 @@ body::-webkit-scrollbar {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 50% -20%,
+        radial-gradient(
+            circle at 50% -20%,
             var(--accent-cyan) 0%,
-            transparent 50%),
-        radial-gradient(circle at 0% 100%,
+            transparent 50%
+        ),
+        radial-gradient(
+            circle at 0% 100%,
             var(--accent-purple) 0%,
-            transparent 40%),
-        radial-gradient(circle at 100% 100%,
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
             var(--accent-cyan) 0%,
-            transparent 40%);
+            transparent 40%
+        );
     opacity: 0.15;
     filter: blur(100px);
 }
@@ -192,9 +197,11 @@ body::-webkit-scrollbar {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(to bottom,
-            transparent 60%,
-            rgba(0, 0, 0, 0.8) 100%);
+    background: linear-gradient(
+        to bottom,
+        transparent 60%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
     pointer-events: none;
 }
 
@@ -204,9 +211,11 @@ body::-webkit-scrollbar {
     left: -10vw;
     width: 120vw;
     height: 40vh;
-    background: radial-gradient(ellipse at 50% 100%,
-            var(--accent-cyan) 0%,
-            transparent 70%);
+    background: radial-gradient(
+        ellipse at 50% 100%,
+        var(--accent-cyan) 0%,
+        transparent 70%
+    );
     opacity: 0.1;
     filter: blur(50px);
     z-index: -1;
@@ -230,9 +239,11 @@ body::-webkit-scrollbar {
     width: 200vw;
     height: 60vh;
     background:
-        radial-gradient(ellipse at 50% 0%,
+        radial-gradient(
+            ellipse at 50% 0%,
             var(--planet-surface-color, var(--accent-cyan)) 0%,
-            transparent 70%),
+            transparent 70%
+        ),
         linear-gradient(to bottom, transparent, #000 80%),
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3C%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     background-blend-mode: overlay, normal, soft-light;
@@ -273,7 +284,6 @@ body::-webkit-scrollbar {
 }
 
 @keyframes floatHero {
-
     0%,
     100% {
         transform: translateZ(100px) translateY(0);
@@ -552,10 +562,12 @@ body::-webkit-scrollbar {
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(to right,
-            transparent,
-            var(--accent-cyan),
-            transparent);
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--accent-cyan),
+        transparent
+    );
     opacity: 0.2;
     animation: scan 4s linear infinite;
 }
@@ -655,9 +667,11 @@ body::-webkit-scrollbar {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 55% 55% at 50% 50%,
-            var(--accent-cyan),
-            transparent);
+    background: radial-gradient(
+        ellipse 55% 55% at 50% 50%,
+        var(--accent-cyan),
+        transparent
+    );
     opacity: 0.055;
     pointer-events: none;
     z-index: 0;
@@ -669,9 +683,11 @@ body::-webkit-scrollbar {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 90% 90% at 50% 50%,
-            transparent 50%,
-            rgba(0, 0, 0, 0.7) 100%);
+    background: radial-gradient(
+        ellipse 90% 90% at 50% 50%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
     pointer-events: none;
     z-index: 1;
 }
@@ -731,9 +747,11 @@ body::-webkit-scrollbar {
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    background: linear-gradient(170deg,
-            rgba(255, 255, 255, 0.08) 0%,
-            transparent 38%);
+    background: linear-gradient(
+        170deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        transparent 38%
+    );
     pointer-events: none;
     z-index: 4;
 }
@@ -765,13 +783,18 @@ body::-webkit-scrollbar {
     z-index: 50;
     pointer-events: none;
     opacity: 0;
-    background: repeating-linear-gradient(90deg,
+    background:
+        repeating-linear-gradient(
+            90deg,
             transparent 0%,
             rgba(255, 255, 255, 0.018) 0.5%,
-            transparent 1%),
-        radial-gradient(ellipse 80% 30% at 50% 50%,
+            transparent 1%
+        ),
+        radial-gradient(
+            ellipse 80% 30% at 50% 50%,
             rgba(var(--accent-rgb, 0, 209, 255), 0.08) 0%,
-            transparent 70%);
+            transparent 70%
+        );
     transition: opacity 0.15s ease;
 }
 
@@ -822,11 +845,13 @@ body::-webkit-scrollbar {
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    background: repeating-linear-gradient(0deg,
-            transparent,
-            transparent 3px,
-            rgba(0, 0, 0, 0.06) 3px,
-            rgba(0, 0, 0, 0.06) 4px);
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 0, 0, 0.06) 3px,
+        rgba(0, 0, 0, 0.06) 4px
+    );
     pointer-events: none;
     z-index: 6;
     opacity: 0.5;
@@ -930,7 +955,6 @@ body::-webkit-scrollbar {
 }
 
 @keyframes depthHintPulse {
-
     0%,
     100% {
         opacity: 0.3;
@@ -1037,5 +1061,52 @@ body::-webkit-scrollbar {
 
     .depth-counter-current {
         font-size: 1.4rem;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPACESHIP CURSOR
+   ═══════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+    cursor: none !important;
+}
+
+#cursor-ship {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    width: 28px;
+    height: 28px;
+    pointer-events: none;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    will-change: transform;
+}
+
+#cursor-ship svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 0 3px rgba(0, 209, 255, 0.95))
+        drop-shadow(0 0 9px rgba(0, 209, 255, 0.5));
+}
+
+.ship-flame {
+    transform-origin: 10px 22px;
+    animation: shipFlamePulse 0.1s ease-in-out infinite alternate;
+}
+
+@keyframes shipFlamePulse {
+    from {
+        transform: scaleY(0.7) scaleX(0.85);
+        opacity: 0.65;
+    }
+    to {
+        transform: scaleY(1.35) scaleX(1.15);
+        opacity: 1;
     }
 }
