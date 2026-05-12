@@ -1111,3 +1111,48 @@ body::-webkit-scrollbar {
         opacity: 1;
     }
 }
+
+/* ── Audio Toggle ── */
+.audio-toggle {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 12000;
+    padding: 0.55rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 209, 255, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.audio-toggle:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 16px rgba(0, 209, 255, 0.25);
+}
+
+.audio-toggle.is-on {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 209, 255, 0.08);
+    color: #fff;
+    box-shadow:
+        0 0 18px rgba(0, 209, 255, 0.35),
+        inset 0 0 14px rgba(0, 209, 255, 0.12);
+}
+
+.audio-toggle:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+}
