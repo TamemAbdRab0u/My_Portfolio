@@ -10,7 +10,8 @@
   <!-- Preload fonts from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Share+Tech+Mono&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Share+Tech+Mono&display=swap"
     rel="stylesheet">
   <link rel="preload" as="image" href="./earth.png">
   <link rel="stylesheet" href="./style.css" />
@@ -20,7 +21,6 @@
   <div id="entry-transition" class="entry-transition">
     <div class="entry-portal-ring"></div>
     <div class="entry-portal-content">
-      <span class="status-badge pulse">ATMOSPHERIC JUMP</span>
       <h2 id="transition-planet">INITIATING...</h2>
     </div>
   </div>
@@ -211,85 +211,96 @@
 
         </div>
 
-        <!-- ═══════════════════════════
-             LANDING MODAL
-             Shown on planet click
-             ═══════════════════════════ -->
-        <div id="ps-modal" class="ps-modal">
-          <div class="ps-modal-content">
+      </section>
 
-            <button class="ps-modal-close" id="ps-modal-close" aria-label="Close">&#10005;</button>
+      <!-- Contact Section — Interstellar Transmitter -->
+      <section id="contact" class="panel transmitter-panel">
+        <div class="title-container float-text contact-title-overlay">
+          <h2 class="section-title">CONTACT</h2>
+        </div>
 
-            <div class="ps-modal-header">
-              <div class="ps-modal-planet-preview" id="ps-modal-preview"></div>
-              <div class="ps-modal-meta">
-                <span class="ps-modal-tag">PROJECT</span>
-                <h2 class="ps-modal-name" id="ps-modal-name"></h2>
+        <div class="transmitter-inner">
+          <div class="transmitter-grid">
+            
+            <!-- Left Panel: Connection Info / Socials -->
+            <div class="transmitter-info">
+              <h3 class="info-title">Get in Touch</h3>
+              <p class="info-desc">I'm always open to discussing new projects, creative ideas, or opportunities to collaborate. Drop me a line below, or connect with me through any of these platforms:</p>
+              
+              <div class="social-channels">
+                <a href="mailto:tamem.abdrabou@gmail.com" class="channel-card">
+                  <div class="channel-icon">✉</div>
+                  <div class="channel-details">
+                    <span class="channel-label">EMAIL</span>
+                    <span class="channel-val">tamem.abdrabou@gmail.com</span>
+                  </div>
+                </a>
+                <a href="https://github.com/TamemAbdRab0u" target="_blank" class="channel-card">
+                  <div class="channel-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                    </svg>
+                  </div>
+                  <div class="channel-details">
+                    <span class="channel-label">GITHUB</span>
+                    <span class="channel-val">github.com/TamemAbdRab0u</span>
+                  </div>
+                </a>
+                <a href="https://linkedin.com/in/tamem-abdrabou" target="_blank" class="channel-card">
+                  <div class="channel-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </div>
+                  <div class="channel-details">
+                    <span class="channel-label">LINKEDIN</span>
+                    <span class="channel-val">linkedin.com/in/tamem-abdrabou</span>
+                  </div>
+                </a>
               </div>
             </div>
 
-            <p class="ps-modal-desc" id="ps-modal-desc"></p>
-            <div class="ps-modal-tech" id="ps-modal-tech"></div>
-            <a class="ps-modal-link" id="ps-modal-link" href="#">VIEW PROJECT &#8594;</a>
-
-          </div>
-        </div><!-- /#ps-modal -->
-
-      </section>
-
-      <!-- Contact Section — Constellation Theme -->
-      <section id="contact" class="panel constel-panel">
-        <!-- Canvas for starfield background -->
-        <canvas id="constel-bg" class="constel-canvas"></canvas>
-        <!-- Canvas for constellation lines overlay -->
-        <canvas id="constel-overlay" class="constel-canvas-overlay"></canvas>
-
-        <div class="title-container float-text contact-title-overlay">
-                <h2 class="section-title">CONTACT</h2>
-        </div>
-
-        <div class="constel-inner">
-          <div class="constel-form-wrap">
-            <form id="constel-form" class="constel-form" novalidate>
-
-              <div class="cf-group" data-index="0">
-                <div class="cf-field-header">
-                  <div class="cf-node" id="node-0"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
-                </div>
-                <div class="cf-input-wrapper">
-                  <input id="cf-name" class="cf-input" type="text" name="name" autocomplete="off" placeholder="Name" required/>
-                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+            <!-- Right Panel: Creative Form -->
+            <div class="transmitter-form-wrap">
+              <div class="transmitter-header">
+                <div class="transmitter-satellite-wrap">
+                  <!-- Glowing Interactive SVG Satellite Dish -->
+                  <svg class="satellite-svg" viewBox="0 0 100 100">
+                    <path d="M 28,55 A 22,22 0 0,1 72,55" class="sat-dish" />
+                    <line x1="50" y1="55" x2="50" y2="28" class="sat-probe" />
+                    <circle cx="50" cy="25" r="4" class="sat-emitter" />
+                  </svg>
                 </div>
               </div>
 
-              <div class="cf-group" data-index="1">
-                <div class="cf-field-header">
-                  <div class="cf-node" id="node-1-left"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
-                  <div class="cf-node" id="node-1-right"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+              <form id="transmitter-form" class="transmitter-form" novalidate>
+                <div class="tf-group">
+                  <input id="tf-name" class="tf-input" type="text" name="name" autocomplete="off" placeholder="Name" required />
+                  <span class="tf-focus-line"></span>
                 </div>
-                <div class="cf-input-wrapper">
-                  <input id="cf-email" class="cf-input" type="email" name="email" autocomplete="off" placeholder="Email" required/>
-                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+
+                <div class="tf-group">
+                  <input id="tf-email" class="tf-input" type="email" name="email" autocomplete="off" placeholder="Email Address" required />
+                  <span class="tf-focus-line"></span>
                 </div>
-              </div>
 
-              <div class="cf-group" data-index="2">
-                <div class="cf-field-header">
-                  <div class="cf-node" id="node-2"><div class="cf-node-core"></div><div class="cf-node-rays"></div></div>
+                <div class="tf-group">
+                  <textarea id="tf-msg" class="tf-input tf-textarea" name="message" rows="3" placeholder="Your Message..." required></textarea>
+                  <span class="tf-focus-line"></span>
                 </div>
-                <div class="cf-input-wrapper">
-                  <textarea id="cf-msg" class="cf-input cf-textarea" name="message" rows="4" placeholder="Message" required></textarea>
-                  <div class="cf-underline"><div class="cf-underline-fill"></div></div>
+
+                <button class="tf-submit" id="tf-submit" type="submit" disabled>
+                  <span class="btn-text">SUBMIT</span>
+                  <span class="btn-loader"></span>
+                </button>
+
+                <!-- Interactive digital log output -->
+                <div class="tf-terminal" id="tf-terminal">
+                  <div class="term-line">> Ready for your message...</div>
                 </div>
-              </div>
-
-              <button class="cf-submit" id="cf-submit" type="submit" disabled>
-                Transmit Signal
-              </button>
-
-              <p class="cf-status" id="cf-status" aria-live="polite"></p>
-
-            </form>
+              </form>
+            </div>
+            
           </div>
         </div>
       </section>

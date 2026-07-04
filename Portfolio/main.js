@@ -688,404 +688,158 @@ function initSkillConnector() {
 //  initContactSection()
 // ─────────────────────────────────────────────────────────────────────────────
 function initContactSection() {
-  const contactForm = document.getElementById("constel-form");
-  if (!contactForm) return;
+  const form = document.getElementById("transmitter-form");
+  if (!form) return;
 
-  const cfBtn = document.getElementById("cf-submit");
-  const cfStatus = document.getElementById("cf-status");
-  const cfInputs = contactForm.querySelectorAll(".cf-input");
-  const cfGroups = contactForm.querySelectorAll(".cf-group");
+  const btn = document.getElementById("tf-submit");
+  const terminal = document.getElementById("tf-terminal");
+  const inputs = form.querySelectorAll(".tf-input");
+  const wrap = document.querySelector(".transmitter-form-wrap");
+  const satWrap = document.querySelector(".transmitter-satellite-wrap");
 
-  // Update button state based on validity
-  function checkValidity() {
-    let valid = true;
-    cfInputs.forEach(input => {
-      if (!input.value.trim()) valid = false;
-    });
-    if (cfBtn) cfBtn.disabled = !valid;
+  // Typewriter/log helper to add lines to terminal
+  function logLine(text, type = "") {
+    if (!terminal) return;
+    const line = document.createElement("div");
+    line.className = `term-line ${type}`;
+    line.innerText = text;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
   }
 
-  cfInputs.forEach((input) => {
-    input.addEventListener("input", () => {
-      checkValidity();
-      drawOverlay();
-    });
-    input.addEventListener("focus", () => {
-      const group = input.closest(".cf-group");
-      if (group) group.classList.add("active");
-      drawOverlay();
-    });
-    input.addEventListener("blur", () => {
-      const group = input.closest(".cf-group");
-      if (group && !input.value.trim()) {
-        group.classList.remove("active");
+  // Clear terminal
+  function clearLog() {
+    if (!terminal) return;
+    terminal.innerHTML = "";
+  }
+
+  // Update button state based on validity and signal strength meter
+  function updateState() {
+    let filledCount = 0;
+    let isValid = true;
+
+    inputs.forEach((input) => {
+      if (input.value.trim()) {
+        filledCount++;
+      } else {
+        isValid = false;
       }
-      drawOverlay();
     });
-  });
 
-  contactForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+    if (btn) btn.disabled = !isValid;
+  }
 
-    contactForm.classList.add("connecting");
-    if (cfBtn) {
-      cfBtn.classList.add("submitting");
-      cfBtn.disabled = true;
-    }
-    if (cfStatus) {
-      cfStatus.innerText = "Encrypting Data Packet...";
-      cfStatus.style.color = "var(--accent-cyan)";
-    }
+  // Particle spawning on input typing
+  function spawnParticle(input) {
+    if (!wrap || !satWrap) return;
 
-    // Lock in the nodes
-    cfGroups.forEach(group => group.classList.add("locked"));
+    const inputRect = input.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    const satRect = satWrap.getBoundingClientRect();
+
+    // Random X along input line, Y at the bottom border
+    const spawnX = inputRect.left - wrapRect.left + Math.random() * inputRect.width;
+    const spawnY = inputRect.bottom - wrapRect.top;
+
+    // Center of the satellite dish
+    const targetX = satRect.left - wrapRect.left + satRect.width / 2;
+    const targetY = satRect.top - wrapRect.top + satRect.height / 2;
+
+    const destX = targetX - spawnX;
+    const destY = targetY - spawnY;
+
+    const particle = document.createElement("span");
+    particle.className = "typing-particle";
+    particle.style.left = `${spawnX}px`;
+    particle.style.top = `${spawnY}px`;
+    particle.style.setProperty("--dest-x", `${destX}px`);
+    particle.style.setProperty("--dest-y", `${destY}px`);
+
+    const size = Math.random() * 4 + 3; // 3px to 7px
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.background = Math.random() > 0.45 ? "var(--accent-cyan)" : "var(--accent-gold)";
+
+    wrap.appendChild(particle);
 
     setTimeout(() => {
-      contactForm.classList.remove("connecting");
-      if (cfStatus) {
-        cfStatus.innerText = "";
-      }
-      if (cfBtn) {
-          cfBtn.classList.remove("submitting");
-          cfBtn.classList.add("success");
-          cfBtn.innerHTML = "✔ SENT";
-      }
+      particle.remove();
+    }, 1200);
+  }
 
-      setTimeout(() => {
-        contactForm.reset();
-        checkValidity();
-        cfGroups.forEach(group => {
-          group.classList.remove("active");
-          group.classList.remove("locked");
-        });
-        if (cfBtn) {
-            cfBtn.classList.remove("success");
-            cfBtn.innerHTML = "Transmit Signal";
-            cfBtn.disabled = false;
-        }
-        drawOverlay();
-      }, 4000);
-    }, 2500);
+  // Attach input listeners
+  inputs.forEach((input) => {
+    input.addEventListener("input", (e) => {
+      updateState();
+      // Spawn a dynamic particle if key is not empty space
+      if (e.target.value.trim()) {
+        spawnParticle(input);
+      }
+    });
   });
 
-  // ── Visibility gating ──
-  let contactVisible = false;
-  const contactSection = document.getElementById("contact");
+  // Submit animation sequence
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  // Canvas Background (Starfield)
-  const bgCanvas = document.getElementById("constel-bg");
-  const bgCtx = bgCanvas ? bgCanvas.getContext("2d") : null;
-  let stars = [];
-
-  function initBgCanvas() {
-    if (!bgCanvas) return;
-    bgCanvas.width = bgCanvas.offsetWidth;
-    bgCanvas.height = bgCanvas.offsetHeight;
-    stars = [];
-    // ~160 dots
-    for (let i = 0; i < 160; i++) {
-      stars.push({
-        x: Math.random() * bgCanvas.width,
-        y: Math.random() * bgCanvas.height,
-        r: Math.random() * 1.5,
-        alpha: Math.random() * 0.5 + 0.1
-      });
+    if (btn) {
+      btn.classList.add("submitting");
+      btn.disabled = true;
     }
-  }
+    if (wrap) wrap.classList.add("transmitting");
 
-  function drawBg() {
-    if (!bgCtx) return;
-    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-    stars.forEach(star => {
-      bgCtx.beginPath();
-      bgCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-      bgCtx.fillStyle = `rgba(253, 230, 138, ${star.alpha})`; // gold/amber
-      bgCtx.fill();
-    });
-  }
+    clearLog();
+    logLine("> Processing your message...", "system");
 
-  if (bgCanvas) {
-    initBgCanvas();
-    drawBg();
-    window.addEventListener("resize", debounce(() => {
-      initBgCanvas();
-      drawBg();
-      drawOverlay();
-    }));
-  }
-
-  // Canvas Overlay (Constellation Lines)
-  const overlayCanvas = document.getElementById("constel-overlay");
-  const overlayCtx = overlayCanvas ? overlayCanvas.getContext("2d") : null;
-  let startTime = Date.now();
-  let animationFrameId = null;
-  let currentProgress = 0; // Tracks smooth animation progress
-
-  function drawOverlay() {
-    if (!overlayCanvas || !overlayCtx) return;
-
-    // Resize if needed
-    if (overlayCanvas.width !== overlayCanvas.offsetWidth || overlayCanvas.height !== overlayCanvas.offsetHeight) {
-      overlayCanvas.width = overlayCanvas.offsetWidth;
-      overlayCanvas.height = overlayCanvas.offsetHeight;
+    // Spawn a shockwave ring
+    if (satWrap) {
+      const ring = document.createElement("div");
+      ring.className = "shockwave-ring animate";
+      satWrap.appendChild(ring);
+      setTimeout(() => ring.remove(), 1600);
     }
 
-    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+    setTimeout(() => {
+      logLine("> Validating details...");
+    }, 500);
 
-    const allNodes = [];
-    for (let index = 0; index < cfGroups.length; index++) {
-      const group = cfGroups[index];
-      const nodes = group.querySelectorAll(".cf-node");
-      nodes.forEach(node => {
-        const rect = node.getBoundingClientRect();
-        const parentRect = overlayCanvas.getBoundingClientRect();
-        allNodes.push({
-          x: rect.left - parentRect.left + rect.width / 2,
-          y: rect.top - parentRect.top + rect.height / 2
-        });
-      });
-    }
+    setTimeout(() => {
+      logLine("> Sending message...");
+    }, 1000);
 
-    let targetProgress = 0;
+    setTimeout(() => {
+      logLine("> Connection secured.", "system");
+    }, 1500);
 
-    // Nodes:
-    // 0: Field 1
-    // 1: Field 2 Left
-    // 2: Field 2 Right
-    // 3: Field 3
-
-    const input2 = cfGroups[1].querySelector(".cf-input");
-    const input3 = cfGroups[2].querySelector(".cf-input");
-
-    if (input2 && input2.value.trim() !== "") {
-      targetProgress = 2; // Draws line from 0 to 1, and skip 1 to 2
-    }
-    if (input2 && input2.value.trim() !== "" && input3 && input3.value.trim() !== "") {
-      targetProgress = 3; // Draws line from 2 to 3
-    }
-
-    // Update currentProgress with constant speed
-    const diff = targetProgress - currentProgress;
-    if (Math.abs(diff) > 0.01) {
-      const step = 0.025; // Constant speed
-      currentProgress += Math.sign(diff) * step;
-
-      // Skip the invisible segment (from Node 1 to Node 2) instantly to avoid dead time
-      if (currentProgress > 1 && currentProgress < 2) {
-        if (diff > 0) {
-          currentProgress = 2;
-        } else {
-          currentProgress = 1;
-        }
+    setTimeout(() => {
+      logLine("> Message sent successfully!", "system");
+      if (btn) {
+        btn.classList.remove("submitting");
+        btn.classList.add("success");
+        btn.querySelector(".btn-text").innerText = "SUBMITTED ✓";
       }
-    } else {
-      currentProgress = targetProgress;
-    }
+    }, 2200);
 
-    if (currentProgress > 0 && allNodes.length > 1) {
-      const time = (Date.now() - startTime) / 1000;
-      // Pulse subtlety using sin(time)
-      const alpha = 0.4 + 0.3 * Math.sin(time * 3);
+    setTimeout(() => {
+      logLine("> Thanks for reaching out! I'll get back to you soon.");
+    }, 2700);
 
-      overlayCtx.beginPath();
-      overlayCtx.moveTo(allNodes[0].x, allNodes[0].y);
-
-      let fullSegments = Math.floor(currentProgress);
-      let partialSegment = currentProgress % 1;
-
-      // Guard against rounding errors exceeding array bounds
-      if (fullSegments >= allNodes.length - 1) {
-        fullSegments = allNodes.length - 1;
-        partialSegment = 0;
+    // Form cleanup and reset sequence
+    setTimeout(() => {
+      form.reset();
+      updateState();
+      if (wrap) wrap.classList.remove("transmitting");
+      if (btn) {
+        btn.classList.remove("success");
+        btn.querySelector(".btn-text").innerText = "SUBMIT";
       }
+      clearLog();
+      logLine("> Ready for your message...");
+    }, 5500);
+  });
 
-      let lastX = allNodes[0].x;
-      let lastY = allNodes[0].y;
-
-      const getOffset = (i) => {
-        const isMobile = window.innerWidth < 768;
-        if (i === 0) return isMobile ? 40 : 100;    // F1 -> F2L (Left side)
-        if (i === 1) return 0;                      // F2L -> F2R (Across field)
-        if (i === 2) return isMobile ? -60 : -150; // F2R -> F3R (Right side)
-        return 0;
-      };
-      const radius = 5;
-
-      for (let i = 0; i < fullSegments; i++) {
-        const p0 = allNodes[i];
-        const p2 = allNodes[i + 1];
-        const segOffset = getOffset(i);
-
-        if (i === 1) {
-          // Skip drawing the line between the two nodes in Field 2
-          overlayCtx.moveTo(p2.x, p2.y);
-        } else if (segOffset === 0) {
-          overlayCtx.lineTo(p2.x, p2.y);
-        } else {
-          // Go out
-          overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
-          overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
-
-          // Go down/up to next field level
-          overlayCtx.lineTo(p0.x - segOffset, p2.y - (p2.y > p0.y ? radius : -radius));
-          overlayCtx.arcTo(p0.x - segOffset, p2.y, p0.x - segOffset + (segOffset > 0 ? radius : -radius), p2.y, radius);
-
-          // Go back in
-          overlayCtx.lineTo(p2.x, p2.y);
-        }
-
-        lastX = p2.x;
-        lastY = p2.y;
-      }
-
-      if (partialSegment > 0 && allNodes[fullSegments + 1]) {
-        const p0 = allNodes[fullSegments];
-        const p2 = allNodes[fullSegments + 1];
-        const segOffset = getOffset(fullSegments);
-
-        if (fullSegments === 1) {
-          // Skip drawing the partial line for the internal segment in Field 2
-          lastX = p0.x + (p2.x - p0.x) * partialSegment;
-          lastY = p0.y + (p2.y - p0.y) * partialSegment;
-          overlayCtx.moveTo(lastX, lastY);
-        } else if (segOffset === 0) {
-          lastX = p0.x + (p2.x - p0.x) * partialSegment;
-          lastY = p0.y + (p2.y - p0.y) * partialSegment;
-          overlayCtx.lineTo(lastX, lastY);
-        } else {
-          const hLen = Math.abs(segOffset);
-          const vLen = Math.abs(p2.y - p0.y);
-          const totalLen = hLen * 2 + vLen;
-          const currentLen = totalLen * partialSegment;
-
-          if (currentLen <= hLen) {
-            lastX = p0.x - (segOffset > 0 ? currentLen : -currentLen);
-            lastY = p0.y;
-            overlayCtx.lineTo(lastX, lastY);
-          } else if (currentLen <= hLen + vLen) {
-            overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
-            overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
-
-            const progressV = currentLen - hLen;
-            lastX = p0.x - segOffset;
-            lastY = p0.y + (p2.y > p0.y ? progressV : -progressV);
-            overlayCtx.lineTo(lastX, lastY);
-          } else {
-            overlayCtx.lineTo(p0.x - segOffset + (segOffset > 0 ? radius : -radius), p0.y);
-            overlayCtx.arcTo(p0.x - segOffset, p0.y, p0.x - segOffset, p0.y + (p2.y > p0.y ? radius : -radius), radius);
-            overlayCtx.lineTo(p0.x - segOffset, p2.y - (p2.y > p0.y ? radius : -radius));
-            overlayCtx.arcTo(p0.x - segOffset, p2.y, p0.x - segOffset + (segOffset > 0 ? radius : -radius), p2.y, radius);
-
-            const progressH2 = currentLen - hLen - vLen;
-            lastX = p0.x - segOffset + (segOffset > 0 ? progressH2 : -progressH2);
-            lastY = p2.y;
-            overlayCtx.lineTo(lastX, lastY);
-          }
-        }
-      }
-
-      // Create a gradient that follows the line's general direction
-      const isLocked = contactForm.classList.contains("connecting") ||
-        Array.from(cfGroups).some((g) => g.classList.contains("locked"));
-      const lineRgb = isLocked ? "0, 209, 255" : "253, 230, 138";
-      const glowColor = isLocked ? "#00d1ff" : "#fde68a";
-
-      const grad = overlayCtx.createLinearGradient(allNodes[0].x, allNodes[0].y, lastX, lastY);
-      grad.addColorStop(0, `rgba(${lineRgb}, ${alpha})`);
-      grad.addColorStop(0.5, `rgba(255, 255, 255, ${alpha + 0.2})`); // white
-      grad.addColorStop(1, `rgba(${lineRgb}, ${alpha})`);
-
-      overlayCtx.strokeStyle = grad;
-      overlayCtx.lineWidth = 2.5;
-      // Add a bit of glow
-      overlayCtx.shadowBlur = 15;
-      overlayCtx.shadowColor = glowColor;
-      overlayCtx.stroke();
-
-      overlayCtx.shadowBlur = 0;
-
-      // ── Traveling Pulse Effect ──
-      const pulseTime = (Date.now() % 3000) / 3000; // 0 to 1 loop every 3s
-      const pulseSegment = Math.floor(pulseTime * (allNodes.length - 1));
-      const pulseSubProgress = (pulseTime * (allNodes.length - 1)) % 1;
-
-      // Only show pulse if the line has reached this part
-      if (pulseTime * (allNodes.length - 1) <= currentProgress && allNodes[pulseSegment + 1]) {
-        if (pulseSegment === 1) {
-          // Hide pulse during the gap in Field 2
-        } else {
-          const p0 = allNodes[pulseSegment];
-          const p2 = allNodes[pulseSegment + 1];
-          const segOffset = getOffset(pulseSegment);
-
-          let px, py;
-          if (segOffset === 0) {
-            px = p0.x + (p2.x - p0.x) * pulseSubProgress;
-            py = p0.y + (p2.y - p0.y) * pulseSubProgress;
-          } else {
-            const hLen = Math.abs(segOffset);
-            const vLen = Math.abs(p2.y - p0.y);
-            const totalLen = hLen * 2 + vLen;
-            const currentLen = totalLen * pulseSubProgress;
-
-            if (currentLen <= hLen) {
-              px = p0.x - (segOffset > 0 ? currentLen : -currentLen);
-              py = p0.y;
-            } else if (currentLen <= hLen + vLen) {
-              const vProgress = currentLen - hLen;
-              px = p0.x - segOffset;
-              py = p0.y + (p2.y > p0.y ? vProgress : -vProgress);
-            } else {
-              const h2Progress = currentLen - hLen - vLen;
-              px = (p0.x - segOffset) + (segOffset > 0 ? h2Progress : -h2Progress);
-              py = p2.y;
-            }
-          }
-
-          overlayCtx.beginPath();
-          overlayCtx.arc(px, py, 4, 0, Math.PI * 2);
-          overlayCtx.fillStyle = isLocked ? "#00d1ff" : "#fff";
-          overlayCtx.shadowBlur = 15;
-          overlayCtx.shadowColor = glowColor;
-          overlayCtx.fill();
-          overlayCtx.shadowBlur = 0;
-        }
-      }
-    }
-
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-    }
-
-    // Animate constantly while transitioning or while drawing is visible (for pulse)
-    if (contactVisible && (Math.abs(diff) > 0.01 || currentProgress > 0)) {
-      animationFrameId = requestAnimationFrame(drawOverlay);
-    }
-  }
-
-  // Initial draw
-  setTimeout(() => {
-    if (contactVisible) drawOverlay();
-  }, 100);
-
-  // ── IntersectionObserver: gate rAF to visible only ──
-  if (contactSection) {
-    const contactObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          contactVisible = e.isIntersecting;
-          if (!contactVisible && animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-          } else if (contactVisible) {
-            drawOverlay();
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-    contactObs.observe(contactSection);
-  }
+  // Init state on page load
+  updateState();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1107,10 +861,8 @@ function initPlanetSystem() {
   const wrap = document.getElementById("planet-system-wrap");
   const svgEl = document.getElementById("ps-connector-svg");
   const detailEl = document.getElementById("ps-detail-panel");
-  const modalEl = document.getElementById("ps-modal");
-  const modalClose = document.getElementById("ps-modal-close");
 
-  if (!section || !system || !wrap || !svgEl || !detailEl || !modalEl) return;
+  if (!section || !system || !wrap || !svgEl || !detailEl) return;
 
   // ── Runtime state ────────────────────────────────────────────────────────────
   let cx = 0;
@@ -1180,7 +932,7 @@ function initPlanetSystem() {
     {
       name: "MindShelf",
       description:
-        "An Online Bookstore Platform that is more than just a bookstore. It’s a community for book lovers packed with powerful discovery features.",
+        "An Online Bookstore Platform that is more than just a bookstore. It's a community for book lovers packed with powerful discovery features.",
       tech: ["HTML", "CSS", "JS", "ASP.NET MVC", "SQL Server"],
       link: "#",
       orbitRadius: 240,
@@ -1192,7 +944,7 @@ function initPlanetSystem() {
       floatAngle: 4,
       offsetX: -100,
       offsetY: 0,
-      colorA: "#8e4a01",
+      colorA: "#d47800",
       colorB: "#1a0033",
     },
   ];
@@ -1307,13 +1059,6 @@ function initPlanetSystem() {
   const psdpTech = detailEl.querySelector(".psdp-tech");
   const psdpLink = detailEl.querySelector(".psdp-link");
 
-  // ── Modal sub-element refs ───────────────────────────────────────────────────
-  const modalPreview = document.getElementById("ps-modal-preview");
-  const modalName = document.getElementById("ps-modal-name");
-  const modalDesc = document.getElementById("ps-modal-desc");
-  const modalTech = document.getElementById("ps-modal-tech");
-  const modalLink = document.getElementById("ps-modal-link");
-
   // ── Runtime state ────────────────────────────────────────────────────────────
   let psZoom = 1;
   const ZOOM_MIN = 0.55;
@@ -1398,7 +1143,6 @@ function initPlanetSystem() {
         e.preventDefault();
         const targetUrl = psdpLink.href;
 
-        // Save current spot
         localStorage.setItem("portfolio_return_scroll", window.scrollY);
 
         const transition = document.getElementById("entry-transition");
@@ -1406,12 +1150,12 @@ function initPlanetSystem() {
 
         if (transition) {
           if (transitionText)
-            transitionText.textContent = `PLANET: ${data.name}`;
-          document.documentElement.style.setProperty(
-            "--accent-cyan",
-            data.colorA,
-          );
+            transitionText.textContent = data.name;
+          document.documentElement.style.setProperty("--accent-cyan", data.colorA);
+
           transition.classList.add("active");
+          document.body.style.overflowX = "hidden";
+          document.body.style.overflowY = "hidden";
           setTimeout(() => {
             window.location.href = targetUrl;
           }, 1800);
@@ -1497,85 +1241,27 @@ function initPlanetSystem() {
     if (projectsSec) projectsSec.classList.add("ps--active-landing");
 
     setTimeout(() => {
-      if (!modalPreview || !modalName || !modalDesc || !modalTech) return;
+      localStorage.setItem("portfolio_return_scroll", window.scrollY);
 
-      // Style the preview sphere to match the clicked planet
-      modalPreview.style.background = `radial-gradient(circle at 35% 30%, #fff 0%, ${data.colorA} 30%, ${data.colorB} 100%)`;
-      modalPreview.style.boxShadow = `0 0 55px ${hexToRgba(data.colorA, 0.65)}, 0 0 110px ${hexToRgba(data.colorA, 0.3)}`;
+      const transition = document.getElementById("entry-transition");
+      const transitionText = document.getElementById("transition-planet");
 
-      modalName.textContent = data.name;
-      modalDesc.textContent = data.description;
+      if (transition) {
+        if (transitionText)
+          transitionText.textContent = data.name;
+        document.documentElement.style.setProperty("--accent-cyan", data.colorA);
 
-      modalTech.innerHTML = "";
-      data.tech.forEach((t) => {
-        const badge = document.createElement("span");
-        badge.className = "ps-modal-tech-badge";
-        badge.textContent = t;
-        modalTech.appendChild(badge);
-      });
-
-      if (modalLink) {
-        modalLink.href = "Project/projects.html?id=" + i;
-        modalLink.style.borderColor = hexToRgba(data.colorA, 0.5);
-        modalLink.style.color = data.colorA;
-
-        // Thematic Entry Transition
-        modalLink.onclick = (e) => {
-          e.preventDefault();
-          const targetUrl = modalLink.href;
-
-          // Save current spot
-          localStorage.setItem("portfolio_return_scroll", window.scrollY);
-
-          const transition = document.getElementById("entry-transition");
-          const transitionText = document.getElementById("transition-planet");
-
-          if (transition) {
-            if (transitionText)
-              transitionText.textContent = `PLANET: ${data.name}`;
-            // Match portal color to project color
-            document.documentElement.style.setProperty(
-              "--accent-cyan",
-              data.colorA,
-            );
-
-            transition.classList.add("active");
-            document.body.style.overflowX = "hidden";
-            document.body.style.overflowY = "hidden";
-            setTimeout(() => {
-              window.location.href = targetUrl;
-            }, 1800);
-          } else {
-            window.location.href = targetUrl;
-          }
-        };
+        transition.classList.add("active");
+        document.body.style.overflowX = "hidden";
+        document.body.style.overflowY = "hidden";
+        setTimeout(() => {
+          window.location.href = "Project/projects.html?id=" + i;
+        }, 1800);
+      } else {
+        window.location.href = "Project/projects.html?id=" + i;
       }
-
-      modalEl.classList.add("visible");
-    }, 680); // matches CSS landing transition duration
+    }, 680);
   }
-
-  // ── Close modal ───────────────────────────────────────────────────────────────
-  function closeModal() {
-    modalEl.classList.remove("visible");
-    planetEls.forEach((el) => el.classList.remove("ps-planet--landing"));
-    const projectsSec = document.getElementById("projects");
-    if (projectsSec) projectsSec.classList.remove("ps--active-landing");
-    setTimeout(() => {
-      animPaused = false;
-    }, 420);
-  }
-
-  if (modalClose) {
-    modalClose.addEventListener("click", closeModal);
-  }
-  modalEl.addEventListener("click", (e) => {
-    if (e.target === modalEl) closeModal();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modalEl.classList.contains("visible"))
-      closeModal();
-  });
 
   // ── Planet event listeners ────────────────────────────────────────────────────
   planetEls.forEach((el, i) => {

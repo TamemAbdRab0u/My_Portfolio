@@ -5,102 +5,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Details | Portfolio</title>
-    <!-- Google Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;700&family=Outfit:wght@300;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="./projects.css" />
 </head>
 
 <body>
-    <div class="loading-data-stream" id="data-stream"></div>
+    <div id="particle-field"></div>
     <div class="cosmic-canvas">
         <div class="stars"></div>
     </div>
-    <div id="particle-field"></div>
     <div class="atmosphere-layer"></div>
     <div class="planet-ground"></div>
-
-    <div class="hud-frame">
-        <div class="hud-corner tl"></div>
-        <div class="hud-corner tr"></div>
-        <div class="hud-corner bl"></div>
-        <div class="hud-corner br"></div>
-        <div class="scanning-line"></div>
-        <div class="data-readout" id="hud-stats">
-            ALT: 12.4km<br />
-            O2: 18.2%<br />
-            TEMP: -142°C
-        </div>
-    </div>
 
     <div class="landing-overlay" id="landing-sequence">
         <div class="entry-portal-ring"></div>
         <div class="entry-portal-content">
-            <span class="status-badge pulse">ATMOSPHERIC JUMP</span>
             <h2 id="transition-planet">INITIATING...</h2>
         </div>
     </div>
 
-    <main class="immersive-discovery">
-        <div class="header-nav">
-            <a href="../index.html" class="back-btn"> ← ABORT MISSION </a>
-        </div>
+    <main class="page-container">
+        <div class="control-panel" id="control-panel">
 
-        <section class="planet-hero">
-            <div class="hero-content">
-                <h1 id="proj-title" class="glitch-text">SYNCING...</h1>
-                <p class="project-desc" id="proj-desc">
-                    Initializing secure connection to project subspace...
-                </p>
-
-                <div class="mission-stats">
-                    <div class="stat-box">
-                        <span class="info-label">Tech Composition</span>
-                        <div class="tech-list" id="proj-tech"></div>
+            <!-- ═══ TITLE MODULE ═══ -->
+            <div class="panel-module mod-title">
+                <div class="module-clip">
+                    <div class="title-layout">
+                        <div class="title-main">
+                            <h1 class="gradient-title" id="proj-title">SYNCING...</h1>
+                            <p class="objective-text" id="proj-desc">Loading transmission...</p>
+                        </div>
+                        <div class="title-tech">
+                            <div class="tech-groups" id="proj-systems"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ═══════════════════════════════════════════════════════
-             SCROLL-BASED 3D DEPTH SHOWCASE
-             Tall trigger wrapper → sticky 3D viewport inside
-             Cards + progress injected by initDepthShowcase()
-             ═══════════════════════════════════════════════════════ -->
-        <section class="depth-showcase-trigger" id="depth-showcase">
-            <div class="depth-showcase-sticky">
-                <!-- 3D perspective stage (children positioned by JS) -->
-                <div class="depth-scene" id="depth-stage"></div>
-
-                <!-- ── UI Overlays ── -->
-
-                <!-- Image counter  top-right -->
-                <div class="depth-counter">
-                    <span class="depth-counter-current" id="depth-current">01</span>
-                    <span class="depth-sep">/</span>
-                    <span class="depth-counter-total" id="depth-total">01</span>
-                </div>
-
-                <!-- Section label  top-left -->
-                <div class="depth-section-label">
-                    <span class="depth-label-tag">SPECIMEN ARCHIVE</span>
-                    <span class="depth-label-name" id="depth-proj-name"></span>
-                </div>
-
-                <!-- Scroll hint (fades once user scrolls) -->
-                <div class="depth-hint" id="depth-hint">
-                    ↓ &nbsp; SCROLL TO TRAVEL THROUGH SPACE
-                </div>
-
-                <!-- Progress bar  bottom-center -->
-                <div class="depth-progress-track">
-                    <div class="depth-progress-fill" id="gallery-progress"></div>
+            <!-- ═══ SCREENSHOT MODULE ═══ -->
+            <div class="panel-module mod-screenshot">
+                <div class="module-clip">
+                    <div class="gallery-viewport" id="gallery-viewport">
+                        <button class="gallery-arrow prev" id="gallery-prev" aria-label="Previous">◀</button>
+                        <button class="gallery-arrow next" id="gallery-next" aria-label="Next">▶</button>
+                        <div class="gallery-counter" id="gallery-counter"><span id="gallery-cur">1</span> / <span
+                                id="gallery-tot">1</span></div>
+                    </div>
                 </div>
             </div>
-            <!-- /.depth-showcase-sticky -->
-        </section>
-        <!-- /#depth-showcase -->
+
+            <!-- ═══ ACTIONS MODULE ═══ -->
+            <div class="panel-module mod-actions">
+                <div class="module-clip">
+                    <a id="proj-live-link" class="action-btn primary" href="#" target="_blank" rel="noopener">
+                        LAUNCH PROJECT <span class="arrow">→</span>
+                    </a>
+                    <a id="proj-source-link" class="action-btn secondary" href="#" target="_blank" rel="noopener">
+                        VIEW SOURCE
+                    </a>
+                    <a href="../index.html#planet-system-wrap" class="action-btn back" id="back-btn">← ABORT MISSION</a>
+                </div>
+            </div>
+
+        </div>
     </main>
 
     <script src="./projects.js"></script>
