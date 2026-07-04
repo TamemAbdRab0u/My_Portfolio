@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=Share+Tech+Mono&display=swap"
     rel="stylesheet">
+  <link rel="preload" as="image" href="./earth.png">
   <link rel="stylesheet" href="./style.css" />
 </head>
 
@@ -140,7 +141,7 @@
 
       <!-- Skills Section -->
       <section id="skills" class="panel">
-        <div class="title-container float-text" style="position: relative; top: 100px;">
+        <div class="title-container float-text">
           <h2 class="section-title">MY SKILLS</h2>
         </div>
         <div class="solar-system-viewport">
@@ -155,121 +156,15 @@
             </div>
 
             <!-- Inner Orbit (Web Core) -->
-            <div class="orbit-ring" id="orbit-inner"
-              style="--diameter: 450px; --duration: 25s; --ring-dir: normal; --card-dir: reverse;">
-              <div class="skill-planet" style="--angle: 0deg;">
-                <div class="planet-card" data-name="HTML5" data-desc="Semantic markup & structure for modern web apps"
-                  data-level="95" data-tag="Web Foundation"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
-                    alt="HTML5" /><span>HTML</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 120deg;">
-                <div class="planet-card" data-name="CSS3" data-desc="Advanced styling, animations & responsive layouts"
-                  data-level="90" data-tag="Web Foundation"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
-                    alt="CSS3" /><span>CSS</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 240deg;">
-                <div class="planet-card" data-name="JavaScript"
-                  data-desc="Dynamic scripting, DOM manipulation & async patterns" data-level="85"
-                  data-tag="Web Foundation"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-                    alt="JS" /><span>JS</span></div>
-              </div>
+            <div class="orbit-ring" id="orbit-inner">
             </div>
 
             <!-- Middle Orbit (.NET & Backend) -->
-            <div class="orbit-ring" id="orbit-middle"
-              style="--diameter: 750px; --duration: 40s; --ring-dir: reverse; --card-dir: normal;">
-              <div class="skill-planet" style="--angle: 0deg;">
-                <div class="planet-card" data-name="C#" data-desc="Object-oriented language for .NET ecosystem"
-                  data-level="92" data-tag="Backend"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg"
-                    alt="C#" /><span>C#</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 60deg;">
-                <div class="planet-card" data-name="ASP.NET MVC"
-                  data-desc="Model-View-Controller web framework for .NET" data-level="88" data-tag="Backend"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg"
-                    alt="MVC" /><span>MVC</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 120deg;">
-                <div class="planet-card" data-name="ASP.NET Core API" data-desc="RESTful API development with .NET Core"
-                  data-level="88" data-tag="Backend"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg"
-                    alt="API" /><span>API</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 180deg;">
-                <div class="planet-card" data-name="Node.js"
-                  data-desc="Server-side JavaScript runtime & event-driven APIs" data-level="75" data-tag="Backend"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
-                    alt="Node" /><span>Node</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 240deg;" data-skill="signalr">
-                <div class="planet-card" data-name="SignalR"
-                  data-desc="Real-time bidirectional communication for web apps" data-level="80" data-tag="Backend">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M12,2A10,10,0,0,0,2,12a9.89,9.89,0,0,0,2,6l-1.3,1.3a1,1,0,0,0,0,1.42,1,1,0,0,0,.71.29,1,1,0,0,0,.71-.29L5.75,19.38A10,10,0,1,0,12,2ZM12,18a6,6,0,1,1,6-6A6,6,0,0,1,12,18ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Z" />
-                  </svg>
-                  <span>SignalR</span>
-                </div>
-              </div>
-              <div class="skill-planet" style="--angle: 300deg;">
-                <div class="planet-card" data-name="Git & GitHub"
-                  data-desc="Version control, branching & collaborative workflows" data-level="85" data-tag="Tools"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
-                    alt="GitHub" /><span>Git</span></div>
-              </div>
+            <div class="orbit-ring" id="orbit-middle">
             </div>
 
             <!-- Outer Orbit (Data & Languages) -->
-            <div class="orbit-ring" id="orbit-outer"
-              style="--diameter: 950px; --duration: 60s; --ring-dir: normal; --card-dir: reverse;">
-              <div class="skill-planet" style="--angle: 0deg;">
-                <div class="planet-card" data-name="SQL Server"
-                  data-desc="Relational database design, queries & optimization" data-level="85" data-tag="Database">
-                  <img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg"
-                    alt="SQL" /><span>SQL</span>
-                </div>
-              </div>
-              <div class="skill-planet" style="--angle: 60deg;">
-                <div class="planet-card" data-name="MongoDB"
-                  data-desc="NoSQL document database for flexible data models" data-level="75" data-tag="Database"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
-                    alt="Mongo" /><span>Mongo</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 120deg;">
-                <div class="planet-card" data-name="Python" data-desc="Scripting, automation & data processing"
-                  data-level="70" data-tag="Language"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
-                    alt="Python" /><span>Python</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 180deg;">
-                <div class="planet-card" data-name="C++"
-                  data-desc="Systems programming, performance-critical applications" data-level="75"
-                  data-tag="Language"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg"
-                    alt="C++" /><span>C++</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 240deg;">
-                <div class="planet-card" data-name="SQLite" data-desc="Lightweight embedded relational database"
-                  data-level="80" data-tag="Database"><img
-                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg"
-                    alt="SQLite" /><span>SQLite</span></div>
-              </div>
-              <div class="skill-planet" style="--angle: 300deg;" data-skill="assembly">
-                <div class="planet-card" data-name="Assembly (x86)"
-                  data-desc="Low-level CPU instruction programming & system internals" data-level="65"
-                  data-tag="Language">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M19 13H17V9H19V13M19 17H17V15H19V17M19 7H17V5H19V7M22 6C22 5.4 21.6 5 21 5H20V4C20 2.9 19.1 2 18 2H17V1H15V2H13V1H11V2H9V1H7V2H6C4.9 2 4 2.9 4 4V5H3C2.4 5 2 5.4 2 6V7H1V9H2V11H1V13H2V15H1V17H2V18C2 19.1 2.9 20 4 20V21H6V22H8V21H10V22H12V21H14V22H16V21H18C19.1 21 20 20.1 20 19V18H21C21.6 18 22 17.6 22 17V16H23V14H22V12H23V10H22V9H23V7H22V6M16 19H8V5H16V19M15 6H9V18H15V6M14 7H10V17H14V7Z" />
-                  </svg>
-                  <span>ASM</span>
-                </div>
-              </div>
+            <div class="orbit-ring" id="orbit-outer">
             </div>
           </div>
 
@@ -286,7 +181,6 @@
           </div>
 
         </div>
-      </section>
       </section>
 
       <!-- Projects Section -->

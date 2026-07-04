@@ -1,11 +1,130 @@
 // main.js
 
+// ── Master Animation Loop ──
+const animCallbacks = new Set();
+let masterRafId = null;
+
+function masterTick(timestamp) {
+  animCallbacks.forEach(cb => cb(timestamp));
+  masterRafId = requestAnimationFrame(masterTick);
+}
+
+function registerAnim(fn) {
+  animCallbacks.add(fn);
+  if (!masterRafId) {
+    masterRafId = requestAnimationFrame(masterTick);
+  }
+  return () => {
+    animCallbacks.delete(fn);
+    if (animCallbacks.size === 0) {
+      cancelAnimationFrame(masterRafId);
+      masterRafId = null;
+    }
+  };
+}
+
+// ── Debounce Utility ──
+function debounce(fn, ms = 150) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+}
+
+// ── Skills Data ──────────────────────────────────────────────────────────────
+const SKILLS = [
+  // Inner orbit — Web Core
+  { name: "HTML5", desc: "Semantic markup & structure for modern web apps", level: 95, tag: "Web Foundation", short: "HTML", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", orbit: "inner" },
+  { name: "CSS3", desc: "Advanced styling, animations & responsive layouts", level: 90, tag: "Web Foundation", short: "CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg", orbit: "inner" },
+  { name: "JavaScript", desc: "Dynamic scripting, DOM manipulation & async patterns", level: 85, tag: "Web Foundation", short: "JS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", orbit: "inner" },
+
+  // Middle orbit — .NET & Backend
+  { name: "C#", desc: "Object-oriented language for .NET ecosystem", level: 92, tag: "Backend", short: "C#", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg", orbit: "middle" },
+  { name: "ASP.NET MVC", desc: "Model-View-Controller web framework for .NET", level: 88, tag: "Backend", short: "MVC", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg", orbit: "middle" },
+  { name: "ASP.NET Core API", desc: "RESTful API development with .NET Core", level: 88, tag: "Backend", short: "API", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg", orbit: "middle" },
+  { name: "Node.js", desc: "Server-side JavaScript runtime & event-driven APIs", level: 75, tag: "Backend", short: "Node", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", orbit: "middle" },
+  { name: "SignalR", desc: "Real-time bidirectional communication for web apps", level: 80, tag: "Backend", short: "SignalR", svgPath: "M12,2A10,10,0,0,0,2,12a9.89,9.89,0,0,0,2,6l-1.3,1.3a1,1,0,0,0,0,1.42,1,1,0,0,0,.71.29,1,1,0,0,0,.71-.29L5.75,19.38A10,10,0,1,0,12,2ZM12,18a6,6,0,1,1,6-6A6,6,0,0,1,12,18ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Z", dataSkill: "signalr", orbit: "middle" },
+  { name: "Git & GitHub", desc: "Version control, branching & collaborative workflows", level: 85, tag: "Tools", short: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", orbit: "middle" },
+
+  // Outer orbit — Data & Languages
+  { name: "SQL Server", desc: "Relational database design, queries & optimization", level: 85, tag: "Database", short: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", orbit: "outer" },
+  { name: "MongoDB", desc: "NoSQL document database for flexible data models", level: 75, tag: "Database", short: "Mongo", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg", orbit: "outer" },
+  { name: "Python", desc: "Scripting, automation & data processing", level: 70, tag: "Language", short: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", orbit: "outer" },
+  { name: "C++", desc: "Systems programming, performance-critical applications", level: 75, tag: "Language", short: "C++", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg", orbit: "outer" },
+  { name: "SQLite", desc: "Lightweight embedded relational database", level: 80, tag: "Database", short: "SQLite", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg", orbit: "outer" },
+  { name: "Assembly (x86)", desc: "Low-level CPU instruction programming & system internals", level: 65, tag: "Language", short: "ASM", svgPath: "M19 13H17V9H19V13M19 17H17V15H19V17M19 7H17V5H19V7M22 6C22 5.4 21.6 5 21 5H20V4C20 2.9 19.1 2 18 2H17V1H15V2H13V1H11V2H9V1H7V2H6C4.9 2 4 2.9 4 4V5H3C2.4 5 2 5.4 2 6V7H1V9H2V11H1V13H2V15H1V17H2V18C2 19.1 2.9 20 4 20V21H6V22H8V21H10V22H12V21H14V22H16V21H18C19.1 21 20 20.1 20 19V18H21C21.6 18 22 17.6 22 17V16H23V14H22V12H23V10H22V9H23V7H22V6M16 19H8V5H16V19M15 6H9V18H15V6M14 7H10V17H14V7Z", dataSkill: "assembly", orbit: "outer" },
+];
+
+function renderSkills() {
+  const orbits = {
+    inner: document.getElementById("orbit-inner"),
+    middle: document.getElementById("orbit-middle"),
+    outer: document.getElementById("orbit-outer"),
+  };
+
+  const grouped = { inner: [], middle: [], outer: [] };
+  SKILLS.forEach(s => grouped[s.orbit].push(s));
+
+  ["inner", "middle", "outer"].forEach((orbit) => {
+    const items = grouped[orbit];
+    const container = orbits[orbit];
+    if (!container || items.length === 0) return;
+
+    const gap = 360 / items.length;
+
+    items.forEach((skill, i) => {
+      const angle = gap * i;
+
+      const planet = document.createElement("div");
+      planet.className = "skill-planet";
+      planet.style.setProperty("--angle", `${angle}deg`);
+      if (skill.dataSkill) {
+        planet.dataset.skill = skill.dataSkill;
+      }
+
+      const card = document.createElement("div");
+      card.className = "planet-card";
+      card.dataset.name = skill.name;
+      card.dataset.desc = skill.desc;
+      card.dataset.level = skill.level;
+      card.dataset.tag = skill.tag;
+
+      if (skill.svgPath) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "currentColor");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", skill.svgPath);
+        svg.appendChild(path);
+        card.appendChild(svg);
+      } else {
+        const img = document.createElement("img");
+        img.src = skill.icon;
+        img.alt = skill.name;
+        img.loading = "lazy";
+        img.width = 35;
+        img.height = 35;
+        card.appendChild(img);
+      }
+
+      const span = document.createElement("span");
+      span.textContent = skill.short;
+      card.appendChild(span);
+
+      planet.appendChild(card);
+      container.appendChild(planet);
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initStars();
   initEntrance();
   initScrollAnimations();
   initShootingStars();
   initPlasmaLighter();
+  renderSkills();
   initSkillConnector();
   initPlanetSystem();
   initContactSection();
@@ -59,13 +178,11 @@ function initStars() {
       if (star.opacity < 0.1) star.opacity = 0.1;
       if (star.opacity > 1) star.opacity = 1;
     });
-
-    requestAnimationFrame(draw);
   }
 
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", debounce(resize));
   resize();
-  draw();
+  registerAnim(draw);
 }
 
 // --- Entrance Animation ---
@@ -114,10 +231,9 @@ function initEntrance() {
       earth.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${angle}deg) scale(${currentStretch}, ${1 / currentStretch}) rotate(${-angle}deg)`;
     }
 
-    requestAnimationFrame(updatePhysics);
   }
 
-  updatePhysics();
+  registerAnim(updatePhysics);
 
   earth.addEventListener("mousedown", (e) => {
     if (isZooming) return;
@@ -652,6 +768,10 @@ function initContactSection() {
     }, 2500);
   });
 
+  // ── Visibility gating ──
+  let contactVisible = false;
+  const contactSection = document.getElementById("contact");
+
   // Canvas Background (Starfield)
   const bgCanvas = document.getElementById("constel-bg");
   const bgCtx = bgCanvas ? bgCanvas.getContext("2d") : null;
@@ -687,11 +807,11 @@ function initContactSection() {
   if (bgCanvas) {
     initBgCanvas();
     drawBg();
-    window.addEventListener("resize", () => {
+    window.addEventListener("resize", debounce(() => {
       initBgCanvas();
       drawBg();
       drawOverlay();
-    });
+    }));
   }
 
   // Canvas Overlay (Constellation Lines)
@@ -938,13 +1058,34 @@ function initContactSection() {
     }
 
     // Animate constantly while transitioning or while drawing is visible (for pulse)
-    if (Math.abs(diff) > 0.01 || currentProgress > 0) {
+    if (contactVisible && (Math.abs(diff) > 0.01 || currentProgress > 0)) {
       animationFrameId = requestAnimationFrame(drawOverlay);
     }
   }
 
   // Initial draw
-  setTimeout(drawOverlay, 100);
+  setTimeout(() => {
+    if (contactVisible) drawOverlay();
+  }, 100);
+
+  // ── IntersectionObserver: gate rAF to visible only ──
+  if (contactSection) {
+    const contactObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          contactVisible = e.isIntersecting;
+          if (!contactVisible && animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          } else if (contactVisible) {
+            drawOverlay();
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+    contactObs.observe(contactSection);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -996,7 +1137,7 @@ function initPlanetSystem() {
     }
   }
   // Initial call delayed until after PLANETS is defined
-  window.addEventListener("resize", updateCenter);
+  window.addEventListener("resize", debounce(updateCenter));
 
   // ── Planet data ─────────────────────────────────────────────────────────────
   const PLANETS = [
@@ -1179,15 +1320,11 @@ function initPlanetSystem() {
   const ZOOM_MAX = 1.9;
 
   let animPaused = false;
-  let rafId = null;
+  let unregisterPlanetAnim = null;
   let hoveredIdx = -1; // index of hovered planet, -1 = none
   let flashFired = false;
-  /*
-  updateCenter();
-  window.addEventListener("resize", updateCenter);
-  */
 
-  // ── rAF loop ─────────────────────────────────────────────────────────────────
+  // ── rAF callback (no self-loop) ─────────────────────────────────────────────
   function animate() {
     if (!animPaused) {
       PLANETS.forEach((data, i) => {
@@ -1207,22 +1344,17 @@ function initPlanetSystem() {
       // Keep SVG connector locked onto the moving planet
       if (hoveredIdx >= 0) updateConnector(planetEls[hoveredIdx]);
     }
-    rafId = requestAnimationFrame(animate);
   }
 
-  // ── IntersectionObserver: start / stop loop ────────────────────────────────
+  // ── IntersectionObserver: register / unregister with master loop ───────────
   const visObs = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
-          // Recalculate center once section is definitely visible
           updateCenter();
-          if (!rafId) rafId = requestAnimationFrame(animate);
+          if (!unregisterPlanetAnim) unregisterPlanetAnim = registerAnim(animate);
         } else {
-          if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-          }
+          if (unregisterPlanetAnim) { unregisterPlanetAnim(); unregisterPlanetAnim = null; }
         }
       });
     },
