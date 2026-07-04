@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initPlasmaLighter();
   initSkillConnector();
   initPlanetSystem();
-  initSpaceshipCursor();
   initContactSection();
 });
 
@@ -948,91 +947,6 @@ function initContactSection() {
   setTimeout(drawOverlay, 100);
 }
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  SPACESHIP CURSOR
-//  Creates a small SVG spaceship that replaces the OS pointer.
-//  It follows the mouse with slight lag and rotates smoothly to face
-//  the direction of travel.
-// ─────────────────────────────────────────────────────────────────────────────
-function initSpaceshipCursor() {
-  // Build and inject the cursor element
-  const ship = document.createElement("div");
-  ship.id = "cursor-ship";
-  ship.innerHTML =
-    /* SVG spaceship pointing UP in its own coordinate space */
-    `<svg viewBox="0 0 20 28" xmlns="http://www.w3.org/2000/svg" overflow="visible">
-      <!-- Engine exhaust flame (rendered behind body via SVG order) -->
-      <g class="ship-flame">
-        <ellipse cx="10" cy="23" rx="2.6" ry="3.4" fill="#ff6a00" opacity="0.88"/>
-        <ellipse cx="10" cy="26" rx="1.5" ry="2.6" fill="#ffcc00" opacity="0.6"/>
-      </g>
-      <!-- Main hull -->
-      <polygon points="10,1 15.5,20 10,17 4.5,20" fill="#00d1ff"/>
-      <!-- Left swept wing -->
-      <polygon points="4.5,15.5 0,22   5,19"      fill="rgba(0,180,220,0.82)"/>
-      <!-- Right swept wing -->
-      <polygon points="15.5,15.5 20,22 15,19"     fill="rgba(0,180,220,0.82)"/>
-      <!-- Hull sheen (highlight along the left edge) -->
-      <polygon points="10,1 11.5,20 10,17"        fill="rgba(255,255,255,0.16)"/>
-      <!-- Cockpit window -->
-      <ellipse cx="10" cy="9.5" rx="1.7" ry="2.4" fill="rgba(255,255,255,0.32)"/>
-    </svg>`;
-  document.body.appendChild(ship);
-
-  // ── State ──────────────────────────────────────────────────────
-  let mx = -200,
-    my = -200; // raw mouse position
-  let sx = -200,
-    sy = -200; // smoothed (rendered) position
-  let angle = -90; // current displayed angle (deg)
-  let tAngle = -90; // target angle from velocity
-
-  // Appear when the mouse first enters, hide when it leaves
-  document.addEventListener("mouseenter", () => {
-    ship.style.opacity = "1";
-  });
-  document.addEventListener("mouseleave", () => {
-    ship.style.opacity = "0";
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    const dx = e.clientX - mx;
-    const dy = e.clientY - my;
-    // Only update heading if cursor actually moved
-    if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
-      // atan2 gives angle from +x axis; +90° aligns SVG "up" with forward
-      tAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-    }
-    mx = e.clientX;
-    my = e.clientY;
-    if (ship.style.opacity !== "1") ship.style.opacity = "1";
-  });
-
-  // Shortest-path angle interpolation
-  function lerpAngle(a, b, t) {
-    let d = ((((b - a) % 360) + 540) % 360) - 180;
-    return a + d * t;
-  }
-
-  // ── Animation loop ─────────────────────────────────────────────
-  (function loop() {
-    // Slight lag on position gives a "floating in space" feel
-    sx += (mx - sx) * 0.22;
-    sy += (my - sy) * 0.22;
-    // Smooth heading rotation
-    angle = lerpAngle(angle, tAngle, 0.1);
-
-    // One transform-only write — zero layout reflow, fully GPU-composited
-    ship.style.transform =
-      `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)` +
-      ` translate(-50%,-50%)` +
-      ` rotate(${angle.toFixed(2)}deg)`;
-
-    requestAnimationFrame(loop);
-  })();
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
 //  PLANET SYSTEM — Projects Section
 //  initPlanetSystem()
@@ -1296,7 +1210,7 @@ function initPlanetSystem() {
     rafId = requestAnimationFrame(animate);
   }
 
-  // ── IntersectionObserver: start / stop loop, fire flash ─────────────────────
+  // ── IntersectionObserver: start / stop loop ────────────────────────────────
   const visObs = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -1304,7 +1218,6 @@ function initPlanetSystem() {
           // Recalculate center once section is definitely visible
           updateCenter();
           if (!rafId) rafId = requestAnimationFrame(animate);
-          triggerFlash();
         } else {
           if (rafId) {
             cancelAnimationFrame(rafId);
@@ -1316,24 +1229,6 @@ function initPlanetSystem() {
     { threshold: 0.15 },
   );
   visObs.observe(section);
-
-  // ── Cinematic white-flash on section entry ───────────────────────────────────
-  function triggerFlash() {
-    if (flashFired) return;
-    flashFired = true;
-    // Wait for the .panel reveal transition (1 s) before flashing
-    setTimeout(() => {
-      const flash = document.getElementById("ps-flash");
-      if (!flash) return;
-      flash.classList.add("active");
-      setTimeout(() => {
-        flash.classList.remove("active");
-        setTimeout(() => {
-          flashFired = false;
-        }, 8000); // re-arm after 8 s
-      }, 950);
-    }, 900);
-  }
 
   // ── Scroll zoom ───────────────────────────────────────────────────────────────
   // When zoom is already at its min/max the event is NOT prevented,

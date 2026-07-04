@@ -468,6 +468,7 @@ body {
     position: relative;
     font-weight: 900;
     transition: all 0.5s ease;
+    text-align: center;
 }
 
 .title-container {
@@ -1852,25 +1853,6 @@ body {
     letter-spacing: 1px;
 }
 
-.exp-item {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(0, 209, 255, 0.1);
-}
-
-.exp-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.exp-date {
-    font-family: var(--font-hero);
-    font-size: 0.8rem;
-    color: var(--accent-cyan);
-    display: block;
-    margin-bottom: 0.5rem;
-}
 
 /* --- Scroll Indicator --- */
 .scroll-indicator {
@@ -2644,7 +2626,7 @@ textarea:focus {
     font-size: 0.9rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    cursor: none !important;
+    cursor: pointer;
     transition:
         background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
         border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -2719,7 +2701,7 @@ textarea:focus {
 }
 
 .cf-submit:disabled {
-    cursor: none !important;
+    cursor: not-allowed;
     opacity: 0.55;
     filter: grayscale(1);
     border-style: dashed;
@@ -2789,86 +2771,6 @@ textarea:focus {
 }
 
 /* ── Contact Title Glitch ── */
-
-.contact-title-overlay h2 {
-    position: relative;
-    animation: contactGlitch 4s infinite;
-}
-
-/* ── Audio Toggle ── */
-.audio-toggle {
-    position: fixed;
-    right: 18px;
-    bottom: 18px;
-    z-index: 12000;
-    padding: 0.55rem 0.8rem;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 209, 255, 0.25);
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.85);
-    font-family: "Share Tech Mono", monospace;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        background 0.25s ease;
-}
-
-.audio-toggle:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 16px rgba(0, 209, 255, 0.25);
-}
-
-.audio-toggle.is-on {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 209, 255, 0.08);
-    color: #fff;
-    box-shadow:
-        0 0 18px rgba(0, 209, 255, 0.35),
-        inset 0 0 14px rgba(0, 209, 255, 0.12);
-}
-
-.audio-toggle:focus-visible {
-    outline: 2px solid var(--accent-cyan);
-    outline-offset: 3px;
-}
-
-@keyframes contactGlitch {
-
-    0%,
-    90%,
-    100% {
-        transform: none;
-        opacity: 1;
-    }
-
-    92% {
-        transform: skewX(10deg);
-        opacity: 0.8;
-        color: var(--accent-cyan);
-    }
-
-    94% {
-        transform: skewX(-10deg);
-        opacity: 0.8;
-        color: #fde68a;
-    }
-
-    96% {
-        transform: translateX(2px);
-    }
-
-    98% {
-        transform: translateX(-2px);
-    }
-}
 
 /* ── Status line ── */
 .cf-status {
@@ -3021,58 +2923,7 @@ a.cf-meta-val:hover {
     }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SPACESHIP CURSOR
-   ═══════════════════════════════════════════════════════════ */
 
-/* Hide the OS cursor on every element */
-*,
-*::before,
-*::after {
-    cursor: none !important;
-}
-
-/* The custom cursor div (injected by initSpaceshipCursor) */
-#cursor-ship {
-    position: fixed;
-    /* Anchored at origin — all movement is via transform (no layout reflow) */
-    top: 0;
-    left: 0;
-    width: 28px;
-    height: 28px;
-    pointer-events: none;
-    z-index: 999999;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    will-change: transform;
-    /* Isolate cursor compositing from the rest of the document */
-    contain: layout style;
-}
-
-#cursor-ship svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    filter: drop-shadow(0 0 3px rgba(0, 209, 255, 0.95)) drop-shadow(0 0 9px rgba(0, 209, 255, 0.5));
-}
-
-/* Engine flame — pulses on its own transform-origin */
-.ship-flame {
-    transform-origin: 10px 22px;
-    animation: shipFlamePulse 0.1s ease-in-out infinite alternate;
-}
-
-@keyframes shipFlamePulse {
-    from {
-        transform: scaleY(0.7) scaleX(0.85);
-        opacity: 0.65;
-    }
-
-    to {
-        transform: scaleY(1.35) scaleX(1.15);
-        opacity: 1;
-    }
-}
 
 /* ==========================================================
    PLANET SYSTEM — Projects Section
@@ -3089,47 +2940,18 @@ a.cf-meta-val:hover {
     z-index: 1000;
 }
 
-/* ---- Cinematic flash overlay ---- */
-.ps-flash-overlay {
-    position: absolute;
-    inset: 0;
-    background: #fff;
-    opacity: 0;
-    z-index: 50;
-    pointer-events: none;
-}
-
-.ps-flash-overlay.active {
-    animation: psFlash 0.95s ease-out forwards;
-}
-
-@keyframes psFlash {
-    0% {
-        opacity: 0;
-    }
-
-    18% {
-        opacity: 0.92;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
 /* ---- Floating title ---- */
 .ps-title-overlay,
 .contact-title-overlay {
     position: absolute;
     top: 3.5rem;
-    /* Raised slightly to create even more vertical space below */
-    left: 4.5rem;
-    /* Clean left positioning as requested */
-    z-index: 10;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    z-index: 20;
     pointer-events: none;
-    white-space: nowrap;
-    text-align: left;
-    transform: none;
+    text-align: center;
 }
 
 .ps-title-overlay .title-subline {

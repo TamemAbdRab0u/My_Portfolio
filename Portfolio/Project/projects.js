@@ -148,9 +148,6 @@ window.addEventListener("load", () => {
 
   // Kick off the showcase after the DOM is fully laid out
   if (project) initDepthShowcase(project, theme);
-
-  // Spaceship cursor (works on all pages)
-  initSpaceshipCursor();
 });
 
 /* — Particle weather engine — */
@@ -595,64 +592,3 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
-
-/* ═══════════════════════════════════════════════════════════════
-   SPACESHIP CURSOR
-   ═══════════════════════════════════════════════════════════════ */
-function initSpaceshipCursor() {
-  const ship = document.createElement("div");
-  ship.id = "cursor-ship";
-  ship.innerHTML = `<svg viewBox="0 0 20 28" xmlns="http://www.w3.org/2000/svg" overflow="visible">
-      <g class="ship-flame">
-        <ellipse cx="10" cy="23" rx="2.6" ry="3.4" fill="#ff6a00" opacity="0.88"/>
-        <ellipse cx="10" cy="26" rx="1.5" ry="2.6" fill="#ffcc00" opacity="0.6"/>
-      </g>
-      <polygon points="10,1 15.5,20 10,17 4.5,20" fill="var(--accent-cyan, #00d1ff)"/>
-      <polygon points="4.5,15.5 0,22   5,19"      fill="rgba(0,180,220,0.82)"/>
-      <polygon points="15.5,15.5 20,22 15,19"     fill="rgba(0,180,220,0.82)"/>
-      <polygon points="10,1 11.5,20 10,17"        fill="rgba(255,255,255,0.16)"/>
-      <ellipse cx="10" cy="9.5" rx="1.7" ry="2.4" fill="rgba(255,255,255,0.32)"/>
-    </svg>`;
-  document.body.appendChild(ship);
-
-  let mx = -200,
-    my = -200;
-  let sx = -200,
-    sy = -200;
-  let angle = -90,
-    tAngle = -90;
-
-  document.addEventListener("mouseenter", () => {
-    ship.style.opacity = "1";
-  });
-  document.addEventListener("mouseleave", () => {
-    ship.style.opacity = "0";
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    const dx = e.clientX - mx,
-      dy = e.clientY - my;
-    if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5)
-      tAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-    mx = e.clientX;
-    my = e.clientY;
-    if (ship.style.opacity !== "1") ship.style.opacity = "1";
-  });
-
-  function lerpAngle(a, b, t) {
-    const d = ((((b - a) % 360) + 540) % 360) - 180;
-    return a + d * t;
-  }
-
-  (function loop() {
-    sx += (mx - sx) * 0.22;
-    sy += (my - sy) * 0.22;
-    angle = lerpAngle(angle, tAngle, 0.1);
-    // Single transform write — no left/top, no layout reflow
-    ship.style.transform =
-      `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0)` +
-      ` translate(-50%,-50%)` +
-      ` rotate(${angle.toFixed(2)}deg)`;
-    requestAnimationFrame(loop);
-  })();
-}
