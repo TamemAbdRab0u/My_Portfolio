@@ -34,7 +34,7 @@ const DATA = [
       "../../Projects/N3M Nest/Screenshot 2026-03-27 140104.png",
     ],
     liveUrl: "#",
-    sourceUrl: "#",
+    sourceUrl: "https://github.com/TamemAbdRab0u/N3M-Nest-GLM",
   },
   {
     name: "SummonerBase",
@@ -77,7 +77,7 @@ const DATA = [
       "../../Projects/MindShelf/2026-03-27 21-51-04.mp4",
     ],
     liveUrl: "#",
-    sourceUrl: "#",
+    sourceUrl: "https://github.com/Morales020/Mindshelf",
   },
 ];
 

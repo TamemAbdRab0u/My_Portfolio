@@ -695,7 +695,7 @@ function initContactSection() {
   const terminal = document.getElementById("tf-terminal");
   const inputs = form.querySelectorAll(".tf-input");
   const wrap = document.querySelector(".transmitter-form-wrap");
-  const satWrap = document.querySelector(".transmitter-satellite-wrap");
+  const satWrap = document.querySelector(".transmitter-avatar-badge");
 
   // Typewriter/log helper to add lines to terminal
   function logLine(text, type = "") {
@@ -816,7 +816,7 @@ function initContactSection() {
       if (btn) {
         btn.classList.remove("submitting");
         btn.classList.add("success");
-        btn.querySelector(".btn-text").innerText = "SUBMITTED ✓";
+        btn.querySelector(".btn-text").innerText = "MESSAGE SENT ✓";
       }
     }, 2200);
 
@@ -831,7 +831,7 @@ function initContactSection() {
       if (wrap) wrap.classList.remove("transmitting");
       if (btn) {
         btn.classList.remove("success");
-        btn.querySelector(".btn-text").innerText = "SUBMIT";
+        btn.querySelector(".btn-text").innerText = "SEND MESSAGE";
       }
       clearLog();
       logLine("> Ready for your message...");
@@ -899,14 +899,14 @@ function initPlanetSystem() {
         "Complete full-stack game tracking platform where users can discover games, build a personal library, review titles, and interact with other players in real time.",
       tech: ["HTML", "TailwindCSS", "JS", "ASP.NET API", "SQL Server"],
       link: "#",
-      orbitRadius: 70,
-      speed: 0.0001,
-      startAngle: 1.2,
+      orbitRadius: 180,
+      speed: 0.00032,
+      startAngle: 4.8,
       size: 100,
       floatSpeed: 0.004,
-      floatRange: 22,
-      floatAngle: 0,
-      offsetX: 300,
+      floatRange: 18,
+      floatAngle: 2,
+      offsetX: 0,
       offsetY: 0,
       colorA: "#00d1ff",
       colorB: "#2b2200",
@@ -917,14 +917,14 @@ function initPlanetSystem() {
         "A full-stack League of Legends web application designed to deliver a seamless and interactive user experience for players and summoners.",
       tech: ["Node.js", "HTML", "JS", "CSS"],
       link: "#",
-      orbitRadius: 180,
-      speed: 0.00032,
-      startAngle: 4.8,
+      orbitRadius: 70,
+      speed: 0.0001,
+      startAngle: 1.2,
       size: 100,
       floatSpeed: 0.004,
-      floatRange: 18,
-      floatAngle: 2,
-      offsetX: 0,
+      floatRange: 22,
+      floatAngle: 0,
+      offsetX: 300,
       offsetY: 0,
       colorA: "#a100a4",
       colorB: "#002033",
