@@ -170,7 +170,13 @@ function injectProject() {
   if (liveLink) liveLink.href = project.liveUrl;
 
   const sourceLink = document.getElementById("proj-source-link");
-  if (sourceLink) sourceLink.href = project.sourceUrl;
+  if (sourceLink) {
+    if (project.sourceUrl && project.sourceUrl !== "#") {
+      sourceLink.href = project.sourceUrl;
+    } else {
+      sourceLink.style.display = "none";
+    }
+  }
 
   // Gallery
   initGallery(project.media);
@@ -318,7 +324,65 @@ document.addEventListener("mousemove", (e) => {
    7. BOOT SEQUENCE
    ═══════════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════════
+   8. STAR FIELD
+   ═══════════════════════════════════════════════════════════════ */
+
+function initStars() {
+  const canvas = document.getElementById("stars-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  let stars = [];
+  let numStars = 600;
+  let width, height;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    stars = [];
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5,
+        opacity: Math.random(),
+        speed: Math.random() * 0.05 + 0.01,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#ffffff";
+
+    stars.forEach((star) => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.globalAlpha = star.opacity;
+      ctx.fill();
+
+      star.y -= star.speed;
+      if (star.y < 0) {
+        star.y = height;
+        star.x = Math.random() * width;
+      }
+
+      star.opacity += (Math.random() - 0.5) * 0.05;
+      if (star.opacity < 0.1) star.opacity = 0.1;
+      if (star.opacity > 1) star.opacity = 1;
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  draw();
+}
+
 window.addEventListener("load", () => {
+  initStars();
   initParticles();
   injectProject();
 
