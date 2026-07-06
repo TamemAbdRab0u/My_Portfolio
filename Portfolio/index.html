@@ -50,11 +50,26 @@
   <main id="main-content">
     <nav id="sidebar">
       <div class="nav-icons">
-        <a href="#hero" class="nav-link active" title="Home"></a>
-        <a href="#about" class="nav-link" title="About"></a>
-        <a href="#skills" class="nav-link" title="Skills"></a>
-        <a href="#projects" class="nav-link" title="Projects"></a>
-        <a href="#contact" class="nav-link" title="Contact"></a>
+        <a href="#hero" class="nav-link active" data-tooltip="HOME">
+          <img src="assets/Home-Earth.png" alt="Home" class="nav-icon-img" />
+          <span class="nav-tooltip">HOME</span>
+        </a>
+        <a href="#about" class="nav-link" data-tooltip="ABOUT">
+          <img src="assets/Aboutme.png" alt="About" class="nav-icon-img nav-icon-about" />
+          <span class="nav-tooltip">ABOUT</span>
+        </a>
+        <a href="#skills" class="nav-link" data-tooltip="SKILLS">
+          <img src="assets/Skills.png" alt="Skills" class="nav-icon-img nav-icon-skills" />
+          <span class="nav-tooltip">SKILLS</span>
+        </a>
+        <a href="#projects" class="nav-link" data-tooltip="PROJECTS">
+          <img src="assets/Projects.png" alt="Projects" class="nav-icon-img nav-icon-lg" />
+          <span class="nav-tooltip">PROJECTS</span>
+        </a>
+        <a href="#contact" class="nav-link" data-tooltip="CONTACT">
+          <img src="assets/Contact.png" alt="Contact" class="nav-icon-img nav-icon-lg" />
+          <span class="nav-tooltip">CONTACT</span>
+        </a>
       </div>
     </nav>
 
@@ -66,10 +81,7 @@
           <h1 class="glitch" data-text="I'M TAMEM ABDRABOU">I'M TAMEM ABDRABOU</h1>
           <p class="hero-tagline">Full-stack developer crafting scalable, high-performance web applications with clean
             architecture and modern technologies.</p>
-          <div class="scroll-indicator">
-            <span>EXPLORE MORE</span>
-            <div class="mouse"></div>
-          </div>
+
         </div>
       </section>
 
@@ -225,11 +237,10 @@
             <!-- Left Panel: Connection Info / Socials -->
             <div class="transmitter-info">
               <h3 class="info-title">Let's Build Something Great</h3>
-              <p class="info-desc">I'm always open to discussing new projects, creative ideas, or opportunities to
-                collaborate. Reach out and let's create something amazing together.</p>
+
 
               <div class="social-channels">
-                <a href="mailto:tamem.abdrabou@gmail.com" class="channel-card channel-email">
+                 <a href="mailto:tamem.abdrabou@gmail.com" class="channel-card channel-email" style="--float-dur: 4.2s; --float-delay: 0s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -247,7 +258,7 @@
                     </svg>
                   </div>
                 </a>
-                <a href="https://github.com/TamemAbdRab0u" target="_blank" class="channel-card channel-github">
+                 <a href="https://github.com/TamemAbdRab0u" target="_blank" class="channel-card channel-github" style="--float-dur: 3.8s; --float-delay: 0.6s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                       <path
@@ -264,7 +275,7 @@
                     </svg>
                   </div>
                 </a>
-                <a href="https://www.linkedin.com/in/tamem-abdrabou-34ab14357/" target="_blank" class="channel-card">
+                 <a href="https://www.linkedin.com/in/tamem-abdrabou-34ab14357/" target="_blank" class="channel-card" style="--float-dur: 4.5s; --float-delay: 1.2s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                       <path
