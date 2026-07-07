@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSkillConnector();
   initPlanetSystem();
   initContactSection();
+  initCometCursor();
 });
 
 // --- Star Animation ---
@@ -139,48 +140,108 @@ function initStars() {
   let stars = [];
   let numStars = 800;
   let width, height;
+  let cx = 0,
+    cy = 0;
+  let warp = 0; // 0 = calm, 1 = full hyperspace
+  let warpTarget = 0;
 
   function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
+    cx = width / 2;
+    cy = height / 2;
     stars = [];
     for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 1.5,
-        opacity: Math.random(),
-        speed: Math.random() * 0.05 + 0.01,
-        depth: Math.random() * 0.2 + 0.1, // Parallax depth
-      });
+      stars.push(makeStar());
     }
+  }
+
+  function makeStar() {
+    return {
+      // Position relative to center for radial warp
+      x: Math.random() * width - cx,
+      y: Math.random() * height - cy,
+      z: Math.random() * width,
+      size: Math.random() * 1.5,
+      opacity: Math.random(),
+      speed: Math.random() * 0.05 + 0.01,
+      depth: Math.random() * 0.2 + 0.1, // Parallax depth
+    };
   }
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#ffffff";
+
+    // Ease warp factor toward target
+    warp += (warpTarget - warp) * 0.06;
+
+    const calm = warp < 0.01;
 
     stars.forEach((star) => {
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      ctx.globalAlpha = star.opacity;
-      ctx.fill();
+      if (calm) {
+        // --- Calm drifting stars (original behaviour) ---
+        ctx.beginPath();
+        ctx.arc(star.x + cx, star.y + cy, star.size, 0, Math.PI * 2);
+        ctx.globalAlpha = star.opacity;
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
 
-      // Movement
-      star.y -= star.speed;
-      if (star.y < 0) {
-        star.y = height;
-        star.x = Math.random() * width;
+        star.y -= star.speed;
+        if (star.y + cy < 0) {
+          star.y = height - cy;
+          star.x = Math.random() * width - cx;
+        }
+
+        star.opacity += (Math.random() - 0.5) * 0.05;
+        if (star.opacity < 0.1) star.opacity = 0.1;
+        if (star.opacity > 1) star.opacity = 1;
+      } else {
+        // --- Warp / hyperspace: stars rush outward from center ---
+        star.z -= (4 + warp * 40) * (1 - star.z / width) + 2;
+        if (star.z <= 1) {
+          star.x = Math.random() * width - cx;
+          star.y = Math.random() * height - cy;
+          star.z = width;
+          star.size = Math.random() * 1.5;
+        }
+
+        const k = 128 / star.z;
+        const px = cx + star.x * k;
+        const py = cy + star.y * k;
+
+        // Previous position for streak length (longer as warp increases)
+        const kPrev = 128 / (star.z + 6 + warp * 30);
+        const pxp = cx + star.x * kPrev;
+        const pyp = cy + star.y * kPrev;
+
+        const a = Math.min(1, (1 - star.z / width) * (0.4 + warp));
+        ctx.globalAlpha = a;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = star.size * k * 0.8 + 0.3;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(pxp, pyp);
+        ctx.lineTo(px, py);
+        ctx.stroke();
       }
-
-      // Twinkle
-      star.opacity += (Math.random() - 0.5) * 0.05;
-      if (star.opacity < 0.1) star.opacity = 0.1;
-      if (star.opacity > 1) star.opacity = 1;
     });
+    ctx.globalAlpha = 1;
   }
 
+  // Public controls
+  window.startStarWarp = function () {
+    warpTarget = 1;
+  };
+  window.stopStarWarp = function () {
+    warpTarget = 0;
+  };
+
   window.addEventListener("resize", debounce(resize));
+  window.addEventListener("pagehide", () => {
+    warpTarget = 0;
+    warp = 0;
+    document.body.classList.remove("portal-entering");
+  });
   resize();
   registerAnim(draw);
 }
@@ -292,6 +353,8 @@ function initEntrance() {
     isZooming = true;
     earth.classList.add("zooming");
     splash.classList.add("fading");
+    const cd = document.getElementById("cursor-dot");
+    if (cd) cd.classList.remove("cursor-hot");
 
     setTimeout(() => {
       splash.style.display = "none";
@@ -843,8 +906,198 @@ function initContactSection() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  PLANET SYSTEM — Projects Section
-//  initPlanetSystem()
+//  COMET TRAIL CUSTOM CURSOR
+//  initCometCursor()
+//  ├─ light canvas trail (single rAF via master loop, fading line segments)
+//  ├─ interpolated dot that smoothly eases toward the real pointer
+//  └─ "hot" state over interactive elements
+// ─────────────────────────────────────────────────────────────────────────────
+function initCometCursor() {
+  // Skip entirely on touch / coarse-pointer devices
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
+
+  const canvas = document.getElementById("cursor-trail");
+  const dot = document.getElementById("cursor-dot");
+  if (!canvas || !dot) return;
+
+  const ctx = canvas.getContext("2d");
+
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let width = 0;
+  let height = 0;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", debounce(resize));
+
+  // Real pointer target + eased dot position
+  const target = { x: width / 2, y: height / 2 };
+  const pos = { x: target.x, y: target.y };
+
+  // Trail of recent points; each fades out over its lifetime
+  const trail = [];
+  const MAX_TRAIL = 22;
+
+  let rgb = getComputedStyle(document.documentElement)
+    .getPropertyValue("--accent-cyan-rgb")
+    .trim() || "0, 209, 255";
+
+  // Keep trail color in sync with the active accent (changes per project)
+  const colorObserver = new MutationObserver(() => {
+    const v = getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent-cyan-rgb")
+      .trim();
+    if (v) rgb = v;
+  });
+  colorObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["style"],
+  });
+
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      target.x = e.clientX;
+      target.y = e.clientY;
+    },
+    { passive: true },
+  );
+
+  // "Hot" grow state over interactive elements
+  const hotSelector =
+    "a, button, input, textarea, .cyber-torch, .skill-planet, .project-planet, .channel-card";
+  const earth = document.getElementById("earth");
+  const enterBtn = document.getElementById("enter-btn");
+  document.addEventListener(
+    "mouseover",
+    (e) => {
+      if (
+        e.target.closest(hotSelector) ||
+        e.target === earth ||
+        e.target === enterBtn ||
+        (earth && earth.contains(e.target)) ||
+        (enterBtn && enterBtn.contains(e.target))
+      ) {
+        dot.classList.add("cursor-hot");
+      }
+    },
+    { passive: true },
+  );
+  document.addEventListener(
+    "mouseout",
+    (e) => {
+      if (
+        e.target.closest(hotSelector) ||
+        e.target === earth ||
+        e.target === enterBtn ||
+        (earth && earth.contains(e.target)) ||
+        (enterBtn && enterBtn.contains(e.target))
+      ) {
+        dot.classList.remove("cursor-hot");
+      }
+    },
+    { passive: true },
+  );
+
+  function draw() {
+    // Ease the dot toward the real pointer (spring-like follow)
+    pos.x += (target.x - pos.x) * 0.35;
+    pos.y += (target.y - pos.y) * 0.35;
+
+    dot.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+
+    // Record current point with a life value
+    trail.push({ x: pos.x, y: pos.y, life: 1 });
+    if (trail.length > MAX_TRAIL) trail.shift();
+
+    // Fade existing points
+    for (let i = 0; i < trail.length; i++) {
+      trail[i].life -= 0.045;
+    }
+    while (trail.length && trail[0].life <= 0) trail.shift();
+
+    // Clear with a slight alpha so old frames dissolve (motion blur feel)
+    ctx.clearRect(0, 0, width, height);
+
+    if (trail.length > 1) {
+      for (let i = 1; i < trail.length; i++) {
+        const p0 = trail[i - 1];
+        const p1 = trail[i];
+        const a = p1.life * 0.85;
+        const w = p1.life * 3.5;
+
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(p1.x, p1.y);
+        ctx.strokeStyle = `rgba(${rgb}, ${a})`;
+        ctx.lineWidth = w;
+        ctx.lineCap = "round";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `rgba(${rgb}, ${a})`;
+        ctx.stroke();
+      }
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  registerAnim(draw);
+
+  // Stop the trail when the tab is hidden to save CPU
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      trail.length = 0;
+      ctx.clearRect(0, 0, width, height);
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  ATMOSPHERIC TRANSITION — "decryption" typewriter + scramble
+//  runTransitionDecrypt(el, text)
+//  Resolves random glyphs into the real name, char-by-char, with a blinking
+//  caret. Also adds the page "suck-in" blur class.
+// ─────────────────────────────────────────────────────────────────────────────
+const GLYPHS = "▓▒░#@%&*+=/\\<>?01ABCDEF$£¥§";
+
+function runTransitionDecrypt(el, text) {
+  if (!el) return;
+  document.body.classList.add("portal-entering");
+  el.classList.add("typing");
+
+  const len = text.length;
+  let frame = 0;
+  const totalFrames = len * 3; // scramble settles gradually
+
+  clearInterval(el._decryptTimer);
+  el._decryptTimer = setInterval(() => {
+    let out = "";
+    for (let i = 0; i < len; i++) {
+      // Characters lock in left-to-right as the frame progresses
+      if (i < frame / 3) {
+        out += text[i];
+      } else if (text[i] === " ") {
+        out += " ";
+      } else {
+        out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      }
+    }
+    el.textContent = out;
+    frame++;
+    if (frame > totalFrames) {
+      clearInterval(el._decryptTimer);
+      el.textContent = text;
+      el.classList.remove("typing");
+    }
+  }, 28);
+}//  initPlanetSystem()
 //  ├─ PLANETS[]          project data (edit here to add / change projects)
 //  ├─ orbit rings        decorative CSS circles injected into #ps-system
 //  ├─ orbit nodes        zero-size position carriers, moved by rAF
@@ -1150,9 +1403,10 @@ function initPlanetSystem() {
 
         if (transition) {
           if (transitionText)
-            transitionText.textContent = data.name;
+            runTransitionDecrypt(transitionText, data.name);
           document.documentElement.style.setProperty("--accent-cyan", data.colorA);
 
+          if (window.startStarWarp) window.startStarWarp();
           transition.classList.add("active");
           document.body.style.overflowX = "hidden";
           document.body.style.overflowY = "hidden";
@@ -1246,12 +1500,13 @@ function initPlanetSystem() {
       const transition = document.getElementById("entry-transition");
       const transitionText = document.getElementById("transition-planet");
 
-      if (transition) {
-        if (transitionText)
-          transitionText.textContent = data.name;
-        document.documentElement.style.setProperty("--accent-cyan", data.colorA);
+        if (transition) {
+          if (transitionText)
+            runTransitionDecrypt(transitionText, data.name);
+          document.documentElement.style.setProperty("--accent-cyan", data.colorA);
 
-        transition.classList.add("active");
+          if (window.startStarWarp) window.startStarWarp();
+          transition.classList.add("active");
         document.body.style.overflowX = "hidden";
         document.body.style.overflowY = "hidden";
         setTimeout(() => {

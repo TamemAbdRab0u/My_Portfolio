@@ -123,16 +123,7 @@ body::-webkit-scrollbar {
 }
 
 .entry-portal-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 350px;
-    height: 350px;
-    border: 1px solid var(--accent-cyan);
-    border-radius: 50%;
-    box-shadow: 0 0 50px var(--accent-cyan), inset 0 0 25px var(--accent-cyan);
-    transform: translate(-50%, -50%) scale(1);
-    animation: portalRotate 10s linear infinite;
+    display: none;
 }
 
 @keyframes portalRotate {
@@ -182,6 +173,14 @@ body::-webkit-scrollbar {
     min-height: 100vh;
     padding: 2rem 2rem 4rem;
     z-index: 10;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.page-container.revealed {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ═══════ CONTROL PANEL GRID ═══════ */

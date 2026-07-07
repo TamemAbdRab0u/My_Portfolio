@@ -27,6 +27,10 @@
   <!-- Star Background Canvas -->
   <canvas id="stars-canvas"></canvas>
   <div class="shooting-stars"></div>
+
+  <!-- Comet Trail Custom Cursor -->
+  <canvas id="cursor-trail"></canvas>
+  <div id="cursor-dot"></div>
   <!-- Splash Screen -->
   <section id="splash">
     <div id="mouse-glow"></div>
@@ -240,7 +244,8 @@
 
 
               <div class="social-channels">
-                 <a href="mailto:tamem.abdrabou@gmail.com" class="channel-card channel-email" style="--float-dur: 4.2s; --float-delay: 0s;">
+                <a href="mailto:tamem.abdrabou@gmail.com" class="channel-card channel-email"
+                  style="--float-dur: 4.2s; --float-delay: 0s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -258,7 +263,8 @@
                     </svg>
                   </div>
                 </a>
-                 <a href="https://github.com/TamemAbdRab0u" target="_blank" class="channel-card channel-github" style="--float-dur: 3.8s; --float-delay: 0.6s;">
+                <a href="https://github.com/TamemAbdRab0u" target="_blank" class="channel-card channel-github"
+                  style="--float-dur: 3.8s; --float-delay: 0.6s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                       <path
@@ -275,7 +281,8 @@
                     </svg>
                   </div>
                 </a>
-                 <a href="https://www.linkedin.com/in/tamem-abdrabou-34ab14357/" target="_blank" class="channel-card" style="--float-dur: 4.5s; --float-delay: 1.2s;">
+                <a href="https://www.linkedin.com/in/tamem-abdrabou-34ab14357/" target="_blank" class="channel-card"
+                  style="--float-dur: 4.5s; --float-delay: 1.2s;">
                   <div class="channel-icon">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                       <path
@@ -304,9 +311,13 @@
                 </svg>
               </div>
               <div class="transmitter-form-wrap">
+                <div class="corner-bracket tl"></div>
+                <div class="corner-bracket tr"></div>
+                <div class="corner-bracket bl"></div>
+                <div class="corner-bracket br"></div>
 
                 <form id="transmitter-form" class="transmitter-form" novalidate>
-                  <div class="tf-group">
+                  <div class="tf-group tf-group-name">
                     <div class="tf-icon-wrap">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -317,7 +328,7 @@
                       placeholder="Your Name" required />
                   </div>
 
-                  <div class="tf-group">
+                  <div class="tf-group tf-group-email">
                     <div class="tf-icon-wrap">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -330,7 +341,7 @@
 
 
 
-                  <div class="tf-group tf-group-full">
+                  <div class="tf-group tf-group-full tf-group-msg">
                     <div class="tf-icon-wrap">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 20h9" />

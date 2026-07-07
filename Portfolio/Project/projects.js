@@ -387,7 +387,9 @@ window.addEventListener("load", () => {
   injectProject();
 
   const landing = document.getElementById("landing-sequence");
+  const container = document.querySelector(".page-container");
   setTimeout(() => {
     if (landing) landing.classList.add("revealed");
+    if (container) container.classList.add("revealed");
   }, 1000);
 });
