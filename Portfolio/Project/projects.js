@@ -33,7 +33,7 @@ const DATA = [
       "../../Projects/N3M Nest/Screenshot 2026-03-26 193339.png",
       "../../Projects/N3M Nest/Screenshot 2026-03-27 140104.png",
     ],
-    liveUrl: "#",
+    liveUrl: "https://n3mnest.tamemabdo21.workers.dev",
     sourceUrl: "https://github.com/TamemAbdRab0u/N3M-Nest-GLM",
   },
   {
@@ -79,6 +79,36 @@ const DATA = [
     liveUrl: "#",
     sourceUrl: "https://github.com/Morales020/Mindshelf",
   },
+  {
+    name: "DangDoro",
+    tagline: "Collaborative focus timer and real-time team productivity platform.",
+    description:
+      "Dangdoro is a collaborative focus timer and productivity application designed to help individuals and teams focus together in real-time. Built with a premium, immersive glassmorphic user interface, Dangdoro combines Pomodoro mechanics, synchronized group focus workspaces, ambient audio mix controls, and AI-powered task planning to create a high-engagement workspace.",
+    status: "ACTIVE",
+    codename: "DD-001",
+    tech: {
+      Frontend: [
+        "Next.js",
+        "Tailwind CSS",
+        "Zustand",
+      ],
+      "Backend & Database": [
+        "Firebase",
+      ],
+      AI: [
+        "OpenRouter API",
+      ],
+    },
+    media: [
+      "../../Projects/DangDoro/1-enrty.png",
+      "../../Projects/DangDoro/2-home.png",
+      "../../Projects/DangDoro/3-tasks.png",
+      "../../Projects/DangDoro/4-groups.png",
+      "../../Projects/DangDoro/5-profile.png",
+    ],
+    liveUrl: "https://www.dangdoro.com/",
+    sourceUrl: "https://github.com/Bitra-Forge/Dangdoro",
+  },
 ];
 
 const THEMES = [
@@ -96,6 +126,11 @@ const THEMES = [
     color: "#d47800",
     rgb: "212,120,0",
     name: "SOLAR_ORANGE",
+  },
+  {
+    color: "#0a7e8c",
+    rgb: "10,126,140",
+    name: "DEEP_TEAL",
   },
 ];
 
@@ -167,7 +202,13 @@ function injectProject() {
 
   // Actions
   const liveLink = document.getElementById("proj-live-link");
-  if (liveLink) liveLink.href = project.liveUrl;
+  if (liveLink) {
+    if (project.liveUrl && project.liveUrl !== "#") {
+      liveLink.href = project.liveUrl;
+    } else {
+      liveLink.style.display = "none";
+    }
+  }
 
   const sourceLink = document.getElementById("proj-source-link");
   if (sourceLink) {

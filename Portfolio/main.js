@@ -1159,8 +1159,8 @@ function initPlanetSystem() {
       floatSpeed: 0.004,
       floatRange: 18,
       floatAngle: 2,
-      offsetX: 0,
-      offsetY: 0,
+      offsetX: -120,
+      offsetY: -10,
       colorA: "#00d1ff",
       colorB: "#2b2200",
     },
@@ -1177,8 +1177,8 @@ function initPlanetSystem() {
       floatSpeed: 0.004,
       floatRange: 22,
       floatAngle: 0,
-      offsetX: 300,
-      offsetY: 0,
+      offsetX: 240,
+      offsetY: 20,
       colorA: "#a100a4",
       colorB: "#002033",
     },
@@ -1195,10 +1195,28 @@ function initPlanetSystem() {
       floatSpeed: 0.004,
       floatRange: 20,
       floatAngle: 4,
-      offsetX: -100,
-      offsetY: 0,
+      offsetX: -240,
+      offsetY: 20,
       colorA: "#d47800",
       colorB: "#1a0033",
+    },
+    {
+      name: "DangDoro",
+      description:
+        "Dangdoro is a real-time collaborative Pomodoro app with synced group focus, ambient audio, and AI task planning.",
+      tech: ["Next.js", "Tailwind CSS", "Zustand", "Firebase", "OpenRouter API"],
+      link: "#",
+      orbitRadius: 200,
+      speed: 0.00018,
+      startAngle: 5.8,
+      size: 100,
+      floatSpeed: 0.004,
+      floatRange: 16,
+      floatAngle: 1,
+      offsetX: 80,
+      offsetY: -80,
+      colorA: "#0a7e8c",
+      colorB: "#012124",
     },
   ];
 
@@ -1500,13 +1518,13 @@ function initPlanetSystem() {
       const transition = document.getElementById("entry-transition");
       const transitionText = document.getElementById("transition-planet");
 
-        if (transition) {
-          if (transitionText)
-            runTransitionDecrypt(transitionText, data.name);
-          document.documentElement.style.setProperty("--accent-cyan", data.colorA);
+      if (transition) {
+        if (transitionText)
+          runTransitionDecrypt(transitionText, data.name);
+        document.documentElement.style.setProperty("--accent-cyan", data.colorA);
 
-          if (window.startStarWarp) window.startStarWarp();
-          transition.classList.add("active");
+        if (window.startStarWarp) window.startStarWarp();
+        transition.classList.add("active");
         document.body.style.overflowX = "hidden";
         document.body.style.overflowY = "hidden";
         setTimeout(() => {
