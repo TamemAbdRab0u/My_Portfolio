@@ -311,6 +311,7 @@ body {
 
 /* Hide native cursor on pointer-fine devices; restore on touch */
 @media (hover: hover) and (pointer: fine) {
+
     html,
     body,
     * {
@@ -705,6 +706,7 @@ body.portal-entering #splash {
 }
 
 @keyframes arcadeBlink {
+
     0%,
     60% {
         filter: saturate(1.2) brightness(1.1);
@@ -932,6 +934,12 @@ body.portal-entering #splash {
     color: var(--text-gray);
     max-width: 600px;
     margin: 1.5rem auto;
+    text-align: center;
+}
+
+.hero-tagline-sub {
+    display: block;
+    text-align: center;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1774,7 +1782,7 @@ body.portal-entering #splash {
 
 #skills .title-container.float-text {
     position: relative;
-    top: 100px;
+    top: 150px;
 }
 
 /* --- Skills Section: Solar System --- */
@@ -1788,9 +1796,8 @@ body.portal-entering #splash {
 
 .solar-system-viewport {
     position: relative;
-    right: 80px;
     width: 100%;
-    height: 900px;
+    height: 750px;
     display: flex;
     align-items: center;
     justify-content: center;
