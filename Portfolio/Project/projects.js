@@ -8,7 +8,7 @@
 
 const DATA = [
   {
-    name: "N3M|Nest",
+    name: "N3M | Nest",
     tagline: "Full-stack gaming ecosystem with social tracking and curated discovery.",
     description:
       "N3M|Nest is a full-stack Game Library Management tracking platform where users can discover games, build a personal library, review titles, and interact with other players in real time.",
@@ -286,7 +286,7 @@ function initGallery(media) {
     slides.forEach((s, i) => {
       const v = s.querySelector("video");
       if (v) {
-        if (i === current) v.play().catch(() => {});
+        if (i === current) v.play().catch(() => { });
         else v.pause();
       }
     });

@@ -301,6 +301,20 @@ function initEntrance() {
     isDragging = true;
   });
 
+  earth.addEventListener("touchstart", (e) => {
+    if (isZooming) return;
+    isDragging = true;
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+    splash.style.setProperty("--mouse-x", `${x}px`);
+    splash.style.setProperty("--mouse-y", `${y}px`);
+    if (mouseGlow) {
+      mouseGlow.style.left = `${x}px`;
+      mouseGlow.style.top = `${y}px`;
+    }
+  }, { passive: true });
+
   window.addEventListener("mousemove", (e) => {
     if (isZooming) return;
     const x = e.clientX;
@@ -342,7 +356,50 @@ function initEntrance() {
     }
   });
 
+  window.addEventListener("touchmove", (e) => {
+    if (isZooming || !isDragging) return;
+    const touch = e.touches[0];
+    const x = touch.clientX;
+    const y = touch.clientY;
+
+    splash.style.setProperty("--mouse-x", `${x}px`);
+    splash.style.setProperty("--mouse-y", `${y}px`);
+    if (mouseGlow) {
+      mouseGlow.style.left = `${x}px`;
+      mouseGlow.style.top = `${y}px`;
+    }
+
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const dx = x - centerX;
+    const dy = y - centerY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    const maxDrag = 250;
+    const resistanceFactor = 0.55;
+
+    let tx = dx * resistanceFactor;
+    let ty = dy * resistanceFactor;
+
+    const d = Math.sqrt(tx * tx + ty * ty);
+    if (d > maxDrag) {
+      tx *= maxDrag / d;
+      ty *= maxDrag / d;
+    }
+
+    targetX = tx;
+    targetY = ty;
+    targetStretch = 1 + dist / 800;
+  }, { passive: true });
+
   window.addEventListener("mouseup", () => {
+    isDragging = false;
+    targetX = 0;
+    targetY = 0;
+    targetStretch = 1;
+  });
+
+  window.addEventListener("touchend", () => {
     isDragging = false;
     targetX = 0;
     targetY = 0;
@@ -570,6 +627,13 @@ function initPlasmaLighter() {
         revealText.style.setProperty("--light-y", "-1000px");
       }
     });
+
+    // Check by default on mobile to show the glowing background state
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      overrideSwitch.checked = true;
+      decryptPercent = 100;
+      completeDecryption();
+    }
   }
 
   const startDrag = (e) => {
@@ -743,6 +807,29 @@ function initSkillConnector() {
   cards.forEach((card) => {
     card.addEventListener("mouseenter", () => showConnector(card));
     card.addEventListener("mouseleave", hideConnector);
+    card.addEventListener("click", (e) => {
+      if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+        e.stopPropagation();
+        const wasActive = card.classList.contains("active");
+        
+        // Clear active class from all cards first
+        document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
+        
+        if (!wasActive) {
+          card.classList.add("active");
+          showConnector(card);
+        } else {
+          hideConnector();
+        }
+      }
+    });
+  });
+
+  window.addEventListener("click", () => {
+    if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+      document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
+      hideConnector();
+    }
   });
 }
 
@@ -1122,22 +1209,44 @@ function initPlanetSystem() {
   let cy = 0;
 
   function updateCenter() {
-    // Top-level system anchor
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    // Top-level system anchor - shift up on mobile to clear bottom nav/overlays
     const globalCX = system.offsetWidth * 0.5;
-    const globalCY = system.offsetHeight * 0.62;
+    const globalCY = system.offsetHeight * (isMobile ? 0.46 : 0.62);
 
     if (typeof PLANETS !== "undefined" && PLANETS.length > 0) {
       PLANETS.forEach((data, i) => {
-        // Individual anchor override? If not, use global.
-        const cx = system.offsetWidth * (data.centerX || 0.5);
-        const cy = system.offsetHeight * (data.centerY || 0.62);
+        if (isMobile) {
+          let mobileIndex = i;
+          if (i === 1) {
+            mobileIndex = -1; // Hidden on mobile
+          } else if (i === 2) {
+            mobileIndex = 2; // third position
+          } else if (i === 3) {
+            mobileIndex = 1; // second position
+          }
 
-        const angle = data.startAngle || 0;
-        const distance = data.orbitRadius || 0;
+          if (mobileIndex >= 0) {
+            // Align in a clean zig-zag vertically down the center on mobile
+            data.baseX = globalCX + (mobileIndex % 2 === 0 ? -45 : 45);
+            data.baseY = globalCY - 200 + (mobileIndex * 200);
+          } else {
+            // Put it off-screen
+            data.baseX = -9999;
+            data.baseY = -9999;
+          }
+        } else {
+          // Individual anchor override? If not, use global.
+          const cx = system.offsetWidth * (data.centerX || 0.5);
+          const cy = system.offsetHeight * (data.centerY || 0.62);
 
-        // Base Position = Anchor + Circular Position + Manual Nudge
-        data.baseX = cx + distance * Math.cos(angle) + (data.offsetX || 0);
-        data.baseY = cy + distance * Math.sin(angle) + (data.offsetY || 0);
+          const angle = data.startAngle || 0;
+          const distance = data.orbitRadius || 0;
+
+          // Base Position = Anchor + Circular Position + Manual Nudge
+          data.baseX = cx + distance * Math.cos(angle) + (data.offsetX || 0);
+          data.baseY = cy + distance * Math.sin(angle) + (data.offsetY || 0);
+        }
       });
     }
   }
@@ -1266,6 +1375,9 @@ function initPlanetSystem() {
     // Position carrier
     const node = document.createElement("div");
     node.className = "ps-orbit-node";
+    if (i === 1) {
+      node.classList.add("ps-node--summonerbase");
+    }
 
     // Visual sphere
     const el = document.createElement("div");
@@ -1538,8 +1650,25 @@ function initPlanetSystem() {
 
   // ── Planet event listeners ────────────────────────────────────────────────────
   planetEls.forEach((el, i) => {
-    el.addEventListener("mouseenter", () => showDetail(el, i));
+    el.addEventListener("mouseenter", () => {
+      if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
+      showDetail(el, i);
+    });
     el.addEventListener("mouseleave", hideDetail);
-    el.addEventListener("click", () => triggerLanding(el, i));
+    el.addEventListener("click", (e) => {
+      if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerLanding(el, i);
+      } else {
+        triggerLanding(el, i);
+      }
+    });
+  });
+
+  window.addEventListener("click", () => {
+    if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+      hideDetail();
+    }
   });
 }
