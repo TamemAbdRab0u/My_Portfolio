@@ -37,28 +37,6 @@ const DATA = [
     sourceUrl: "https://github.com/TamemAbdRab0u/N3M-Nest-GLM",
   },
   {
-    name: "SummonerBase",
-    tagline: "High-performance analytics dashboard for League of Legends summoners.",
-    description:
-      "SummonerBase is a League of Legends analytics tool I built to make sense of all the match data Riot's API throws at you. It breaks down summoner performance, tracks match history trends, and presents everything in a clean dashboard that actually helps you spot patterns in how you play.",
-    status: "ACTIVE",
-    codename: "SB-001",
-    tech: {
-      Frontend: ["HTML", "CSS", "JS"],
-      Backend: ["Node.js"],
-      API: ["Riot API"],
-    },
-    media: [
-      "../../Projects/SummonerBase/Screen1.png",
-      "../../Projects/SummonerBase/Screen2.png",
-      "../../Projects/SummonerBase/Screen3.png",
-      "../../Projects/SummonerBase/Screen4.png",
-      "../../Projects/SummonerBase/Screen5.png",
-    ],
-    liveUrl: "#",
-    sourceUrl: "#",
-  },
-  {
     name: "MindShelf",
     tagline: "Cognitive sanctuary for readers — literary e-commerce meets community.",
     description:
@@ -116,11 +94,6 @@ const THEMES = [
     color: "#00d1ff",
     rgb: "0,209,255",
     name: "NEBULA_BLUE",
-  },
-  {
-    color: "#a100a4",
-    rgb: "161,0,164",
-    name: "VOID_PURPLE",
   },
   {
     color: "#d47800",
