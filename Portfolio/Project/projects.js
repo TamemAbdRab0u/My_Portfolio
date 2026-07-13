@@ -33,7 +33,7 @@ const DATA = [
       "../../Projects/N3M Nest/Screenshot 2026-03-26 193339.png",
       "../../Projects/N3M Nest/Screenshot 2026-03-27 140104.png",
     ],
-    liveUrl: "https://n3mnest.tamemabdo21.workers.dev",
+    liveUrl: "https://n3m-nest.pages.dev",
     sourceUrl: "https://github.com/TamemAbdRab0u/N3M-Nest-GLM",
   },
   {

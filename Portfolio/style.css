@@ -1812,6 +1812,15 @@ body.portal-entering #splash {
     transform: rotateX(65deg) rotateY(-5deg);
 }
 
+@media (min-width: 1025px) {
+    .solar-system {
+        transform: rotateX(65deg) rotateY(-5deg) translateX(-40px);
+    }
+    #skills .title-container.float-text {
+        left: -40px;
+    }
+}
+
 /* The Sun */
 .sun-wrapper {
     position: absolute;
@@ -2560,9 +2569,6 @@ textarea:focus {
     .ps-planet-label {
         font-size: 0.9rem;
         opacity: 0.9;
-    }
-    .ps-node--summonerbase {
-        display: none !important;
     }
 }
 

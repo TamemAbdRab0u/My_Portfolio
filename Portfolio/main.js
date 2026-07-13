@@ -1218,24 +1218,9 @@ function initPlanetSystem() {
     if (typeof PLANETS !== "undefined" && PLANETS.length > 0) {
       PLANETS.forEach((data, i) => {
         if (isMobile) {
-          let mobileIndex = i;
-          if (i === 1) {
-            mobileIndex = -1; // Hidden on mobile
-          } else if (i === 2) {
-            mobileIndex = 2; // third position
-          } else if (i === 3) {
-            mobileIndex = 1; // second position
-          }
-
-          if (mobileIndex >= 0) {
-            // Align in a clean zig-zag vertically down the center on mobile
-            data.baseX = globalCX + (mobileIndex % 2 === 0 ? -45 : 45);
-            data.baseY = globalCY - 200 + (mobileIndex * 200);
-          } else {
-            // Put it off-screen
-            data.baseX = -9999;
-            data.baseY = -9999;
-          }
+          // Align in a clean zig-zag vertically down the center on mobile
+          data.baseX = globalCX + (i % 2 === 0 ? -45 : 45);
+          data.baseY = globalCY - 200 + (i * 200);
         } else {
           // Individual anchor override? If not, use global.
           const cx = system.offsetWidth * (data.centerX || 0.5);
@@ -1278,24 +1263,6 @@ function initPlanetSystem() {
       offsetY: -10,
       colorA: "#00d1ff",
       colorB: "#2b2200",
-    },
-    {
-      name: "SummonerBase",
-      description:
-        "A full-stack League of Legends web application designed to deliver a seamless and interactive user experience for players and summoners.",
-      tech: ["Node.js", "HTML", "JS", "CSS"],
-      link: "#",
-      orbitRadius: 70,
-      speed: 0.0001,
-      startAngle: 1.2,
-      size: 100,
-      floatSpeed: 0.004,
-      floatRange: 22,
-      floatAngle: 0,
-      offsetX: 240,
-      offsetY: 20,
-      colorA: "#a100a4",
-      colorB: "#002033",
     },
     {
       name: "MindShelf",
@@ -1381,9 +1348,6 @@ function initPlanetSystem() {
     // Position carrier
     const node = document.createElement("div");
     node.className = "ps-orbit-node";
-    if (i === 1) {
-      node.classList.add("ps-node--summonerbase");
-    }
 
     // Visual sphere
     const el = document.createElement("div");
