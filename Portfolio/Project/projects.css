@@ -609,10 +609,10 @@ body::-webkit-scrollbar {
 
     .action-btn {
         flex: 1 1 calc(50% - 0.4rem);
-        min-width: 120px;
-        padding: 0.8rem 1.2rem;
-        font-size: 0.65rem;
-        border-radius: 8px;
+        min-width: 100px;
+        padding: 0.55rem 1rem;
+        font-size: 0.55rem;
+        border-radius: 6px;
     }
 
     .action-btn.back {
@@ -632,5 +632,112 @@ body::-webkit-scrollbar {
 
     .gallery-viewport {
         aspect-ratio: 16 / 9;
+    }
+
+    .action-btn {
+        min-width: 70px;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.45rem;
+        border-radius: 4px;
+    }
+}
+
+/* ═══════ TABLET / iPAD — portrait (~768–1024px wide) ═══════ */
+@media (max-width: 1024px) {
+    .page-container {
+        padding: 1rem 1rem 3rem;
+    }
+
+    .control-panel {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .mod-title,
+    .mod-screenshot,
+    .mod-actions {
+        grid-column: 1;
+    }
+
+    :root {
+        --panel-pad: 1.5rem;
+        --grid-gap: 1rem;
+    }
+
+    .panel-module {
+        border-radius: 18px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .title-layout {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .title-main {
+        text-align: center;
+    }
+
+    .gradient-title {
+        font-size: clamp(1.8rem, 6vw, 3rem);
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .objective-text {
+        text-align: center;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .title-tech {
+        width: 100%;
+        min-width: unset;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 1.5rem;
+    }
+
+    .tech-groups {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        justify-content: center;
+    }
+
+    .tech-group {
+        align-items: center;
+    }
+
+    .tech-group-badges {
+        justify-content: center;
+    }
+
+    .gallery-viewport {
+        aspect-ratio: 16 / 9;
+        border-radius: 14px;
+        border-color: rgba(var(--accent-rgb), 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .mod-actions .module-clip {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+    }
+
+    .action-btn {
+        flex: 1 1 calc(50% - 0.45rem);
+        min-width: 130px;
+        padding: 0.9rem 1.3rem;
+        font-size: 0.7rem;
+        border-radius: 10px;
+    }
+
+    .action-btn.back {
+        flex: 1 1 100%;
+        margin-top: 0.4rem;
     }
 }

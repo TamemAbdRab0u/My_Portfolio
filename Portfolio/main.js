@@ -1210,6 +1210,7 @@ function initPlanetSystem() {
 
   function updateCenter() {
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isTablet = window.matchMedia("(max-width: 1024px)").matches;
     // Top-level system anchor - shift up on mobile to clear bottom nav/overlays
     const globalCX = system.offsetWidth * 0.5;
     const globalCY = system.offsetHeight * (isMobile ? 0.46 : 0.62);
@@ -1246,6 +1247,11 @@ function initPlanetSystem() {
           // Base Position = Anchor + Circular Position + Manual Nudge
           data.baseX = cx + distance * Math.cos(angle) + (data.offsetX || 0);
           data.baseY = cy + distance * Math.sin(angle) + (data.offsetY || 0);
+
+          // Nudge MindShelf further right on tablets (iPad/tablet preview)
+          if (isTablet && data.name === "MindShelf") {
+            data.baseX = cx - 160;
+          }
         }
       });
     }

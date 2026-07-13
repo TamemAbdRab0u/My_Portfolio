@@ -1744,7 +1744,7 @@ body.portal-entering #splash {
 }
 
 /* Response for module */
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
     .about-module {
         flex-direction: column;
         gap: 2rem;
@@ -3779,4 +3779,177 @@ textarea:focus {
 
 .ps-title-overlay .title-tag {
     margin: 0 0.8rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TABLET / iPAD — portrait (~768–1024px wide, e.g. 1024×1366)
+   Touch-friendly layout without harming landscape tablets/laptops.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    /* Sidebar becomes a floating bottom dock (thumb-reachable) */
+    #sidebar {
+        bottom: 20px;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        height: auto;
+        padding: 0.5rem 1.5rem !important;
+        background: rgba(10, 15, 30, 0.6) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 30px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--accent-cyan-rgb), 0.1) !important;
+    }
+
+    #sidebar::before,
+    #sidebar::after,
+    .nav-icons::before,
+    .nav-icons::after {
+        display: none !important;
+    }
+
+    .nav-icons {
+        flex-direction: row;
+        gap: 0.9rem !important;
+    }
+
+    .nav-link {
+        width: 46px !important;
+        height: 46px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 50% !important;
+        border: 1px solid transparent !important;
+        outline: none !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-link.active {
+        background: rgba(var(--accent-cyan-rgb), 0.15) !important;
+        border: 1px solid var(--accent-cyan) !important;
+        transform: translateY(-2px) scale(1.1) !important;
+        box-shadow: 0 0 20px rgba(var(--accent-cyan-rgb), 0.4) !important;
+        animation: none !important;
+    }
+
+    .nav-link.active::before {
+        display: none !important;
+    }
+
+    .panel {
+        padding-bottom: 120px !important;
+    }
+
+    .scroll-container {
+        padding-left: 0;
+        padding-bottom: 110px;
+    }
+
+    .nav-tooltip {
+        left: 50%;
+        top: auto;
+        bottom: calc(100% + 10px);
+        transform: translateX(-50%);
+    }
+
+    .nav-tooltip::before {
+        right: auto;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-right-color: transparent;
+        border-top-color: rgba(var(--accent-cyan-rgb), 0.3);
+    }
+
+    .nav-tooltip::after {
+        right: auto;
+        top: calc(100% + 1px);
+        left: 50%;
+        transform: translateX(-50%);
+        border-right-color: transparent;
+        border-top-color: rgba(5, 5, 10, 0.9);
+    }
+
+    .nav-link.active .nav-tooltip::before {
+        border-right-color: transparent;
+        border-top-color: var(--accent-cyan);
+    }
+
+    /* Center the hero text */
+    .hero-inner {
+        text-align: center;
+    }
+
+    /* Touch-friendly detail panels */
+    .skill-detail-panel {
+        position: absolute;
+        top: 2rem;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -10px);
+        width: calc(100% - 48px);
+        max-width: 340px;
+        padding: 1rem 1.2rem;
+    }
+
+    .skill-detail-panel.visible {
+        transform: translate(-50%, 0);
+    }
+
+    .ps-detail-panel {
+        top: auto;
+        bottom: 6rem;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, 20px);
+        width: calc(100% - 48px);
+        max-width: 440px;
+        padding: 1.4rem 1.2rem;
+    }
+
+    .ps-detail-panel.visible {
+        transform: translate(-50%, 0);
+    }
+
+    /* Collapse two-column sections for portrait tablets */
+    .transmitter-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .transmitter-inner {
+        padding: 9rem 2.5rem 6rem;
+    }
+
+    .info-title {
+        font-size: 2.2rem;
+    }
+
+    .section-title {
+        font-size: 2.1rem;
+    }
+
+    .glitch {
+        font-size: 3.2rem;
+        text-align: center;
+    }
+
+    /* Scale the project orbit down a touch for narrower screens */
+    .ps-system {
+        transform: scale(0.9);
+        transform-origin: center 62%;
+    }
+
+    /* Remove default square tap highlight on touchable elements */
+    .project-planet,
+    .skill-planet,
+    .planet-card,
+    .action-btn,
+    .channel-card,
+    .nav-link {
+        -webkit-tap-highlight-color: transparent !important;
+        outline: none !important;
+    }
 }
