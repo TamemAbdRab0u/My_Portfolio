@@ -52,7 +52,6 @@ const DATA = [
       "./Projects/MindShelf/photo_2026-03-27_22-15-43.jpg",
       "./Projects/MindShelf/photo_2026-03-27_22-15-45.jpg",
       "./Projects/MindShelf/photo_2026-03-27_22-16-02.jpg",
-      "./Projects/MindShelf/2026-03-27 21-51-04.mp4",
     ],
     liveUrl: "#",
     sourceUrl: "https://github.com/Morales020/Mindshelf",
@@ -225,20 +224,11 @@ function initGallery(media) {
     const slide = document.createElement("div");
     slide.className = "gallery-slide" + (i === 0 ? " is-active" : "");
 
-    if (src.endsWith(".mp4")) {
-      const vid = document.createElement("video");
-      vid.src = src;
-      vid.muted = true;
-      vid.loop = true;
-      vid.playsInline = true;
-      slide.appendChild(vid);
-    } else {
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = `${project.name} — screenshot ${i + 1}`;
-      img.loading = i === 0 ? "eager" : "lazy";
-      slide.appendChild(img);
-    }
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = `${project.name} — screenshot ${i + 1}`;
+    img.loading = i === 0 ? "eager" : "lazy";
+    slide.appendChild(img);
 
     track.appendChild(slide);
     slides.push(slide);
@@ -255,14 +245,6 @@ function initGallery(media) {
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === N - 1;
 
-    // Play video if active slide contains one
-    slides.forEach((s, i) => {
-      const v = s.querySelector("video");
-      if (v) {
-        if (i === current) v.play().catch(() => { });
-        else v.pause();
-      }
-    });
   }
 
   prevBtn.addEventListener("click", () => goTo(current - 1));
