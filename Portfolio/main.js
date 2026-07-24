@@ -359,6 +359,7 @@ function initEntrance() {
 
   window.addEventListener("touchmove", (e) => {
     if (isZooming || !isDragging) return;
+    if (e.cancelable) e.preventDefault();
     const touch = e.touches[0];
     const x = touch.clientX;
     const y = touch.clientY;
@@ -391,7 +392,7 @@ function initEntrance() {
     targetX = tx;
     targetY = ty;
     targetStretch = 1 + dist / 800;
-  }, { passive: true });
+  }, { passive: false });
 
   window.addEventListener("mouseup", () => {
     isDragging = false;

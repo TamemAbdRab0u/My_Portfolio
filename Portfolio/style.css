@@ -2427,6 +2427,16 @@ textarea:focus {
     }
 
     /* --- Splash Screen Mobile Adjustments --- */
+    #splash {
+        touch-action: none;
+        overflow: hidden;
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        height: 100dvh;
+        background: #050505;
+    }
+
     .earth-container {
         width: 200px;
         height: 200px;
@@ -2435,6 +2445,7 @@ textarea:focus {
     .earth-model {
         width: 160px;
         height: 160px;
+        touch-action: none;
     }
 
     .earth-glow {
