@@ -150,6 +150,7 @@ function initStars() {
     height = canvas.height = window.innerHeight;
     cx = width / 2;
     cy = height / 2;
+    numStars = width < 768 ? 250 : 800;
     stars = [];
     for (let i = 0; i < numStars; i++) {
       stars.push(makeStar());
@@ -811,10 +812,10 @@ function initSkillConnector() {
       if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
         e.stopPropagation();
         const wasActive = card.classList.contains("active");
-        
+
         // Clear active class from all cards first
         document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
-        
+
         if (!wasActive) {
           card.classList.add("active");
           showConnector(card);

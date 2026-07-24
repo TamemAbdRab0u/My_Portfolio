@@ -350,13 +350,26 @@ body {
     pointer-events: all;
 }
 
-/* Underlying page is blurred + scaled up as we "enter" the portal */
-body.portal-entering #main-content,
-body.portal-entering #splash {
-    transform: scale(1.4);
-    filter: blur(8px) brightness(0.6);
-    transition: transform 1.1s cubic-bezier(0.7, 0, 0.3, 1),
-        filter 1.1s cubic-bezier(0.7, 0, 0.3, 1);
+/* Underlying page is blurred + scaled up on desktop, lightweight opacity transition on mobile */
+@media (min-width: 769px) {
+
+    body.portal-entering #main-content,
+    body.portal-entering #splash {
+        transform: scale(1.4);
+        filter: blur(8px) brightness(0.6);
+        transition: transform 1.1s cubic-bezier(0.7, 0, 0.3, 1),
+            filter 1.1s cubic-bezier(0.7, 0, 0.3, 1);
+    }
+}
+
+@media (max-width: 768px) {
+
+    body.portal-entering #main-content,
+    body.portal-entering #splash {
+        opacity: 0.15;
+        transition: opacity 0.8s ease;
+        will-change: opacity;
+    }
 }
 
 .entry-portal-ring {
@@ -1816,6 +1829,7 @@ body.portal-entering #splash {
     .solar-system {
         transform: rotateX(65deg) rotateY(-5deg) translateX(-40px);
     }
+
     #skills .title-container.float-text {
         left: -40px;
     }
@@ -2417,19 +2431,23 @@ textarea:focus {
         width: 200px;
         height: 200px;
     }
+
     .earth-model {
         width: 160px;
         height: 160px;
     }
+
     .earth-glow {
         width: 240px;
         height: 240px;
     }
+
     .splash-title {
         font-size: 1.1rem;
         letter-spacing: 0.1rem;
         padding: 0 1rem;
     }
+
     .cta-btn {
         padding: 0.8rem 1.6rem;
         font-size: 0.9rem;
@@ -2444,35 +2462,43 @@ textarea:focus {
     .torch-pedestal {
         display: none;
     }
+
     .about-module {
         gap: 1rem;
         flex-direction: column;
     }
+
     .module-clip {
         padding: 1.5rem;
         min-height: auto;
     }
+
     .about-lead {
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 0;
     }
+
     .about-divider,
     .about-body {
         display: none;
     }
+
     .about-glass-module .tl {
         top: 6px;
         left: 6px;
     }
+
     .about-glass-module .tr {
         top: 6px;
         right: 6px;
     }
+
     .about-glass-module .bl {
         bottom: 6px;
         left: 6px;
     }
+
     .about-glass-module .br {
         bottom: 6px;
         right: 6px;
@@ -2483,12 +2509,15 @@ textarea:focus {
         gap: 1.5rem;
         flex-direction: column;
     }
+
     .data-readout .stat-item:nth-child(2) {
         display: none;
     }
+
     .pc-prefix {
         display: none;
     }
+
     .module-controls {
         position: relative;
         bottom: auto;
@@ -2499,6 +2528,7 @@ textarea:focus {
         align-items: center;
         width: 100%;
     }
+
     .cyber-switch,
     .switch-slider {
         -webkit-tap-highlight-color: transparent !important;
@@ -2512,12 +2542,31 @@ textarea:focus {
         right: 0;
         perspective: 1200px;
     }
+
     .solar-system {
         transform: scale(0.38) rotateX(65deg) rotateY(-5deg);
+        will-change: transform;
     }
+
+    .orbit-ring,
+    .skill-planet,
+    .planet-card {
+        will-change: transform;
+    }
+
+    .planet-card img,
+    .planet-card svg {
+        filter: none !important;
+    }
+
+    .sun {
+        box-shadow: 0 0 30px #fff, 0 0 50px var(--accent-cyan) !important;
+    }
+
     #skills .title-container.float-text {
         top: 30px;
     }
+
     .skill-detail-panel {
         position: absolute;
         top: 2rem;
@@ -2531,32 +2580,39 @@ textarea:focus {
         display: none;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--accent-cyan-rgb), 0.15);
     }
+
     .skill-detail-panel.visible {
         display: block;
         transform: translate(-50%, 0);
     }
+
     .skill-detail-panel .sdp-tag {
         font-size: 0.5rem;
         margin-bottom: 0.4rem;
         padding: 0.15rem 0.35rem;
     }
+
     .skill-detail-panel .sdp-icon-wrap {
         margin-bottom: 0.4rem;
     }
+
     .skill-detail-panel .sdp-icon-wrap img,
     .skill-detail-panel .sdp-icon-wrap svg {
         width: 32px;
         height: 32px;
     }
+
     .skill-detail-panel .sdp-name {
         font-size: 0.85rem;
         margin-bottom: 0.25rem;
     }
+
     .skill-detail-panel .sdp-desc {
         font-size: 0.65rem;
         margin-bottom: 0.6rem;
         line-height: 1.35;
     }
+
     .skill-detail-panel .sdp-level-wrap {
         margin-top: 0.4rem;
     }
@@ -2566,6 +2622,7 @@ textarea:focus {
         transform: scale(0.85);
         transform-origin: center 62%;
     }
+
     .ps-planet-label {
         font-size: 0.9rem;
         opacity: 0.9;
@@ -2573,6 +2630,7 @@ textarea:focus {
 }
 
 @media (max-width: 480px) {
+
     /* Super narrow screens projects scale */
     .ps-system {
         transform: scale(0.75);
@@ -3738,6 +3796,7 @@ textarea:focus {
         padding: 1.2rem 1rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--accent-cyan-rgb), 0.15);
     }
+
     .ps-detail-panel.visible {
         transform: translate(-50%, 0);
         opacity: 1;
@@ -3764,7 +3823,8 @@ textarea:focus {
         transition: all 0.3s ease;
     }
 
-    .psdp-link:hover, .psdp-link:active {
+    .psdp-link:hover,
+    .psdp-link:active {
         background: var(--accent-cyan);
         color: #000 !important;
         box-shadow: 0 0 15px rgba(var(--accent-cyan-rgb), 0.4);
@@ -3792,6 +3852,7 @@ textarea:focus {
    Touch-friendly layout without harming landscape tablets/laptops.
    ═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
+
     /* Sidebar becomes a floating bottom dock (thumb-reachable) */
     #sidebar {
         bottom: 20px;

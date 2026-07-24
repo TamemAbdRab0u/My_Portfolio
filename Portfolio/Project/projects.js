@@ -269,7 +269,8 @@ function initParticles() {
   if (!field) return;
   field.innerHTML = "";
 
-  for (let i = 0; i < 30; i++) {
+  const count = window.innerWidth < 768 ? 10 : 30;
+  for (let i = 0; i < count; i++) {
     const p = document.createElement("div");
     const size = Math.random() * 2.5 + 0.5;
     p.style.cssText = `
@@ -303,6 +304,7 @@ document.head.appendChild(driftStyle);
    ═══════════════════════════════════════════════════════════════ */
 
 document.addEventListener("mousemove", (e) => {
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
   const x = (e.clientX / window.innerWidth - 0.5) * 2;
   const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
@@ -330,12 +332,13 @@ function initStars() {
   const ctx = canvas.getContext("2d");
 
   let stars = [];
-  let numStars = 600;
+  let numStars = window.innerWidth < 768 ? 200 : 600;
   let width, height;
 
   function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
+    numStars = width < 768 ? 200 : 600;
     stars = [];
     for (let i = 0; i < numStars; i++) {
       stars.push({
