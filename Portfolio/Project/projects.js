@@ -1,14 +1,10 @@
-// ─────────────────────────────────────────────────────────────────────────────
-//  projects.js — Data-Panel Grid Layout
-// ─────────────────────────────────────────────────────────────────────────────
-
 /* ═══════════════════════════════════════════════════════════════
    1. DATA & THEME
    ═══════════════════════════════════════════════════════════════ */
 
 const DATA = [
   {
-    name: "N3M | Nest",
+    name: "N3M|Nest",
     tagline: "Full-stack gaming ecosystem with social tracking and curated discovery.",
     description:
       "N3M|Nest is a full-stack Game Library Management tracking platform where users can discover games, build a personal library, review titles, and interact with other players in real time.",
@@ -122,11 +118,9 @@ function injectProject() {
   document.documentElement.style.setProperty("--accent-rgb", theme.rgb);
   document.title = `${project.name} | Portfolio`;
 
-  // Transition overlay
   const trans = document.getElementById("transition-planet");
   if (trans) trans.textContent = project.name;
 
-  // Header
   const statusEl = document.getElementById("proj-status");
   if (statusEl) statusEl.textContent = `STATUS: ${project.status}`;
 
@@ -136,15 +130,12 @@ function injectProject() {
   const codeEl = document.getElementById("proj-codename");
   if (codeEl) codeEl.textContent = project.codename;
 
-  // Title
   const titleEl = document.getElementById("proj-title");
   if (titleEl) titleEl.textContent = project.name;
 
-  // Objective
   const descEl = document.getElementById("proj-desc");
   if (descEl) descEl.textContent = project.description;
 
-  // Systems
   const sysContainer = document.getElementById("proj-systems");
   if (sysContainer) {
     const categories = Object.entries(project.tech);
@@ -172,7 +163,6 @@ function injectProject() {
     });
   }
 
-  // Actions
   const liveLink = document.getElementById("proj-live-link");
   if (liveLink) {
     if (project.liveUrl && project.liveUrl !== "#") {
@@ -191,7 +181,6 @@ function injectProject() {
     }
   }
 
-  // Gallery
   initGallery(project.media);
 }
 
@@ -218,7 +207,6 @@ function initGallery(media) {
 
   if (totEl) totEl.textContent = N;
 
-  // Build slides
   const slides = [];
   media.forEach((src, i) => {
     const slide = document.createElement("div");
@@ -244,13 +232,11 @@ function initGallery(media) {
 
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === N - 1;
-
   }
 
   prevBtn.addEventListener("click", () => goTo(current - 1));
   nextBtn.addEventListener("click", () => goTo(current + 1));
 
-  // Keyboard nav
   viewport.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") goTo(current - 1);
     if (e.key === "ArrowRight") goTo(current + 1);
@@ -319,10 +305,6 @@ document.addEventListener("mousemove", (e) => {
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   7. BOOT SEQUENCE
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════════════
    8. STAR FIELD
    ═══════════════════════════════════════════════════════════════ */
 
@@ -380,10 +362,11 @@ function initStars() {
   draw();
 }
 
+injectProject();
+
 window.addEventListener("load", () => {
   initStars();
   initParticles();
-  injectProject();
 
   const landing = document.getElementById("landing-sequence");
   const container = document.querySelector(".page-container");

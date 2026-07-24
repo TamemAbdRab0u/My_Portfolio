@@ -126,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initPlasmaLighter();
   renderSkills();
   initSkillConnector();
+  initSkillsVisibilityObserver();
   initPlanetSystem();
   initContactSection();
   initCometCursor();
@@ -150,7 +151,7 @@ function initStars() {
     height = canvas.height = window.innerHeight;
     cx = width / 2;
     cy = height / 2;
-    numStars = width < 768 ? 250 : 800;
+    numStars = width < 768 ? 120 : 800;
     stars = [];
     for (let i = 0; i < numStars; i++) {
       stars.push(makeStar());
@@ -752,6 +753,27 @@ function initSkillConnector() {
 
   function showConnector(card) {
     const data = card.dataset;
+
+    // Populate panel
+    sdpTag.textContent = data.tag || "Skill";
+    sdpName.textContent = data.name || "";
+    sdpDesc.textContent = data.desc || "";
+
+    // Clone icon from card
+    sdpIcon.innerHTML = "";
+    const img = card.querySelector("img");
+    const svgEl = card.querySelector("svg");
+    if (img) {
+      const clone = img.cloneNode(true);
+      sdpIcon.appendChild(clone);
+    } else if (svgEl) {
+      const clone = svgEl.cloneNode(true);
+      sdpIcon.appendChild(clone);
+    }
+
+    // Make panel visible first so bounding rect is measured correctly on mobile
+    panel.classList.add("visible");
+
     const svgRect = svg.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
@@ -778,28 +800,10 @@ function initSkillConnector() {
     dotEnd.setAttribute("cx", px);
     dotEnd.setAttribute("cy", py);
     dotEnd.style.display = "";
-
-    // Populate panel
-    sdpTag.textContent = data.tag || "Skill";
-    sdpName.textContent = data.name || "";
-    sdpDesc.textContent = data.desc || "";
-
-    // Clone icon from card
-    sdpIcon.innerHTML = "";
-    const img = card.querySelector("img");
-    const svgEl = card.querySelector("svg");
-    if (img) {
-      const clone = img.cloneNode(true);
-      sdpIcon.appendChild(clone);
-    } else if (svgEl) {
-      const clone = svgEl.cloneNode(true);
-      sdpIcon.appendChild(clone);
-    }
-
-    panel.classList.add("visible");
   }
 
-  function hideConnector() {
+  function hideConnector(force = false) {
+    if (!force && document.querySelector(".planet-card.active")) return;
     line.style.display = "none";
     dotStart.style.display = "none";
     dotEnd.style.display = "none";
@@ -807,32 +811,78 @@ function initSkillConnector() {
   }
 
   cards.forEach((card) => {
-    card.addEventListener("mouseenter", () => showConnector(card));
-    card.addEventListener("mouseleave", hideConnector);
+    card.addEventListener("mouseenter", () => {
+      if (!window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+        showConnector(card);
+      }
+    });
+    card.addEventListener("mouseleave", () => {
+      if (!card.classList.contains("active")) {
+        hideConnector(false);
+      }
+    });
     card.addEventListener("click", (e) => {
-      if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
-        e.stopPropagation();
-        const wasActive = card.classList.contains("active");
+      e.stopPropagation();
+      const wasActive = card.classList.contains("active");
 
-        // Clear active class from all cards first
-        document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
+      // Clear active class from all cards first
+      document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
 
-        if (!wasActive) {
-          card.classList.add("active");
-          showConnector(card);
-        } else {
-          hideConnector();
-        }
+      if (!wasActive) {
+        card.classList.add("active");
+        showConnector(card);
+      } else {
+        hideConnector(true);
       }
     });
   });
 
   window.addEventListener("click", () => {
-    if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
-      document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
-      hideConnector();
-    }
+    document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
+    hideConnector(true);
   });
+}
+
+function initSkillsVisibilityObserver() {
+  const skillsSec = document.getElementById("skills");
+  const solarSystem = document.querySelector(".solar-system");
+  if (!skillsSec || !solarSystem) return;
+
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          solarSystem.classList.remove("system-paused");
+        } else {
+          solarSystem.classList.add("system-paused");
+          document.querySelectorAll(".planet-card").forEach((c) => c.classList.remove("active"));
+          const panel = document.getElementById("skill-detail-panel");
+          if (panel) panel.classList.remove("visible");
+        }
+      });
+    },
+    { threshold: 0.05 }
+  );
+  obs.observe(skillsSec);
+
+  let scrollTimeout;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.body.classList.add("is-scrolling");
+        document.querySelectorAll(".planet-card").forEach((c) => c.classList.remove("active"));
+        const panel = document.getElementById("skill-detail-panel");
+        if (panel) panel.classList.remove("visible");
+
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          document.body.classList.remove("is-scrolling");
+        }, 150);
+      }
+    },
+    { passive: true }
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1590,15 +1640,38 @@ function initPlanetSystem() {
     animPaused = true;
     hideDetail();
 
-    // CSS transition: planet scales to 9× and fades out (camera rush effect)
+    const isMobile = window.matchMedia("(max-width: 1024px)").matches || window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    localStorage.setItem("portfolio_return_scroll", window.scrollY);
+
+    if (isMobile) {
+      // On mobile: Skip the lagging planet circle expand animation (ps-planet--landing + 680ms delay),
+      // but immediately start the suck-in blur, typewriter text decrypt, and star warp transition sequence!
+      const transition = document.getElementById("entry-transition");
+      const transitionText = document.getElementById("transition-planet");
+
+      if (transition) {
+        if (transitionText) runTransitionDecrypt(transitionText, data.name);
+        document.documentElement.style.setProperty("--accent-cyan", data.colorA);
+
+        if (window.startStarWarp) window.startStarWarp();
+        transition.classList.add("active");
+        document.body.style.overflowX = "hidden";
+        document.body.style.overflowY = "hidden";
+        setTimeout(() => {
+          window.location.href = "Project/projects.html?id=" + i;
+        }, 1800);
+      } else {
+        window.location.href = "Project/projects.html?id=" + i;
+      }
+      return;
+    }
+
+    // Laptop & Desktop: Keep both initial planet circle expand AND full suck-in sequence
     el.classList.add("ps-planet--landing");
-    // Ensure the section itself sits above all others to allow spilling over
     const projectsSec = document.getElementById("projects");
     if (projectsSec) projectsSec.classList.add("ps--active-landing");
 
     setTimeout(() => {
-      localStorage.setItem("portfolio_return_scroll", window.scrollY);
-
       const transition = document.getElementById("entry-transition");
       const transitionText = document.getElementById("transition-planet");
 

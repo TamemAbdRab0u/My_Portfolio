@@ -520,7 +520,6 @@ body {
         0 0 0 1px rgba(var(--accent-cyan-rgb), 0.08);
 }
 
-/* CRT scanline overlay + inset border across the whole sidebar */
 #sidebar::before {
     content: "";
     position: absolute;
@@ -1844,6 +1843,7 @@ body {
     /* Counter-tilt for label */
     text-align: center;
     z-index: 100;
+    pointer-events: none;
 }
 
 .sun {
@@ -1915,6 +1915,7 @@ body {
     transform-style: preserve-3d;
     animation: orbitRotate var(--duration) linear infinite;
     animation-direction: var(--ring-dir, normal);
+    pointer-events: none;
 }
 
 .orbit-ring::before {
@@ -1930,6 +1931,7 @@ body {
     --duration: 25s;
     --ring-dir: normal;
     --card-dir: reverse;
+    z-index: 3;
 }
 
 #orbit-middle {
@@ -1937,6 +1939,7 @@ body {
     --duration: 40s;
     --ring-dir: reverse;
     --card-dir: normal;
+    z-index: 2;
 }
 
 #orbit-outer {
@@ -1944,6 +1947,7 @@ body {
     --duration: 60s;
     --ring-dir: normal;
     --card-dir: reverse;
+    z-index: 1;
 }
 
 @keyframes orbitRotate {
@@ -1965,6 +1969,7 @@ body {
     height: 0;
     transform-style: preserve-3d;
     transform: rotateZ(var(--angle)) translateX(calc(var(--diameter) / 2));
+    pointer-events: none;
 }
 
 .planet-card {
@@ -1981,6 +1986,7 @@ body {
     padding: 0.8rem;
     cursor: pointer;
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: auto;
 
     /* Counter-rotate to stay upright — uses OPPOSITE direction of the ring */
     animation: counterRotate var(--duration) linear infinite;
@@ -1994,6 +2000,16 @@ body {
 
     to {
         transform: translate(-50%, -50%) rotateZ(-360deg) rotateX(-65deg);
+    }
+}
+
+@keyframes counterRotate2D {
+    from {
+        transform: translate(-50%, -50%) rotateZ(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotateZ(-360deg);
     }
 }
 
@@ -2013,6 +2029,20 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 0.7;
+}
+
+/* Offscreen & Active Scroll Pause States */
+.solar-system.system-paused,
+.solar-system.system-paused .orbit-ring,
+.solar-system.system-paused .planet-card,
+.solar-system.system-paused .sun,
+.solar-system.system-paused .sun-corona,
+body.is-scrolling .solar-system,
+body.is-scrolling .orbit-ring,
+body.is-scrolling .planet-card,
+body.is-scrolling .sun,
+body.is-scrolling .sun-corona {
+    animation-play-state: paused !important;
 }
 
 /* Hover States - Only pause when SPECIFICALLY hovering a card */
@@ -2551,18 +2581,34 @@ textarea:focus {
     .solar-system-viewport {
         height: 480px;
         right: 0;
-        perspective: 1200px;
+        perspective: none;
     }
 
     .solar-system {
-        transform: scale(0.38) rotateX(65deg) rotateY(-5deg);
+        transform: scale(0.38);
+        transform-style: flat !important;
         will-change: transform;
     }
 
     .orbit-ring,
-    .skill-planet,
-    .planet-card {
+    .skill-planet {
+        transform-style: flat !important;
+        backface-visibility: hidden;
         will-change: transform;
+        pointer-events: none !important;
+    }
+
+    .planet-card {
+        transform-style: flat !important;
+        backface-visibility: hidden;
+        will-change: transform;
+        animation: counterRotate2D var(--duration) linear infinite !important;
+        animation-direction: var(--card-dir, reverse) !important;
+        pointer-events: auto !important;
+    }
+
+    .sun-wrapper {
+        transform: translate(-50%, -50%) !important;
     }
 
     .planet-card img,
