@@ -1,6 +1,6 @@
-// main.js
 
-// ── Master Animation Loop ──
+
+
 const animCallbacks = new Set();
 let masterRafId = null;
 
@@ -23,7 +23,7 @@ function registerAnim(fn) {
   };
 }
 
-// ── Debounce Utility ──
+
 function debounce(fn, ms = 150) {
   let timer;
   return (...args) => {
@@ -32,22 +32,20 @@ function debounce(fn, ms = 150) {
   };
 }
 
-// ── Skills Data ──────────────────────────────────────────────────────────────
+
 const SKILLS = [
-  // Inner orbit — Web Core
   { name: "HTML5", desc: "Semantic markup & structure for modern web apps", level: 95, tag: "Web Foundation", short: "HTML", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", orbit: "inner" },
   { name: "CSS3", desc: "Advanced styling, animations & responsive layouts", level: 90, tag: "Web Foundation", short: "CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg", orbit: "inner" },
   { name: "JavaScript", desc: "Dynamic scripting, DOM manipulation & async patterns", level: 85, tag: "Web Foundation", short: "JS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", orbit: "inner" },
 
-  // Middle orbit — .NET & Backend
   { name: "C#", desc: "Object-oriented language for .NET ecosystem", level: 92, tag: "Backend", short: "C#", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg", orbit: "middle" },
   { name: "ASP.NET MVC", desc: "Model-View-Controller web framework for .NET", level: 88, tag: "Backend", short: "MVC", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg", orbit: "middle" },
   { name: "ASP.NET Core API", desc: "RESTful API development with .NET Core", level: 88, tag: "Backend", short: "API", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg", orbit: "middle" },
+  { name: "Azure", desc: "Cloud computing & web app deployment services", level: 82, tag: "Cloud & Deployment", short: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg", orbit: "middle" },
   { name: "Node.js", desc: "Server-side JavaScript runtime & event-driven APIs", level: 75, tag: "Backend", short: "Node", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", orbit: "middle" },
   { name: "SignalR", desc: "Real-time bidirectional communication for web apps", level: 80, tag: "Backend", short: "SignalR", svgPath: "M12,2A10,10,0,0,0,2,12a9.89,9.89,0,0,0,2,6l-1.3,1.3a1,1,0,0,0,0,1.42,1,1,0,0,0,.71.29,1,1,0,0,0,.71-.29L5.75,19.38A10,10,0,1,0,12,2ZM12,18a6,6,0,1,1,6-6A6,6,0,0,1,12,18ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Z", dataSkill: "signalr", orbit: "middle" },
   { name: "Git & GitHub", desc: "Version control, branching & collaborative workflows", level: 85, tag: "Tools", short: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", orbit: "middle" },
 
-  // Outer orbit — Data & Languages
   { name: "SQL Server", desc: "Relational database design, queries & optimization", level: 85, tag: "Database", short: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg", orbit: "outer" },
   { name: "MongoDB", desc: "NoSQL document database for flexible data models", level: 75, tag: "Database", short: "Mongo", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg", orbit: "outer" },
   { name: "Python", desc: "Scripting, automation & data processing", level: 70, tag: "Language", short: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", orbit: "outer" },
@@ -132,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCometCursor();
 });
 
-// --- Star Animation ---
+
 function initStars() {
   const canvas = document.getElementById("stars-canvas");
   if (!canvas) return;
@@ -143,7 +141,7 @@ function initStars() {
   let width, height;
   let cx = 0,
     cy = 0;
-  let warp = 0; // 0 = calm, 1 = full hyperspace
+  let warp = 0; 
   let warpTarget = 0;
 
   function resize() {
@@ -160,28 +158,25 @@ function initStars() {
 
   function makeStar() {
     return {
-      // Position relative to center for radial warp
       x: Math.random() * width - cx,
       y: Math.random() * height - cy,
       z: Math.random() * width,
       size: Math.random() * 1.5,
       opacity: Math.random(),
       speed: Math.random() * 0.05 + 0.01,
-      depth: Math.random() * 0.2 + 0.1, // Parallax depth
+      depth: Math.random() * 0.2 + 0.1, 
     };
   }
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
 
-    // Ease warp factor toward target
     warp += (warpTarget - warp) * 0.06;
 
     const calm = warp < 0.01;
 
     stars.forEach((star) => {
       if (calm) {
-        // --- Calm drifting stars (original behaviour) ---
         ctx.beginPath();
         ctx.arc(star.x + cx, star.y + cy, star.size, 0, Math.PI * 2);
         ctx.globalAlpha = star.opacity;
@@ -198,7 +193,6 @@ function initStars() {
         if (star.opacity < 0.1) star.opacity = 0.1;
         if (star.opacity > 1) star.opacity = 1;
       } else {
-        // --- Warp / hyperspace: stars rush outward from center ---
         star.z -= (4 + warp * 40) * (1 - star.z / width) + 2;
         if (star.z <= 1) {
           star.x = Math.random() * width - cx;
@@ -211,7 +205,6 @@ function initStars() {
         const px = cx + star.x * k;
         const py = cy + star.y * k;
 
-        // Previous position for streak length (longer as warp increases)
         const kPrev = 128 / (star.z + 6 + warp * 30);
         const pxp = cx + star.x * kPrev;
         const pyp = cy + star.y * kPrev;
@@ -230,7 +223,6 @@ function initStars() {
     ctx.globalAlpha = 1;
   }
 
-  // Public controls
   window.startStarWarp = function () {
     warpTarget = 1;
   };
@@ -248,7 +240,7 @@ function initStars() {
   registerAnim(draw);
 }
 
-// --- Entrance Animation ---
+
 function initEntrance() {
   const splash = document.getElementById("splash");
   const enterBtn = document.getElementById("enter-btn");
@@ -261,7 +253,6 @@ function initEntrance() {
   let isZooming = false;
   let isDragging = false;
 
-  // Physics targets for spring animation
   let currentX = 0,
     currentY = 0;
   let targetX = 0,
@@ -427,18 +418,15 @@ function initEntrance() {
   document.body.style.overflowX = "hidden";
   document.body.style.overflowY = "hidden";
 
-  // Persistent Return Logic
   const returnScroll = localStorage.getItem("portfolio_return_scroll");
   if (returnScroll) {
     splash.style.display = "none";
-    mainContent.style.display = "block"; // Force display first so layout height is correct
+    mainContent.style.display = "block"; 
     document.body.style.overflowX = "hidden";
     document.body.style.overflowY = "auto";
 
-    // Jump to spot before showing content
     window.scrollTo(0, parseInt(returnScroll));
 
-    // Now trigger the fade-in
     requestAnimationFrame(() => {
       mainContent.classList.add("visible");
       localStorage.removeItem("portfolio_return_scroll");
@@ -446,7 +434,7 @@ function initEntrance() {
   }
 }
 
-// --- Shooting Stars ---
+
 function initShootingStars() {
   const container = document.querySelector(".shooting-stars");
   if (!container) return;
@@ -455,7 +443,6 @@ function initShootingStars() {
     const star = document.createElement("div");
     star.className = "shooting-star";
 
-    // Randomly spawn from top or left edge (outside viewport)
     const isTop = Math.random() > 0.5;
     if (isTop) {
       star.style.top = "-100px";
@@ -465,7 +452,6 @@ function initShootingStars() {
       star.style.top = Math.random() * 120 - 20 + "%";
     }
 
-    // Randomize speed/duration (Slower range: 8s to 15s)
     const duration = 8 + Math.random() * 7;
     star.style.animationDuration = duration + "s";
 
@@ -479,7 +465,6 @@ function initShootingStars() {
     );
   }
 
-  // Continuous Persistent Trigger (More subtle: one every 5 to 10s)
   function autoTrigger() {
     createShootingStar();
     setTimeout(autoTrigger, 5000 + Math.random() * 5000);
@@ -489,7 +474,7 @@ function initShootingStars() {
   window.triggerShootingStar = createShootingStar;
 }
 
-// --- Scroll Animations ---
+
 function initScrollAnimations() {
   const panels = document.querySelectorAll(".panel");
   const observer = new IntersectionObserver(
@@ -516,7 +501,7 @@ function initScrollAnimations() {
   panels.forEach((panel) => observer.observe(panel));
 }
 
-// --- Cyber Torch Reveal Logic ---
+
 function initPlasmaLighter() {
   const torch = document.querySelector(".cyber-torch");
   const pedestal = document.querySelector(".torch-pedestal");
@@ -537,33 +522,28 @@ function initPlasmaLighter() {
     const clientX = e.type.includes("touch") ? e.touches[0].clientX : e.clientX;
     const clientY = e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
 
-    // Pure CSS Solar System implemented. No complex JS dependencies required for 3D orbits.
 
-    // Calculate movement based on initial click offset
     const tx = clientX - clickOffsetX;
     const ty = clientY - clickOffsetY;
 
     torch.style.transform = `translate(${tx}px, ${ty}px) rotate(${tx * 0.05}deg)`;
     torch.style.transition = "none";
 
-    // Update the flashlight beam (emanating from the torch flame tip, not the cursor)
     const torchRect = torch.getBoundingClientRect();
     const textRect = revealText.getBoundingClientRect();
 
-    // lx/ly should be the flame position relative to the text box
     const lx = torchRect.left + torchRect.width / 2 - textRect.left;
     const ly = torchRect.top - textRect.top;
 
     revealText.style.setProperty("--light-x", `${lx}px`);
     revealText.style.setProperty("--light-y", `${ly}px`);
 
-    // Check if we are over the text area (based on flame position)
     const clipRect = moduleClip.getBoundingClientRect();
     const cx = torchRect.left + torchRect.width / 2 - clipRect.left;
     const cy = torchRect.top - clipRect.top;
     if (cx > 0 && cx < clipRect.width && cy > 0 && cy < clipRect.height) {
       if (decryptPercent < 100) {
-        decryptPercent = Math.min(100, decryptPercent + 0.3); // Faster on active move
+        decryptPercent = Math.min(100, decryptPercent + 0.3); 
         statusText.innerText = `DECRYPTING... ${Math.floor(decryptPercent)}%`;
         statusText.style.color = "var(--accent-cyan)";
         statusText.style.textShadow = "0 0 15px var(--accent-cyan)";
@@ -594,14 +574,10 @@ function initPlasmaLighter() {
     statusText.style.color = "#4ade80";
     statusText.style.textShadow = "0 0 10px rgba(74, 222, 128, 0.5)";
 
-    // Sync the switch if it's not already on
     if (overrideSwitch && !overrideSwitch.checked) {
       overrideSwitch.checked = true;
     }
 
-    // Removed: Hide the torch hint logic to keep it visible
-    // const torchHint = document.querySelector('.torch-hint');
-    // if (torchHint) torchHint.style.opacity = '0';
   };
 
   const overrideSwitch = document.getElementById("torch-override");
@@ -609,29 +585,25 @@ function initPlasmaLighter() {
     overrideSwitch.addEventListener("change", (e) => {
       const container = document.querySelector(".module-clip");
       if (e.target.checked) {
-        decryptPercent = 100; // Instantly complete
+        decryptPercent = 100; 
         completeDecryption();
       } else {
-        // Manual Lockdown: Restore the "barely visible" dark state
         if (container) container.classList.remove("decrypted");
         const glassModule = document.querySelector(".about-glass-module");
         if (glassModule) glassModule.classList.remove("decrypted");
 
         revealText.classList.remove("decrypted");
-        decryptPercent = 0; // Reset progress so it can be re-decrypted
+        decryptPercent = 0; 
 
-        // Restore WAITING status
         statusText.innerText = "WAITING...";
         statusText.style.color = "rgba(255,255,255,0.3)";
         statusText.style.textShadow = "none";
 
-        // Move the light beam far away
         revealText.style.setProperty("--light-x", "-1000px");
         revealText.style.setProperty("--light-y", "-1000px");
       }
     });
 
-    // Check by default on mobile to show the glowing background state
     if (window.matchMedia("(max-width: 768px)").matches) {
       overrideSwitch.checked = true;
       decryptPercent = 100;
@@ -644,12 +616,10 @@ function initPlasmaLighter() {
     const clientX = e.type.includes("touch") ? e.touches[0].clientX : e.clientX;
     const clientY = e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
 
-    // Capture pedestal center to calculate relative transform
     const pedRect = pedestal.getBoundingClientRect();
     const pedCenterX = pedRect.left + pedRect.width / 2;
     const pedCenterY = pedRect.top + pedRect.height / 2;
 
-    // Store the offset between where we clicked and where tx/ty=0 (the center)
     clickOffsetX = clientX;
     clickOffsetY = clientY;
 
@@ -664,22 +634,18 @@ function initPlasmaLighter() {
     torch.style.cursor = "grab";
     document.body.style.cursor = "default";
 
-    // Keep is-grabbed ON so float animation stays paused during the return journey
-    // Use a smooth spring transition back to origin
     torch.style.transition =
       "transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
     torch.style.transform = "translate(0, 0) rotate(0deg)";
 
-    // Once the return transition ends, hand control back to the float animation
     const onReturnEnd = () => {
       torch.removeEventListener("transitionend", onReturnEnd);
       torch.style.transition = "";
       torch.style.transform = "";
-      torch.classList.remove("is-grabbed"); // Resume zero-gravity float
+      torch.classList.remove("is-grabbed"); 
     };
     torch.addEventListener("transitionend", onReturnEnd);
 
-    // Reset Light variables if not yet fully decrypted
     if (decryptPercent < 100) {
       revealText.style.setProperty("--light-x", "-500px");
       revealText.style.setProperty("--light-y", "-500px");
@@ -712,7 +678,7 @@ function initPlasmaLighter() {
   window.addEventListener("touchend", stopDrag);
 }
 
-// --- Skill Hover Connector ---
+
 function initSkillConnector() {
   const svg = document.getElementById("skill-connector-svg");
   const panel = document.getElementById("skill-detail-panel");
@@ -720,13 +686,11 @@ function initSkillConnector() {
 
   const cards = document.querySelectorAll(".planet-card[data-name]");
 
-  // Cache panel sub-elements
   const sdpTag = panel.querySelector(".sdp-tag");
   const sdpIcon = panel.querySelector(".sdp-icon-wrap");
   const sdpName = panel.querySelector(".sdp-name");
   const sdpDesc = panel.querySelector(".sdp-desc");
 
-  // SVG line + endpoint dot
   const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
   line.classList.add("skill-connector-line");
   line.style.display = "none";
@@ -754,12 +718,10 @@ function initSkillConnector() {
   function showConnector(card) {
     const data = card.dataset;
 
-    // Populate panel
     sdpTag.textContent = data.tag || "Skill";
     sdpName.textContent = data.name || "";
     sdpDesc.textContent = data.desc || "";
 
-    // Clone icon from card
     sdpIcon.innerHTML = "";
     const img = card.querySelector("img");
     const svgEl = card.querySelector("svg");
@@ -771,22 +733,18 @@ function initSkillConnector() {
       sdpIcon.appendChild(clone);
     }
 
-    // Make panel visible first so bounding rect is measured correctly on mobile
     panel.classList.add("visible");
 
     const svgRect = svg.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
 
-    // Card center in SVG-local coords
     const cx = cardRect.left + cardRect.width / 2 - svgRect.left;
     const cy = cardRect.top + cardRect.height / 2 - svgRect.top;
 
-    // Panel entry point (left-center of the panel)
     const px = panelRect.left - svgRect.left;
     const py = panelRect.top + panelRect.height / 2 - svgRect.top;
 
-    // Set connector line
     line.setAttribute("x1", cx);
     line.setAttribute("y1", cy);
     line.setAttribute("x2", px);
@@ -825,7 +783,6 @@ function initSkillConnector() {
       e.stopPropagation();
       const wasActive = card.classList.contains("active");
 
-      // Clear active class from all cards first
       document.querySelectorAll(".planet-card").forEach(c => c.classList.remove("active"));
 
       if (!wasActive) {
@@ -885,10 +842,10 @@ function initSkillsVisibilityObserver() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  CONSTELLATION CONTACT SECTION
-//  initContactSection()
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
 function initContactSection() {
   const form = document.getElementById("transmitter-form");
   if (!form) return;
@@ -899,7 +856,6 @@ function initContactSection() {
   const wrap = document.querySelector(".transmitter-form-wrap");
   const satWrap = document.querySelector(".transmitter-avatar-badge");
 
-  // Typewriter/log helper to add lines to terminal
   function logLine(text, type = "") {
     if (!terminal) return;
     const line = document.createElement("div");
@@ -909,13 +865,11 @@ function initContactSection() {
     terminal.scrollTop = terminal.scrollHeight;
   }
 
-  // Clear terminal
   function clearLog() {
     if (!terminal) return;
     terminal.innerHTML = "";
   }
 
-  // Update button state based on validity and signal strength meter
   function updateState() {
     let filledCount = 0;
     let isValid = true;
@@ -931,7 +885,6 @@ function initContactSection() {
     if (btn) btn.disabled = !isValid;
   }
 
-  // Particle spawning on input typing
   function spawnParticle(input) {
     if (!wrap || !satWrap) return;
 
@@ -939,11 +892,9 @@ function initContactSection() {
     const wrapRect = wrap.getBoundingClientRect();
     const satRect = satWrap.getBoundingClientRect();
 
-    // Random X along input line, Y at the bottom border
     const spawnX = inputRect.left - wrapRect.left + Math.random() * inputRect.width;
     const spawnY = inputRect.bottom - wrapRect.top;
 
-    // Center of the satellite dish
     const targetX = satRect.left - wrapRect.left + satRect.width / 2;
     const targetY = satRect.top - wrapRect.top + satRect.height / 2;
 
@@ -957,7 +908,7 @@ function initContactSection() {
     particle.style.setProperty("--dest-x", `${destX}px`);
     particle.style.setProperty("--dest-y", `${destY}px`);
 
-    const size = Math.random() * 4 + 3; // 3px to 7px
+    const size = Math.random() * 4 + 3; 
     particle.style.width = `${size}px`;
     particle.style.height = `${size}px`;
     particle.style.background = Math.random() > 0.45 ? "var(--accent-cyan)" : "var(--accent-gold)";
@@ -969,18 +920,15 @@ function initContactSection() {
     }, 1200);
   }
 
-  // Attach input listeners
   inputs.forEach((input) => {
     input.addEventListener("input", (e) => {
       updateState();
-      // Spawn a dynamic particle if key is not empty space
       if (e.target.value.trim()) {
         spawnParticle(input);
       }
     });
   });
 
-  // Submit animation sequence
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -993,7 +941,6 @@ function initContactSection() {
     clearLog();
     logLine("> Processing your message...", "system");
 
-    // Spawn a shockwave ring
     if (satWrap) {
       const ring = document.createElement("div");
       ring.className = "shockwave-ring animate";
@@ -1026,7 +973,6 @@ function initContactSection() {
       logLine("> Thanks for reaching out! I'll get back to you soon.");
     }, 2700);
 
-    // Form cleanup and reset sequence
     setTimeout(() => {
       form.reset();
       updateState();
@@ -1040,19 +986,17 @@ function initContactSection() {
     }, 5500);
   });
 
-  // Init state on page load
   updateState();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  COMET TRAIL CUSTOM CURSOR
-//  initCometCursor()
-//  ├─ light canvas trail (single rAF via master loop, fading line segments)
-//  ├─ interpolated dot that smoothly eases toward the real pointer
-//  └─ "hot" state over interactive elements
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 function initCometCursor() {
-  // Skip entirely on touch / coarse-pointer devices
   if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
 
   const canvas = document.getElementById("cursor-trail");
@@ -1077,11 +1021,9 @@ function initCometCursor() {
   resize();
   window.addEventListener("resize", debounce(resize));
 
-  // Real pointer target + eased dot position
   const target = { x: width / 2, y: height / 2 };
   const pos = { x: target.x, y: target.y };
 
-  // Trail of recent points; each fades out over its lifetime
   const trail = [];
   const MAX_TRAIL = 22;
 
@@ -1089,7 +1031,6 @@ function initCometCursor() {
     .getPropertyValue("--accent-cyan-rgb")
     .trim() || "0, 209, 255";
 
-  // Keep trail color in sync with the active accent (changes per project)
   const colorObserver = new MutationObserver(() => {
     const v = getComputedStyle(document.documentElement)
       .getPropertyValue("--accent-cyan-rgb")
@@ -1110,7 +1051,6 @@ function initCometCursor() {
     { passive: true },
   );
 
-  // "Hot" grow state over interactive elements
   const hotSelector =
     "a, button, input, textarea, .cyber-torch, .skill-planet, .project-planet, .channel-card";
   const earth = document.getElementById("earth");
@@ -1147,23 +1087,19 @@ function initCometCursor() {
   );
 
   function draw() {
-    // Ease the dot toward the real pointer (spring-like follow)
     pos.x += (target.x - pos.x) * 0.35;
     pos.y += (target.y - pos.y) * 0.35;
 
     dot.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
 
-    // Record current point with a life value
     trail.push({ x: pos.x, y: pos.y, life: 1 });
     if (trail.length > MAX_TRAIL) trail.shift();
 
-    // Fade existing points
     for (let i = 0; i < trail.length; i++) {
       trail[i].life -= 0.045;
     }
     while (trail.length && trail[0].life <= 0) trail.shift();
 
-    // Clear with a slight alpha so old frames dissolve (motion blur feel)
     ctx.clearRect(0, 0, width, height);
 
     if (trail.length > 1) {
@@ -1189,7 +1125,6 @@ function initCometCursor() {
 
   registerAnim(draw);
 
-  // Stop the trail when the tab is hidden to save CPU
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       trail.length = 0;
@@ -1198,12 +1133,12 @@ function initCometCursor() {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  ATMOSPHERIC TRANSITION — "decryption" typewriter + scramble
-//  runTransitionDecrypt(el, text)
-//  Resolves random glyphs into the real name, char-by-char, with a blinking
-//  caret. Also adds the page "suck-in" blur class.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
 const GLYPHS = "▓▒░#@%&*+=/\\<>?01ABCDEF$£¥§";
 
 function runTransitionDecrypt(el, text) {
@@ -1213,13 +1148,12 @@ function runTransitionDecrypt(el, text) {
 
   const len = text.length;
   let frame = 0;
-  const totalFrames = len * 3; // scramble settles gradually
+  const totalFrames = len * 3; 
 
   clearInterval(el._decryptTimer);
   el._decryptTimer = setInterval(() => {
     let out = "";
     for (let i = 0; i < len; i++) {
-      // Characters lock in left-to-right as the frame progresses
       if (i < frame / 3) {
         out += text[i];
       } else if (text[i] === " ") {
@@ -1236,18 +1170,17 @@ function runTransitionDecrypt(el, text) {
       el.classList.remove("typing");
     }
   }, 28);
-}//  initPlanetSystem()
-//  ├─ PLANETS[]          project data (edit here to add / change projects)
-//  ├─ orbit rings        decorative CSS circles injected into #ps-system
-//  ├─ orbit nodes        zero-size position carriers, moved by rAF
-//  ├─ planet elements    visual spheres inside each node
-//  ├─ SVG connector      color-matched dashed line drawn on hover
-//  ├─ detail panel       slide-in card shown on hover
-//  ├─ scroll zoom        wheel → scale(psZoom) on the system div
-//  └─ modal              "landing" zoom-out + project detail overlay
-// ─────────────────────────────────────────────────────────────────────────────
+}
+
+
+
+
+
+
+
+
+
 function initPlanetSystem() {
-  // ── DOM refs ────────────────────────────────────────────────────────────────
   const section = document.getElementById("projects");
   const system = document.getElementById("ps-system");
   const wrap = document.getElementById("planet-system-wrap");
@@ -1256,36 +1189,30 @@ function initPlanetSystem() {
 
   if (!section || !system || !wrap || !svgEl || !detailEl) return;
 
-  // ── Runtime state ────────────────────────────────────────────────────────────
   let cx = 0;
   let cy = 0;
 
   function updateCenter() {
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const isTablet = window.matchMedia("(max-width: 1024px)").matches;
-    // Top-level system anchor - shift up on mobile to clear bottom nav/overlays
     const globalCX = system.offsetWidth * 0.5;
     const globalCY = system.offsetHeight * (isMobile ? 0.46 : 0.62);
 
     if (typeof PLANETS !== "undefined" && PLANETS.length > 0) {
       PLANETS.forEach((data, i) => {
         if (isMobile) {
-          // Align in a clean zig-zag vertically down the center on mobile
           data.baseX = globalCX + (i % 2 === 0 ? -45 : 45);
           data.baseY = globalCY - 200 + (i * 200);
         } else {
-          // Individual anchor override? If not, use global.
           const cx = system.offsetWidth * (data.centerX || 0.5);
           const cy = system.offsetHeight * (data.centerY || 0.62);
 
           const angle = data.startAngle || 0;
           const distance = data.orbitRadius || 0;
 
-          // Base Position = Anchor + Circular Position + Manual Nudge
           data.baseX = cx + distance * Math.cos(angle) + (data.offsetX || 0);
           data.baseY = cy + distance * Math.sin(angle) + (data.offsetY || 0);
 
-          // Nudge MindShelf further right on tablets (iPad/tablet preview)
           if (isTablet && data.name === "MindShelf") {
             data.baseX = cx - 160;
           }
@@ -1293,16 +1220,14 @@ function initPlanetSystem() {
       });
     }
   }
-  // Initial call delayed until after PLANETS is defined
   window.addEventListener("resize", debounce(updateCenter));
 
-  // ── Planet data ─────────────────────────────────────────────────────────────
   const PLANETS = [
     {
       name: "N3M|Nest",
       description:
         "Complete full-stack game tracking platform where users can discover games, build a personal library, review titles, and interact with other players in real time.",
-      tech: ["HTML", "TailwindCSS", "JS", "ASP.NET API", "SQL Server"],
+      tech: ["HTML", "TailwindCSS", "JS", "ASP.NET API", "SQL Server", "Azure"],
       link: "#",
       orbitRadius: 180,
       speed: 0.00032,
@@ -1354,7 +1279,6 @@ function initPlanetSystem() {
     },
   ];
 
-  // ── Helpers ─────────────────────────────────────────────────────────────────
   function hexToRgba(hex, alpha) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -1362,46 +1286,24 @@ function initPlanetSystem() {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  /*
-  // ── Orbit rings (removed for free-floating design) ─────────────────────────
-  const orbitRadii = [...new Set(PLANETS.map((p) => p.orbitRadius))].sort(
-    (a, b) => a - b,
-  );
-  orbitRadii.forEach((r) => {
-    const ring = document.createElement("div");
-    ring.className = "ps-orbit-ring";
-    ring.style.setProperty("--ps-r", r + "px");
-    system.appendChild(ring);
-  });
-  */
 
-  // ── Build orbit nodes + planet elements ─────────────────────────────────────
-  // Two-element structure keeps orbit position (left/top, layout) completely
-  // separate from visual transform (scale/hover), preventing transition fights.
-  //
-  //   ps-orbit-node    – zero-size absolute div; left/top set by rAF
-  //     └ project-planet – visible sphere; only transform/box-shadow animated
   const orbitNodes = [];
   const planetEls = [];
 
   PLANETS.forEach((data, i) => {
-    // Specific base positions relative to system center (static but distributed)
     const angle = data.startAngle || i * ((Math.PI * 2) / PLANETS.length);
     const distance = data.orbitRadius || 150 + i * 80;
 
     data.baseX = cx + distance * Math.cos(angle);
     data.baseY = cy + distance * Math.sin(angle);
 
-    // Floating state
     data.floatAngle = Math.random() * Math.PI * 2;
     data.floatSpeed = 0.008 + Math.random() * 0.007;
     data.floatRange = 15 + Math.random() * 10;
 
-    // Position carrier
     const node = document.createElement("div");
     node.className = "ps-orbit-node";
 
-    // Visual sphere
     const el = document.createElement("div");
     el.className = "project-planet";
     el.setAttribute("data-index", i);
@@ -1409,7 +1311,6 @@ function initPlanetSystem() {
     el.setAttribute("data-description", data.description);
     el.setAttribute("data-tech", data.tech.join(" · "));
 
-    // Per-planet CSS variables (color + pre-computed rgba glows)
     el.style.setProperty("--planet-color-a", data.colorA);
     el.style.setProperty("--planet-color-b", data.colorB);
     el.style.setProperty("--planet-size", data.size + "px");
@@ -1417,12 +1318,10 @@ function initPlanetSystem() {
     el.style.setProperty("--planet-glow-50", hexToRgba(data.colorA, 0.5));
     el.style.setProperty("--planet-glow-25", hexToRgba(data.colorA, 0.25));
 
-    // Atmosphere ring (child — inherits CSS vars)
     const atmo = document.createElement("div");
     atmo.className = "ps-planet-atmo";
     el.appendChild(atmo);
 
-    // Name label
     const label = document.createElement("span");
     label.className = "ps-planet-label";
     label.textContent = data.name;
@@ -1435,10 +1334,8 @@ function initPlanetSystem() {
     planetEls.push(el);
   });
 
-  // Call updateCenter once PLANETS is fully defined to set baseX/baseY
   updateCenter();
 
-  // ── SVG connector elements ───────────────────────────────────────────────────
   const NS = "http://www.w3.org/2000/svg";
 
   const connLine = document.createElementNS(NS, "line");
@@ -1457,46 +1354,38 @@ function initPlanetSystem() {
   svgEl.appendChild(connDotA);
   svgEl.appendChild(connDotB);
 
-  // ── Detail-panel sub-element refs ───────────────────────────────────────────
   const psdpTag = detailEl.querySelector(".psdp-tag");
   const psdpName = detailEl.querySelector(".psdp-name");
   const psdpDesc = detailEl.querySelector(".psdp-desc");
   const psdpTech = detailEl.querySelector(".psdp-tech");
   const psdpLink = detailEl.querySelector(".psdp-link");
 
-  // ── Runtime state ────────────────────────────────────────────────────────────
   let psZoom = 1;
   const ZOOM_MIN = 0.55;
   const ZOOM_MAX = 1.9;
 
   let animPaused = false;
   let unregisterPlanetAnim = null;
-  let hoveredIdx = -1; // index of hovered planet, -1 = none
+  let hoveredIdx = -1; 
   let flashFired = false;
 
-  // ── rAF callback (no self-loop) ─────────────────────────────────────────────
   function animate() {
     if (!animPaused) {
       PLANETS.forEach((data, i) => {
-        // Increment float angle
         data.floatAngle += data.floatSpeed;
 
-        // Gentle "hover" oscillation
         const driftX = Math.sin(data.floatAngle) * data.floatRange;
         const driftY =
           Math.cos(data.floatAngle * 0.8) * (data.floatRange * 0.7);
 
-        // Apply position
         orbitNodes[i].style.left = data.baseX + driftX + "px";
         orbitNodes[i].style.top = data.baseY + driftY + "px";
       });
 
-      // Keep SVG connector locked onto the moving planet
       if (hoveredIdx >= 0) updateConnector(planetEls[hoveredIdx]);
     }
   }
 
-  // ── IntersectionObserver: register / unregister with master loop ───────────
   const visObs = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -1512,29 +1401,7 @@ function initPlanetSystem() {
   );
   visObs.observe(section);
 
-  // ── Scroll zoom ───────────────────────────────────────────────────────────────
-  // When zoom is already at its min/max the event is NOT prevented,
-  // so the page can scroll naturally to the next section.
-  /*
-  // Scroll zoom disabled per user request
-  wrap.addEventListener(
-    "wheel",
-    (e) => {
-      const delta = e.deltaY * -0.0009;
-      const newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, psZoom + delta));
 
-      if (newZoom === psZoom) return; // limit reached — let page scroll
-
-      e.preventDefault();
-      psZoom = newZoom;
-      system.style.transform = `scale(${psZoom})`;
-      hideConnector(); // will redraw on next frame once mouse re-enters planet
-    },
-    { passive: false },
-  );
-  */
-
-  // ── Hover: detail panel + colour-matched connector ───────────────────────────
   function showDetail(el, i) {
     const data = PLANETS[i];
     hoveredIdx = i;
@@ -1581,7 +1448,6 @@ function initPlanetSystem() {
       });
     }
 
-    // Tint connector to the planet's primary colour
     connLine.style.stroke = hexToRgba(data.colorA, 0.65);
     connLine.style.filter = `drop-shadow(0 0 4px ${data.colorA})`;
     connDotA.style.fill = data.colorA;
@@ -1605,7 +1471,6 @@ function initPlanetSystem() {
     connDotB.style.display = "none";
   }
 
-  // Recomputes line endpoints using live screen coordinates (works through any transform)
   function updateConnector(el) {
     if (!el || !detailEl.classList.contains("visible")) return;
 
@@ -1633,7 +1498,6 @@ function initPlanetSystem() {
     connDotB.style.display = "";
   }
 
-  // ── Click: "landing" animation → modal ───────────────────────────────────────
   function triggerLanding(el, i) {
     const data = PLANETS[i];
 
@@ -1644,8 +1508,6 @@ function initPlanetSystem() {
     localStorage.setItem("portfolio_return_scroll", window.scrollY);
 
     if (isMobile) {
-      // On mobile: Skip the lagging planet circle expand animation (ps-planet--landing + 680ms delay),
-      // but immediately start the suck-in blur, typewriter text decrypt, and star warp transition sequence!
       const transition = document.getElementById("entry-transition");
       const transitionText = document.getElementById("transition-planet");
 
@@ -1666,7 +1528,6 @@ function initPlanetSystem() {
       return;
     }
 
-    // Laptop & Desktop: Keep both initial planet circle expand AND full suck-in sequence
     el.classList.add("ps-planet--landing");
     const projectsSec = document.getElementById("projects");
     if (projectsSec) projectsSec.classList.add("ps--active-landing");
@@ -1693,7 +1554,6 @@ function initPlanetSystem() {
     }, 680);
   }
 
-  // ── Planet event listeners ────────────────────────────────────────────────────
   planetEls.forEach((el, i) => {
     el.addEventListener("mouseenter", () => {
       if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;

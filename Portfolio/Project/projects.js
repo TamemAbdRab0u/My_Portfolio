@@ -14,6 +14,7 @@ const DATA = [
       Frontend: ["HTML", "TailwindCSS", "JS"],
       Backend: ["ASP.NET API"],
       Database: ["SQL Server"],
+      Deployment: ["Azure"],
     },
     media: [
       "./Projects/N3M Nest/Screenshot 2026-03-26 192926.png",
@@ -84,23 +85,46 @@ const DATA = [
   },
 ];
 
+function hexToRgbString(hex) {
+  let c = hex.replace("#", "").trim();
+  if (c.length === 3) c = c.split("").map((x) => x + x).join("");
+  const r = parseInt(c.substring(0, 2), 16) || 0;
+  const g = parseInt(c.substring(2, 4), 16) || 0;
+  const b = parseInt(c.substring(4, 6), 16) || 0;
+  return `${r}, ${g}, ${b}`;
+}
+
 const THEMES = [
   {
-    color: "#00d1ff",
-    rgb: "0,209,255",
+    color: "#00abd2ff",
     name: "NEBULA_BLUE",
   },
   {
     color: "#d47800",
-    rgb: "212,120,0",
     name: "SOLAR_ORANGE",
   },
   {
     color: "#0a7e8c",
-    rgb: "10,126,140",
     name: "DEEP_TEAL",
   },
 ];
+
+const TECH_ICONS = {
+  HTML: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+  CSS: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+  JS: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+  JavaScript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+  TailwindCSS: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+  "Tailwind CSS": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+  "ASP.NET API": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg",
+  "ASP.NET MVC": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dot-net/dot-net-original.svg",
+  "SQL Server": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
+  Azure: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
+  "Next.js": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+  Zustand: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+  Firebase: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+  "OpenRouter API": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/openapi/openapi-original.svg",
+};
 
 const params = new URLSearchParams(window.location.search);
 const id = parseInt(params.get("id")) || 0;
@@ -114,8 +138,9 @@ const theme = THEMES[id % THEMES.length];
 function injectProject() {
   if (!project) return;
 
+  const rgbStr = hexToRgbString(theme.color);
   document.documentElement.style.setProperty("--accent-cyan", theme.color);
-  document.documentElement.style.setProperty("--accent-rgb", theme.rgb);
+  document.documentElement.style.setProperty("--accent-rgb", rgbStr);
   document.title = `${project.name} | Portfolio`;
 
   const trans = document.getElementById("transition-planet");
@@ -138,8 +163,9 @@ function injectProject() {
 
   const sysContainer = document.getElementById("proj-systems");
   if (sysContainer) {
+    sysContainer.innerHTML = "";
     const categories = Object.entries(project.tech);
-    categories.forEach(([category, items], ci) => {
+    categories.forEach(([category, items]) => {
       const group = document.createElement("div");
       group.className = "tech-group";
 
@@ -151,9 +177,24 @@ function injectProject() {
       badges.className = "tech-group-badges";
 
       items.forEach((tech) => {
-        const badge = document.createElement("span");
+        const badge = document.createElement("div");
         badge.className = "tech-badge";
-        badge.textContent = tech;
+
+        const iconUrl = TECH_ICONS[tech];
+        if (iconUrl) {
+          const img = document.createElement("img");
+          img.src = iconUrl;
+          img.alt = tech;
+          img.className = "tech-badge-icon";
+          img.loading = "lazy";
+          badge.appendChild(img);
+        }
+
+        const text = document.createElement("span");
+        text.className = "tech-badge-text";
+        text.textContent = tech;
+        badge.appendChild(text);
+
         badges.appendChild(badge);
       });
 
