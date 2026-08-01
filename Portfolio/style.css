@@ -1762,16 +1762,18 @@ body.is-scrolling .sun-corona {
 }
 .sdp-tag {
     font-family: var(--font-hero);
-    font-size: 0.55rem;
-    letter-spacing: 0.2rem;
+    font-size: 0.48rem;
+    letter-spacing: 0.15rem;
     text-transform: uppercase;
     color: var(--accent-cyan);
     background: rgba(var(--accent-cyan-rgb), 0.08);
     border: 1px solid rgba(var(--accent-cyan-rgb), 0.2);
     border-radius: 4px;
-    padding: 0.2rem 0.5rem;
-    display: inline-block;
-    margin-bottom: 1rem;
+    padding: 0.18rem 0.45rem;
+    display: block;
+    width: max-content;
+    margin: 0 auto 1rem auto;
+    white-space: nowrap;
 }
 .sdp-icon-wrap {
     display: flex;
@@ -2197,9 +2199,12 @@ textarea:focus {
         transform: translate(-50%, 0);
     }
     .skill-detail-panel .sdp-tag {
-        font-size: 0.5rem;
+        font-size: 0.45rem;
         margin-bottom: 0.4rem;
         padding: 0.15rem 0.35rem;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
     .skill-detail-panel .sdp-icon-wrap {
         margin-bottom: 0.4rem;
